@@ -1,0 +1,199 @@
+{
+  "title": "North Wildwood Shoreline Observatory",
+  "generated": "2026-08-10T22:59:10.898915Z",
+  "aoi": [
+    -74.825,
+    38.98,
+    -74.77,
+    39.03
+  ],
+  "display_bounds": [
+    -74.808,
+    38.984,
+    -74.7725,
+    39.007
+  ],
+  "reference": "Mean Sea Level (MSL)",
+  "beach_slope": 0.045,
+  "sentinel_resolution_m": 10,
+  "tide_station": "8536110",
+  "wave_station": "44009",
+  "scenes": [
+    {
+      "year": 2016,
+      "scene_id": "S2A_MSIL2A_20160720T154912_R054_T18SWJ_20210212T062408",
+      "datetime": "2016-07-20T15:49:12.026000Z",
+      "cloud_cover_tile_pct": 10.21,
+      "cloud_mask_aoi_pct": 12.0,
+      "ndwi_threshold": -0.02,
+      "tide": {
+        "level_m_msl": 0.285,
+        "time": "2016-07-20T15:48:00Z",
+        "source": "verified"
+      },
+      "wave": {
+        "height_m": 0.43,
+        "dominant_period_s": 7.7,
+        "time": "2016-07-20T15:50:00Z",
+        "source": "NDBC historical"
+      },
+      "wave_setup_m": 0.099,
+      "horizontal_correction_m": 8.5,
+      "uncertainty_m": 15.5,
+      "image": "/data/sentinel-2016.jpg",
+      "image_shape": [
+        477,
+        556
+      ],
+      "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2A_MSIL2A_20160720T154912_R054_T18SWJ_20210212T062408"
+    },
+    {
+      "year": 2018,
+      "scene_id": "S2B_MSIL2A_20180824T154809_R054_T18SWJ_20201011T063219",
+      "datetime": "2018-08-24T15:48:09.024000Z",
+      "cloud_cover_tile_pct": 0.3,
+      "cloud_mask_aoi_pct": 4.65,
+      "ndwi_threshold": 0.132,
+      "tide": {
+        "level_m_msl": -0.128,
+        "time": "2018-08-24T15:48:00Z",
+        "source": "verified"
+      },
+      "wave": {
+        "height_m": 0.4,
+        "dominant_period_s": 10.8,
+        "time": "2018-08-24T15:50:00Z",
+        "source": "NDBC historical"
+      },
+      "wave_setup_m": 0.134,
+      "horizontal_correction_m": 0.1,
+      "uncertainty_m": 14.0,
+      "image": null,
+      "image_shape": [
+        477,
+        556
+      ],
+      "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2B_MSIL2A_20180824T154809_R054_T18SWJ_20201011T063219"
+    },
+    {
+      "year": 2020,
+      "scene_id": "S2B_MSIL2A_20200803T154819_R054_T18SWJ_20200816T013303",
+      "datetime": "2020-08-03T15:48:19.024000Z",
+      "cloud_cover_tile_pct": 1.35,
+      "cloud_mask_aoi_pct": 6.45,
+      "ndwi_threshold": 0.027,
+      "tide": {
+        "level_m_msl": 0.135,
+        "time": "2020-08-03T15:48:00Z",
+        "source": "verified"
+      },
+      "wave": {
+        "height_m": 0.98,
+        "dominant_period_s": 5.9,
+        "time": "2020-08-03T15:50:00Z",
+        "source": "NDBC historical"
+      },
+      "wave_setup_m": 0.115,
+      "horizontal_correction_m": 5.6,
+      "uncertainty_m": 15.0,
+      "image": null,
+      "image_shape": [
+        477,
+        556
+      ],
+      "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2B_MSIL2A_20200803T154819_R054_T18SWJ_20200816T013303"
+    },
+    {
+      "year": 2022,
+      "scene_id": "S2B_MSIL2A_20220803T154819_R054_T18SWJ_20220804T150432",
+      "datetime": "2022-08-03T15:48:19.024000Z",
+      "cloud_cover_tile_pct": 1.76,
+      "cloud_mask_aoi_pct": 0.21,
+      "ndwi_threshold": -0.002,
+      "tide": {
+        "level_m_msl": 0.676,
+        "time": "2022-08-03T15:48:00Z",
+        "source": "verified"
+      },
+      "wave": {
+        "height_m": 0.54,
+        "dominant_period_s": 9.1,
+        "time": "2022-08-03T23:40:00Z",
+        "source": "NDBC historical"
+      },
+      "wave_setup_m": 0.132,
+      "horizontal_correction_m": 17.9,
+      "uncertainty_m": 17.2,
+      "image": null,
+      "image_shape": [
+        477,
+        556
+      ],
+      "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2B_MSIL2A_20220803T154819_R054_T18SWJ_20220804T150432"
+    },
+    {
+      "year": 2024,
+      "scene_id": "S2B_MSIL2A_20240822T154809_R054_T18SWJ_20240822T215036",
+      "datetime": "2024-08-22T15:48:09.024000Z",
+      "cloud_cover_tile_pct": 1.86,
+      "cloud_mask_aoi_pct": 0.18,
+      "ndwi_threshold": -0.007,
+      "tide": {
+        "level_m_msl": 1.048,
+        "time": "2024-08-22T15:48:00Z",
+        "source": "verified"
+      },
+      "wave": {
+        "height_m": 0.42,
+        "dominant_period_s": 7.7,
+        "time": "2024-08-22T15:40:00Z",
+        "source": "NDBC historical"
+      },
+      "wave_setup_m": 0.098,
+      "horizontal_correction_m": 25.5,
+      "uncertainty_m": 18.6,
+      "image": null,
+      "image_shape": [
+        477,
+        556
+      ],
+      "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2B_MSIL2A_20240822T154809_R054_T18SWJ_20240822T215036"
+    },
+    {
+      "year": 2026,
+      "scene_id": "S2C_MSIL2A_20260807T154811_R054_T18SWJ_20260807T210317",
+      "datetime": "2026-08-07T15:48:11.025000Z",
+      "cloud_cover_tile_pct": 1.16,
+      "cloud_mask_aoi_pct": 0.42,
+      "ndwi_threshold": -0.02,
+      "tide": {
+        "level_m_msl": -0.214,
+        "time": "2026-08-07T15:48:00Z",
+        "source": "verified"
+      },
+      "wave": {
+        "height_m": 0.8,
+        "dominant_period_s": 7.0,
+        "time": "2026-08-07T15:48:11.025000Z",
+        "source": "regional climatology fallback"
+      },
+      "wave_setup_m": 0.123,
+      "horizontal_correction_m": -2.0,
+      "uncertainty_m": 14.4,
+      "image": "/data/sentinel-2026.jpg",
+      "image_shape": [
+        477,
+        556
+      ],
+      "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2C_MSIL2A_20260807T154811_R054_T18SWJ_20260807T210317"
+    }
+  ],
+  "method": {
+    "water_index": "NDWI = (B03 - B08) / (B03 + B08), adaptive Otsu threshold",
+    "cloud_mask": "Sentinel-2 Scene Classification Layer; classes 0,1,3,8,9,10,11 excluded",
+    "tide": "Nearest NOAA CO-OPS Cape May water level, MSL datum",
+    "waves": "Nearest NOAA NDBC 44009 significant wave height and dominant period",
+    "wave_setup": "Stockdon setup term: 0.35 * beach slope * sqrt(H0 * L0)",
+    "horizontal_normalization": "Observed line shifted along local seaward normal by (tide + setup) / beach slope"
+  }
+}
