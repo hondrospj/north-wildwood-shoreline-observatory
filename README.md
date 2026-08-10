@@ -4,6 +4,8 @@ An interactive coastal-change dashboard built from six Sentinel-2 L2A summer acq
 
 The site includes a swipe comparison, corrected shoreline timeline, scene-level correction details, alongshore change summaries, uncertainty guidance, and direct source links.
 
+The public dashboard is deployed through GitHub Pages at `https://hondrospj.github.io/north-wildwood-shoreline-observatory/`.
+
 ## Run locally
 
 ```bash
@@ -16,6 +18,7 @@ npm run dev
 ```bash
 npm test
 npm run lint
+npm run build:github
 ```
 
 The reproducible data workflow is in `scripts/build_shorelines.py`; generated site data is under `public/data/`.

@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import Image from "next/image";
 
 type Scene = {
   year: number;
@@ -207,7 +206,7 @@ export function ShorelineApp({ metadata, trend, shorelines }: { metadata: Metada
   const scene = useMemo(() => metadata.scenes.find((item) => item.year === selectedYear) ?? metadata.scenes.at(-1)!, [metadata.scenes, selectedYear]);
 
   return (
-    <main>
+    <main style={{ "--hero-image": "url('./data/sentinel-2026.jpg')" } as React.CSSProperties}>
       <header className="topbar">
         <a className="brand" href="#top" aria-label="North Wildwood Shoreline Observatory home">
           <span className="brand-mark"><i /><i /><i /></span>
@@ -250,11 +249,13 @@ export function ShorelineApp({ metadata, trend, shorelines }: { metadata: Metada
         <div className="explorer-grid">
           <div className="map-card">
             <div className="map-stage">
-              <Image className="base-image" src="/data/sentinel-2026.jpg" alt="Sentinel-2 view of North Wildwood on August 7, 2026" fill sizes="(max-width: 1050px) 100vw, 65vw" style={{ objectFit: "fill" }} priority />
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img className="base-image" src="./data/sentinel-2026.jpg" alt="Sentinel-2 view of North Wildwood on August 7, 2026" />
               {view === "compare" && (
                 <>
                   <div className="compare-image" style={{ clipPath: `inset(0 ${100 - compare}% 0 0)` }}>
-                    <Image src="/data/sentinel-2016.jpg" alt="Sentinel-2 view of North Wildwood on July 20, 2016" fill sizes="(max-width: 1050px) 100vw, 65vw" style={{ objectFit: "fill" }} />
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src="./data/sentinel-2016.jpg" alt="Sentinel-2 view of North Wildwood on July 20, 2016" />
                   </div>
                   <div className="compare-handle" style={{ left: `${compare}%` }}><span>↔</span></div>
                   <input className="compare-range" type="range" min="5" max="95" value={compare} onChange={(event) => setCompare(Number(event.target.value))} aria-label="Compare 2016 and 2026 imagery" />

@@ -59,3 +59,16 @@ test("ships the real data bundle and removes the starter preview", async () => {
   await assert.rejects(access(new URL("../app/_sites-preview/preview.css", import.meta.url)));
   await assert.rejects(access(new URL("public/_sites-preview", projectRoot)));
 });
+
+test("builds a GitHub Pages app with project-scoped assets", async () => {
+  const html = await readFile(new URL("../dist-github/index.html", import.meta.url), "utf8");
+  assert.match(html, /North Wildwood Shoreline Observatory/);
+  assert.match(html, /\/north-wildwood-shoreline-observatory\/assets\//);
+  assert.match(html, /hondrospj\.github\.io\/north-wildwood-shoreline-observatory\/og\.png/);
+  await Promise.all([
+    access(new URL("../dist-github/data/sentinel-2016.jpg", import.meta.url)),
+    access(new URL("../dist-github/data/sentinel-2026.jpg", import.meta.url)),
+    access(new URL("../dist-github/data/shorelines.json", import.meta.url)),
+    access(new URL("../dist-github/og.png", import.meta.url)),
+  ]);
+});

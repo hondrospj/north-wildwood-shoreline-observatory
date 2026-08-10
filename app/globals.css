@@ -72,7 +72,7 @@ main { overflow: hidden; }
   align-items: end;
   background:
     linear-gradient(90deg, rgba(7,24,33,.97) 0%, rgba(7,24,33,.81) 55%, rgba(7,24,33,.54) 100%),
-    url('/data/sentinel-2026.jpg') center 42% / cover;
+    var(--hero-image) center 42% / cover;
 }
 .hero::after {
   content: "";
