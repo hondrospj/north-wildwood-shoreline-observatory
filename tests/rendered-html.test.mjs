@@ -76,6 +76,9 @@ test("includes keyboard logging and a true Excel export", async () => {
   const packageJson = JSON.parse(packageRaw);
   assert.match(source, /event\.key === "ArrowRight"/);
   assert.match(source, /event\.key === "ArrowLeft"/);
+  assert.match(source, /\(event\.metaKey \|\| event\.ctrlKey\)/);
+  assert.match(source, /event\.key\.toLowerCase\(\) === "z"/);
+  assert.match(source, /Last shoreline point undone/);
   assert.match(source, /const DEFAULT_ZOOM = 7/);
   assert.match(source, /const SHORE_FOCUS: Coordinate = \[-74\.787, 38\.9945\]/);
   assert.match(source, /Clear study area/);

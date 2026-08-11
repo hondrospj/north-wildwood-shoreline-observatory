@@ -256,9 +256,32 @@ export function ShorelineApp({ catalog }: { catalog: Catalog }) {
     [scenes.length],
   );
 
+  const undoLastPoint = useCallback(() => {
+    if (drawing && drawStart) {
+      setDrawStart(null);
+      setGestureStart(null);
+      setHoverCoordinate(null);
+      setNotice("First transect endpoint undone. Drag a new line or click the landward end.");
+      return;
+    }
+    let lastIndex = -1;
+    observations.forEach((row, index) => {
+      if (row.mode === mode) lastIndex = index;
+    });
+    if (lastIndex < 0) {
+      setNotice("No shoreline point to undo.");
+      return;
+    }
+    setObservations((current) => current.filter((_, index) => index !== lastIndex));
+    setNotice("Last shoreline point undone.");
+  }, [drawStart, drawing, mode, observations]);
+
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "ArrowRight") {
+      if ((event.metaKey || event.ctrlKey) && !event.shiftKey && event.key.toLowerCase() === "z") {
+        event.preventDefault();
+        undoLastPoint();
+      } else if (event.key === "ArrowRight") {
         event.preventDefault();
         changeScene(1);
       } else if (event.key === "ArrowLeft") {
@@ -268,7 +291,7 @@ export function ShorelineApp({ catalog }: { catalog: Catalog }) {
     };
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [changeScene]);
+  }, [changeScene, undoLastPoint]);
 
   useEffect(() => {
     for (const neighbor of [scenes[sceneIndex - 1], scenes[sceneIndex + 1]]) {
@@ -400,7 +423,7 @@ export function ShorelineApp({ catalog }: { catalog: Catalog }) {
       ...current.filter((item) => !(item.mode === mode && item.sceneId === scene.id)),
       row,
     ]);
-    setNotice(scene.id === baselineId ? "Baseline saved. Press →, then click the wet/dry line." : "Saved. Press →, then click the wet/dry line.");
+    setNotice(scene.id === baselineId ? "Baseline saved. Press → for the next image · ⌘Z undoes." : "Saved. Press → for the next image · ⌘Z undoes.");
   }, [baselineId, drawStart, drawing, finishTransect, mode, scene, transect]);
 
   const onPointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
