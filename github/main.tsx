@@ -1,13 +1,11 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import metadata from "../public/data/metadata.json";
-import trend from "../public/data/trend.json";
-import shorelines from "../public/data/shorelines.json";
+import catalog from "../public/data/monthly-catalog.json";
 import { ShorelineApp } from "../app/ShorelineApp";
 import "../app/globals.css";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <ShorelineApp metadata={metadata} trend={trend} shorelines={shorelines} />
+    <ShorelineApp catalog={catalog} />
   </StrictMode>,
 );

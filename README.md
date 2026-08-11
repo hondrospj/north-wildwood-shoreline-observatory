@@ -1,10 +1,12 @@
-# North Wildwood Shoreline Observatory
+# North Wildwood Shoreline Logger
 
-An interactive coastal-change dashboard built from every suitable Sentinel-2 L2A acquisition over North Wildwood since 2015. Each retained image must fall within 90 minutes before or after a NOAA-predicted high tide and is screened locally for clouds and shoreline coherence. Accepted ocean-facing waterlines are normalized to mean sea level with NOAA Cape May tide observations and NDBC wave conditions using a Stockdon setup term.
+A minimal Sentinel-2 shoreline measurement app. It includes one lowest-cloud image for every month from August 2015 through August 2026 and a separate catalog of monthly images captured within 90 minutes of NOAA-predicted low tide.
 
-The site includes an acquisition-by-acquisition explorer, swipe comparison, corrected shoreline overlays, scene-level correction details, alongshore change summaries, uncertainty guidance, and direct source links.
+Choose a baseline image, draw a transect with two clicks, then click the wet/dry line once per image. `←` and `→` move through the catalog. Logged coordinates, distance along the transect, shoreline width, and baseline change are stored locally in the browser and export as an Excel workbook.
 
-The public dashboard is deployed through GitHub Pages at `https://hondrospj.github.io/north-wildwood-shoreline-observatory/`.
+Selected imagery is served from Bunny CDN. The upload key is read from macOS Keychain and is never written to the repository.
+
+The public app is at `https://hondrospj.github.io/north-wildwood-shoreline-observatory/`.
 
 ## Run locally
 
@@ -13,12 +15,15 @@ npm install
 npm run dev
 ```
 
+## Rebuild the imagery catalog
+
+```bash
+python scripts/build_monthly_catalog.py --upload-bunny
+```
+
 ## Validate
 
 ```bash
 npm test
 npm run lint
-npm run build:github
 ```
-
-The reproducible data workflow is in `scripts/build_shorelines.py`; generated site data is under `public/data/`.

@@ -23,19 +23,19 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: "North Wildwood Shoreline Observatory",
     description:
-      "Explore North Wildwood Sentinel-2 L2A acquisitions captured within 90 minutes of high tide and normalized to a common shoreline reference.",
+      "Draw a shoreline transect, log one monthly Sentinel-2 shoreline point at a time, and export the measurements to Excel.",
     icons: { icon: "/favicon.svg", shortcut: "/favicon.svg" },
     openGraph: {
       title: "North Wildwood Shoreline Observatory",
-      description: "Every suitable Sentinel-2 acquisition within 90 minutes of high tide, normalized to the same sea state.",
+      description: "A minimal monthly and low-tide Sentinel-2 shoreline logger for North Wildwood.",
       type: "website",
       url: origin,
-      images: [{ url: `${origin}/og.png`, width: 1200, height: 630, alt: "North Wildwood shoreline change across every suitable Sentinel-2 acquisition" }],
+      images: [{ url: `${origin}/og.png`, width: 1200, height: 630, alt: "North Wildwood monthly Sentinel-2 shoreline logger" }],
     },
     twitter: {
       card: "summary_large_image",
       title: "North Wildwood Shoreline Observatory",
-      description: "Every suitable Sentinel-2 acquisition within 90 minutes of high tide, normalized to the same sea state.",
+      description: "Draw a transect, log monthly shoreline points, and export the measurements to Excel.",
       images: [`${origin}/og.png`],
     },
   };
