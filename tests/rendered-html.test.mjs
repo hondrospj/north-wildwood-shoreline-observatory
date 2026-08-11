@@ -84,6 +84,8 @@ test("includes keyboard logging and a true Excel export", async () => {
   assert.match(source, /distanceAlongTransect/);
   assert.match(source, /snapToTransect/);
   assert.match(source, /const sourceAspect = sourceWidth \/ sourceHeight/);
+  assert.match(source, /initialFocusDoneRef\.current = true/);
+  assert.match(source, /\[sourceHeight, sourceWidth, viewportSize\.height, viewportSize\.width\]/);
   assert.match(source, /north-wildwood-shoreline-log\.xlsx/);
   assert.equal(packageJson.dependencies.xlsx, "^0.18.5");
 });

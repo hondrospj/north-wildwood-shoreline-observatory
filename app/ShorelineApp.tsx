@@ -171,6 +171,7 @@ export function ShorelineApp({ catalog }: { catalog: Catalog }) {
   const [loaded, setLoaded] = useState(false);
   const [notice, setNotice] = useState("Choose a date, then start with this baseline.");
   const viewportRef = useRef<HTMLDivElement>(null);
+  const initialFocusDoneRef = useRef(false);
   const dragRef = useRef<{
     pointerId: number;
     x: number;
@@ -196,9 +197,9 @@ export function ShorelineApp({ catalog }: { catalog: Catalog }) {
     [catalog.bounds[0], (catalog.bounds[1] + catalog.bounds[3]) / 2],
     [catalog.bounds[2], (catalog.bounds[1] + catalog.bounds[3]) / 2],
   );
+  const sourceWidth = scene?.image_shape?.[0] || 1;
+  const sourceHeight = scene?.image_shape?.[1] || 1;
   const imageFrame = useMemo(() => {
-    const sourceWidth = scene?.image_shape?.[0] || 1;
-    const sourceHeight = scene?.image_shape?.[1] || 1;
     const sourceAspect = sourceWidth / sourceHeight;
     const viewportAspect = viewportSize.width / viewportSize.height;
     if (viewportAspect > sourceAspect) {
@@ -209,7 +210,7 @@ export function ShorelineApp({ catalog }: { catalog: Catalog }) {
     const height = viewportSize.height;
     const width = height * sourceAspect;
     return { width, height, left: (viewportSize.width - width) / 2, top: 0 };
-  }, [scene?.image_shape, viewportSize.height, viewportSize.width]);
+  }, [sourceHeight, sourceWidth, viewportSize.height, viewportSize.width]);
 
   useEffect(() => {
     const frame = window.requestAnimationFrame(() => {
@@ -332,9 +333,14 @@ export function ShorelineApp({ catalog }: { catalog: Catalog }) {
   }, [catalog.bounds, clampPan, imageFrame]);
 
   useEffect(() => {
-    const frame = window.requestAnimationFrame(() => focusShoreline());
+    if (initialFocusDoneRef.current || viewportSize.width <= 1 || viewportSize.height <= 1) return;
+    const frame = window.requestAnimationFrame(() => {
+      if (initialFocusDoneRef.current) return;
+      initialFocusDoneRef.current = true;
+      focusShoreline();
+    });
     return () => window.cancelAnimationFrame(frame);
-  }, [focusShoreline]);
+  }, [focusShoreline, viewportSize.height, viewportSize.width]);
 
   const eventPoint = useCallback((clientX: number, clientY: number): NormalizedPoint | null => {
     const rect = viewportRef.current?.getBoundingClientRect();
