@@ -289,7 +289,9 @@ def attach_quality_and_tide(
     return output
 
 
-def select_catalogs(scenes: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+def select_catalogs(
+    scenes: list[dict[str, Any]],
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]], list[dict[str, Any]]]:
     eligible = [
         scene
         for scene in scenes
@@ -298,13 +300,32 @@ def select_catalogs(scenes: list[dict[str, Any]]) -> tuple[list[dict[str, Any]],
         and scene["study_invalid_pct"] <= MAX_STUDY_INVALID_PCT
     ]
     clear = select_twice_monthly(eligible)
+    monthly = select_monthly(eligible)
     low_tide = [
         scene
         for scene in eligible
         if abs(scene["nearest_low_tide"]["image_offset_minutes"])
         <= LOW_TIDE_WINDOW_MINUTES
     ]
-    return clear, low_tide
+    return clear, monthly, low_tide
+
+
+def select_monthly(scenes: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Choose the highest-quality qualifying scene in each calendar month."""
+    grouped: dict[str, list[dict[str, Any]]] = {}
+    for scene in scenes:
+        grouped.setdefault(month_key(scene["datetime"]), []).append(scene)
+    return [
+        min(
+            grouped[month],
+            key=lambda scene: (
+                scene["study_invalid_pct"],
+                scene["catalog_cloud_pct"],
+                scene["datetime"],
+            ),
+        )
+        for month in sorted(grouped)
+    ]
 
 
 def select_twice_monthly(scenes: list[dict[str, Any]]) -> list[dict[str, Any]]:
@@ -514,8 +535,8 @@ def main() -> None:
     scenes = discover_all_scenes()
     scenes = attach_study_quality(scenes)
     scenes = attach_quality_and_tide(scenes)
-    clear, low_tide = select_catalogs(scenes)
-    chosen = clear + low_tide
+    clear, monthly, low_tide = select_catalogs(scenes)
+    chosen = clear + monthly + low_tide
     dimensions = prepare_images(chosen)
 
     generated = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
@@ -528,20 +549,23 @@ def main() -> None:
         "range": [START_MONTH, monthly_range()[-1]],
         "selection": {
             "clear": "Up to two Sentinel-2 L2A acquisitions per month: the best qualifying image from each half-month, with zero cloud, shadow, cirrus, or snow/ice SCL pixels over the oceanfront study area and no more than 0.5% invalid pixels",
+            "monthly": "The single highest-quality qualifying cloud-free Sentinel-2 L2A acquisition in each calendar month",
             "low_tide": f"Every qualifying cloud-free acquisition within +/- {LOW_TIDE_WINDOW_MINUTES:.0f} minutes of a NOAA-predicted low tide",
             "low_tide_window_minutes": LOW_TIDE_WINDOW_MINUTES,
             "maximum_clear_images_per_month": 2,
+            "maximum_monthly_images_per_month": 1,
             "maximum_study_cloud_pixels": 0,
             "maximum_study_snow_pixels": 0,
             "maximum_study_invalid_pct": MAX_STUDY_INVALID_PCT,
         },
         "clear": [public_scene(scene, dimensions) for scene in clear],
+        "monthly": [public_scene(scene, dimensions) for scene in monthly],
         "low_tide": [public_scene(scene, dimensions) for scene in low_tide],
     }
     CATALOG_PATH.write_text(json.dumps(catalog, indent=2))
     WORK_CATALOG_PATH.write_text(json.dumps(catalog, indent=2))
     print(
-        f"Selected {len(clear)} twice-monthly clear scenes and {len(low_tide)} low-tide scenes",
+        f"Selected {len(clear)} twice-monthly, {len(monthly)} monthly, and {len(low_tide)} low-tide scenes",
         flush=True,
     )
     if args.upload_bunny:

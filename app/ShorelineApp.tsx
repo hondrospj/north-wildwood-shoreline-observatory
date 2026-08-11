@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-type Mode = "clear" | "low_tide";
+type Mode = "clear" | "monthly" | "low_tide";
 type Coordinate = [number, number];
 type NormalizedPoint = { x: number; y: number };
 
@@ -28,8 +28,13 @@ type Catalog = {
   bounds: number[];
   resolution_m: number;
   range: string[];
-  selection: { low_tide_window_minutes: number; maximum_clear_images_per_month: number };
+  selection: {
+    low_tide_window_minutes: number;
+    maximum_clear_images_per_month: number;
+    maximum_monthly_images_per_month: number;
+  };
   clear: Scene[];
+  monthly: Scene[];
   low_tide: Scene[];
 };
 
@@ -305,7 +310,13 @@ export function ShorelineApp({ catalog }: { catalog: Catalog }) {
   const changeMode = (nextMode: Mode) => {
     setMode(nextMode);
     setSceneIndex(0);
-    setNotice(nextMode === "low_tide" ? "All cloud-free images within ±1:45 of low tide. Choose a baseline." : "Two clear images per month. Choose a baseline.");
+    setNotice(
+      nextMode === "low_tide"
+        ? "All cloud-free images within ±1:45 of low tide. Choose a baseline."
+        : nextMode === "monthly"
+          ? "One best cloud-free image per month. Choose a baseline."
+          : "Two clear images per month. Choose a baseline.",
+    );
   };
 
   const clampPan = useCallback((next: { x: number; y: number }, nextZoom: number) => {
@@ -529,7 +540,7 @@ export function ShorelineApp({ catalog }: { catalog: Catalog }) {
           (item) => item.mode === row.mode && item.sceneId === baselines[row.mode],
         );
         return {
-          Mode: row.mode === "low_tide" ? "Low tide" : "Twice monthly",
+          Mode: row.mode === "low_tide" ? "Low tide" : row.mode === "monthly" ? "Monthly" : "Twice monthly",
           Date: row.date.slice(0, 10),
           Month: row.month,
           Latitude: row.latitude,
@@ -583,6 +594,7 @@ export function ShorelineApp({ catalog }: { catalog: Catalog }) {
         <div className="logger-title"><strong>North Wildwood</strong><span>shoreline logger</span></div>
         <div className="mode-switch" aria-label="Imagery set">
           <button className={mode === "clear" ? "active" : ""} onClick={() => changeMode("clear")}>Twice monthly</button>
+          <button className={mode === "monthly" ? "active" : ""} onClick={() => changeMode("monthly")}>Monthly</button>
           <button className={mode === "low_tide" ? "active" : ""} onClick={() => changeMode("low_tide")}>Low tide ±1:45</button>
         </div>
         <div className="frame-control">

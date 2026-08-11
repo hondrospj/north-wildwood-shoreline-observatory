@@ -23,7 +23,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: "North Wildwood Shoreline Observatory",
     description:
-      "Draw a shoreline transect, step through twice-monthly cloud-free Sentinel-2 imagery, and export measurements to Excel.",
+      "Draw a shoreline transect, choose monthly or twice-monthly cloud-free Sentinel-2 imagery, and export measurements to Excel.",
     icons: { icon: "/favicon.svg", shortcut: "/favicon.svg" },
     openGraph: {
       title: "North Wildwood Shoreline Observatory",

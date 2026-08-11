@@ -24,6 +24,7 @@ test("server-renders the minimal shoreline logger", async () => {
   assert.match(html, /<title>North Wildwood Shoreline Observatory<\/title>/i);
   assert.match(html, /shoreline logger/i);
   assert.match(html, /Twice monthly/);
+  assert.match(html, />Monthly<\/button>/);
   assert.match(html, /Low tide/);
   assert.match(html, /Draw transect from this baseline/);
   assert.match(html, /Center shore/);
@@ -41,13 +42,21 @@ test("ships at most two regular images per month and every strict low-tide image
   assert.equal(new Set(catalog.clear.map((scene) => scene.id)).size, catalog.clear.length);
   assert.equal(new Set(catalog.clear.map((scene) => scene.image)).size, catalog.clear.length);
   assert.ok(catalog.low_tide.length > 80);
+  assert.ok(catalog.monthly.length > 100);
+  assert.equal(new Set(catalog.monthly.map((scene) => scene.id)).size, catalog.monthly.length);
   const monthlyCounts = new Map();
   for (const scene of catalog.clear) {
     monthlyCounts.set(scene.month, (monthlyCounts.get(scene.month) ?? 0) + 1);
   }
   assert.ok([...monthlyCounts.values()].every((count) => count <= 2));
+  const singleMonthlyCounts = new Map();
+  for (const scene of catalog.monthly) {
+    singleMonthlyCounts.set(scene.month, (singleMonthlyCounts.get(scene.month) ?? 0) + 1);
+  }
+  assert.ok([...singleMonthlyCounts.values()].every((count) => count === 1));
   assert.equal(catalog.selection.low_tide_window_minutes, 105);
   assert.equal(catalog.selection.maximum_clear_images_per_month, 2);
+  assert.equal(catalog.selection.maximum_monthly_images_per_month, 1);
   assert.ok(
     catalog.low_tide.every(
       (scene) =>
@@ -56,14 +65,14 @@ test("ships at most two regular images per month and every strict low-tide image
     ),
   );
   assert.ok(
-    [...catalog.clear, ...catalog.low_tide].every((scene) =>
+    [...catalog.clear, ...catalog.monthly, ...catalog.low_tide].every((scene) =>
       scene.image.startsWith(
         "https://floodmapperv1.b-cdn.net/NorthWildwoodShoreline/scenes/",
       ),
     ),
   );
   assert.ok(
-    [...catalog.clear, ...catalog.low_tide].every(
+    [...catalog.clear, ...catalog.monthly, ...catalog.low_tide].every(
       (scene) =>
         scene.study_cloud_pixels === 0 &&
         scene.study_snow_pixels === 0 &&
