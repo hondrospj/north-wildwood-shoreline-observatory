@@ -9,6 +9,7 @@ type Scene = {
   cloud_mask_aoi_pct: number;
   ndwi_threshold: number;
   tide: { level_m_msl: number; time: string; source: string };
+  high_tide: { level_m_msl: number; time: string; source: string; image_offset_minutes: number };
   wave: { height_m: number; dominant_period_s: number; time: string; source: string };
   wave_setup_m: number;
   horizontal_correction_m: number;
@@ -29,9 +30,11 @@ type Metadata = {
     catalog_cloud_max_pct: number;
     aoi_cloud_mask_max_pct: number;
     minimum_shoreline_points: number;
+    high_tide_window_minutes: number;
     catalog_candidate_count: number;
     accepted_count: number;
     rejected_count: number;
+    high_tide_rejected_count: number;
   };
   scenes: Scene[];
 };
@@ -67,6 +70,15 @@ function signed(value: number, digits = 1) {
 
 function cleanDate(date: string) {
   return new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" }).format(new Date(date));
+}
+
+function cleanTime(date: string) {
+  return new Intl.DateTimeFormat("en-US", { hour: "numeric", minute: "2-digit", timeZone: "America/New_York", timeZoneName: "short" }).format(new Date(date));
+}
+
+function highTideOffset(minutes: number) {
+  if (Math.abs(minutes) < 0.5) return "At high tide";
+  return `${Math.abs(minutes).toFixed(0)} min ${minutes < 0 ? "before" : "after"}`;
 }
 
 function assetPath(path: string) {
@@ -245,7 +257,7 @@ export function ShorelineApp({ metadata, trend, shorelines }: { metadata: Metada
         <div className="hero-copy">
           <p className="eyebrow">Cape May County · New Jersey</p>
           <h1>A decade of shoreline movement, <em>normalized to the same sea state.</em></h1>
-          <p className="lede">Every suitable Sentinel-2 L2A acquisition reveals where North Wildwood&apos;s oceanfront has moved after removing the visual influence of tide and wave setup.</p>
+          <p className="lede">Every suitable Sentinel-2 L2A acquisition is captured within ±1 hr 30 min of NOAA high tide, then normalized to remove the visual influence of tide and wave setup.</p>
         </div>
         <div className="hero-stat">
           <span className="stat-kicker">{cleanDate(trend.baseline_datetime)} → {cleanDate(trend.latest_datetime)}</span>
@@ -306,6 +318,7 @@ export function ShorelineApp({ metadata, trend, shorelines }: { metadata: Metada
               <p className="eyebrow">Selected acquisition</p>
               <strong>{cleanDate(scene.datetime)}</strong>
               <a href={scene.stac_url} target="_blank" rel="noreferrer">Open Sentinel scene ↗</a>
+              <span className="tide-window-badge">✓ {highTideOffset(scene.high_tide.image_offset_minutes)} high tide</span>
             </div>
             <div className="correction-figure">
               <span>Observed waterline</span><i className="raw-line" />
@@ -315,6 +328,8 @@ export function ShorelineApp({ metadata, trend, shorelines }: { metadata: Metada
             </div>
             <dl className="scene-metrics">
               <div><dt>Tide at capture</dt><dd>{signed(scene.tide.level_m_msl)} m <small>MSL</small></dd></div>
+              <div><dt>Nearest high tide</dt><dd>{cleanTime(scene.high_tide.time)}</dd></div>
+              <div><dt>Capture offset</dt><dd>{highTideOffset(scene.high_tide.image_offset_minutes)}</dd></div>
               <div><dt>Wave height</dt><dd>{scene.wave.height_m.toFixed(2)} m</dd></div>
               <div><dt>Wave period</dt><dd>{scene.wave.dominant_period_s.toFixed(1)} s</dd></div>
               <div><dt>Uncertainty</dt><dd>±{scene.uncertainty_m.toFixed(1)} m</dd></div>
@@ -367,9 +382,9 @@ export function ShorelineApp({ metadata, trend, shorelines }: { metadata: Metada
           <p>Every catalog acquisition is tested with the same reproducible workflow. Suitable scenes are shifted to a mean-sea-level reference so high tide does not masquerade as erosion.</p>
         </div>
         <ol className="method-steps">
-          <li><span>01</span><div><strong>Screen every acquisition</strong><p>Tile cloud must be below {metadata.suitability.catalog_cloud_max_pct}% and the local AOI cloud/invalid mask below {metadata.suitability.aoi_cloud_mask_max_pct}%. No yearly sampling.</p></div></li>
+          <li><span>01</span><div><strong>Screen every acquisition</strong><p>Every retained capture must fall within ±1 hr 30 min of NOAA-predicted high tide. Tile cloud must also be below {metadata.suitability.catalog_cloud_max_pct}% and the local mask below {metadata.suitability.aoi_cloud_mask_max_pct}%. No yearly sampling.</p></div></li>
           <li><span>02</span><div><strong>Find the waterline</strong><p>Green and near-infrared bands form NDWI. An adaptive threshold traces the ocean-facing boundary; traces need at least {metadata.suitability.minimum_shoreline_points} points and must pass a temporal-coherence screen.</p></div></li>
-          <li><span>03</span><div><strong>Normalize the sea state</strong><p>NOAA tide and offshore wave height/period estimate water-level displacement and Stockdon wave setup.</p></div></li>
+          <li><span>03</span><div><strong>Normalize the sea state</strong><p>The exact NOAA water level at capture and offshore wave height/period estimate displacement and Stockdon wave setup.</p></div></li>
           <li><span>04</span><div><strong>Compare alongshore</strong><p>Each line shifts along its local seaward normal using a 0.045 beach slope, then is sampled on consistent transects.</p></div></li>
         </ol>
         <div className="quality-panel">

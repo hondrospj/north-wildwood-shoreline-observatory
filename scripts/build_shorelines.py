@@ -50,6 +50,7 @@ COLLECTION_START = "2015-06-23T00:00:00Z"
 CATALOG_CLOUD_MAX_PCT = 20.0
 AOI_CLOUD_MAX_PCT = 12.5
 MIN_SHORELINE_POINTS = 80
+HIGH_TIDE_WINDOW_MINUTES = 90.0
 GEOMETRY_P90_MAX_DEVIATION_M = 200.0
 GEOMETRY_MAX_DEVIATION_M = 300.0
 MGRS_TILE = "18SWJ"
@@ -177,6 +178,57 @@ def tide_at(scene_time: datetime) -> dict[str, Any]:
                 "source": "verified" if verified else "predicted",
             }
     raise RuntimeError(f"No tide data for {scene_time.isoformat()}")
+
+
+def high_tides_for_month(year: int, month: int) -> list[dict[str, Any]]:
+    """Return NOAA-predicted high tides, with adjacent days for boundary safety."""
+    cache_dir = ROOT / "work" / "high-tide-cache"
+    cache_dir.mkdir(parents=True, exist_ok=True)
+    cache_path = cache_dir / f"{TIDE_STATION}-{year:04d}-{month:02d}.json"
+    if cache_path.exists():
+        return json.loads(cache_path.read_text())
+
+    month_start = datetime(year, month, 1, tzinfo=timezone.utc)
+    if month == 12:
+        next_month = datetime(year + 1, 1, 1, tzinfo=timezone.utc)
+    else:
+        next_month = datetime(year, month + 1, 1, tzinfo=timezone.utc)
+    payload = fetch_json(
+        NOAA_COOPS,
+        params={
+            "application": "NorthWildwoodShoreline",
+            "begin_date": (month_start - timedelta(days=1)).strftime("%Y%m%d"),
+            "end_date": next_month.strftime("%Y%m%d"),
+            "datum": "MSL",
+            "station": TIDE_STATION,
+            "time_zone": "gmt",
+            "units": "metric",
+            "format": "json",
+            "product": "predictions",
+            "interval": "hilo",
+        },
+    )
+    events = []
+    for row in payload.get("predictions", []):
+        if row.get("type") != "H":
+            continue
+        try:
+            event_time = datetime.strptime(row["t"], "%Y-%m-%d %H:%M").replace(
+                tzinfo=timezone.utc
+            )
+            events.append(
+                {
+                    "time": event_time.isoformat().replace("+00:00", "Z"),
+                    "level_m_msl": round(float(row["v"]), 3),
+                    "source": "NOAA predicted high tide",
+                }
+            )
+        except (KeyError, TypeError, ValueError):
+            continue
+    if not events:
+        raise RuntimeError(f"No NOAA high-tide predictions for {year:04d}-{month:02d}")
+    cache_path.write_text(json.dumps(events))
+    return events
 
 
 def parse_ndbc_table(text: str, scene_time: datetime) -> dict[str, Any] | None:
@@ -476,6 +528,44 @@ def lon_delta_m(delta_lon: np.ndarray, latitude: np.ndarray | float) -> np.ndarr
     return delta_lon * (111_320.0 * np.cos(np.radians(latitude)))
 
 
+def screen_high_tide(records: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    """Keep captures made no more than 90 minutes from a NOAA high tide."""
+    month_keys = sorted({(record["year"], parse_dt(record["datetime"]).month) for record in records})
+    monthly_events: dict[tuple[int, int], list[dict[str, Any]]] = {}
+    with ThreadPoolExecutor(max_workers=6) as executor:
+        futures = {
+            executor.submit(high_tides_for_month, year, month): (year, month)
+            for year, month in month_keys
+        }
+        for future in as_completed(futures):
+            monthly_events[futures[future]] = future.result()
+
+    accepted: list[dict[str, Any]] = []
+    rejected: list[dict[str, Any]] = []
+    for record in records:
+        scene_time = parse_dt(record["datetime"])
+        events = monthly_events[(record["year"], scene_time.month)]
+        nearest = min(events, key=lambda event: abs((parse_dt(event["time"]) - scene_time).total_seconds()))
+        offset_minutes = (scene_time - parse_dt(nearest["time"])).total_seconds() / 60
+        if abs(offset_minutes) > HIGH_TIDE_WINDOW_MINUTES:
+            rejected.append(
+                {
+                    "scene": {"id": record["scene_id"], "datetime": record["datetime"]},
+                    "reason": (
+                        f"Capture is {abs(offset_minutes):.1f} minutes from nearest high tide; "
+                        f"maximum is {HIGH_TIDE_WINDOW_MINUTES:.0f} minutes"
+                    ),
+                }
+            )
+            continue
+        record["high_tide"] = {
+            **nearest,
+            "image_offset_minutes": round(offset_minutes, 1),
+        }
+        accepted.append(record)
+    return accepted, rejected
+
+
 def screen_geometry(records: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     """Reject broken traces by comparison with the robust temporal shoreline."""
     if len(records) < 3:
@@ -641,6 +731,7 @@ def build_outputs(records: list[dict[str, Any]], diagnostics: dict[str, Any]) ->
             "catalog_cloud_max_pct": CATALOG_CLOUD_MAX_PCT,
             "aoi_cloud_mask_max_pct": AOI_CLOUD_MAX_PCT,
             "minimum_shoreline_points": MIN_SHORELINE_POINTS,
+            "high_tide_window_minutes": HIGH_TIDE_WINDOW_MINUTES,
             "geometry_p90_max_deviation_m": GEOMETRY_P90_MAX_DEVIATION_M,
             "geometry_max_deviation_m": GEOMETRY_MAX_DEVIATION_M,
             **diagnostics,
@@ -653,6 +744,7 @@ def build_outputs(records: list[dict[str, Any]], diagnostics: dict[str, Any]) ->
             "water_index": "NDWI = (B03 - B08) / (B03 + B08), adaptive Otsu threshold",
             "cloud_mask": "Sentinel-2 Scene Classification Layer; classes 0,1,3,8,9,10,11 excluded",
             "tide": "Nearest NOAA CO-OPS Cape May water level, MSL datum",
+            "high_tide_screen": "Capture must fall within +/- 90 minutes of a NOAA-predicted Cape May high tide",
             "waves": "Nearest NOAA NDBC 44009 significant wave height and dominant period",
             "wave_setup": "Stockdon setup term: 0.35 * beach slope * sqrt(H0 * L0)",
             "horizontal_normalization": "Observed line shifted along local seaward normal by (tide + setup) / beach slope",
@@ -753,14 +845,16 @@ def main() -> None:
 
     extracted = [result["record"] for result in results if result["status"] == "accepted"]
     rejected = [result for result in results if result["status"] == "rejected"]
-    records, geometry_rejected = screen_geometry(extracted)
+    high_tide_records, high_tide_rejected = screen_high_tide(extracted)
+    records, geometry_rejected = screen_geometry(high_tide_records)
     diagnostics = {
         "catalog_item_count": raw_catalog_count,
         "catalog_candidate_count": len(scenes),
         "duplicate_product_count": raw_catalog_count - len(scenes),
         "accepted_count": len(records),
-        "rejected_count": len(rejected) + len(geometry_rejected),
+        "rejected_count": len(rejected) + len(high_tide_rejected) + len(geometry_rejected),
         "cloud_or_extraction_rejected_count": len(rejected),
+        "high_tide_rejected_count": len(high_tide_rejected),
         "geometry_rejected_count": len(geometry_rejected),
         "date_start": scenes[0]["datetime"] if scenes else None,
         "date_end": scenes[-1]["datetime"] if scenes else None,
@@ -768,7 +862,8 @@ def main() -> None:
     build_outputs(records, diagnostics)
     print(
         f"Accepted {len(records)} of {len(scenes)} unique acquisitions "
-        f"({len(geometry_rejected)} geometry rejections); wrote {PUBLIC_DATA}",
+        f"({len(high_tide_rejected)} high-tide and {len(geometry_rejected)} geometry rejections); "
+        f"wrote {PUBLIC_DATA}",
         flush=True,
     )
 

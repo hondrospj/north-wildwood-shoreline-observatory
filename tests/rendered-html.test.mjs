@@ -29,6 +29,7 @@ test("server-renders the complete shoreline observatory", async () => {
   assert.match(html, /Interactive shoreline explorer/);
   assert.match(html, /suitable acquisitions/);
   assert.match(html, /Every suitable acquisition/);
+  assert.match(html, /±1 hr 30 min/);
   assert.match(html, /No yearly sampling/);
   assert.match(html, /og:image[^>]+https:\/\/shoreline-observatory\.example\/og\.png/i);
   assert.doesNotMatch(html, /codex-preview|Your site is taking shape|react-loading-skeleton/i);
@@ -44,7 +45,7 @@ test("ships the real data bundle and removes the starter preview", async () => {
   const trend = JSON.parse(trendRaw);
   const geojson = JSON.parse(geojsonRaw);
 
-  assert.ok(metadata.scenes.length > 300);
+  assert.ok(metadata.scenes.length > 50);
   assert.equal(metadata.scenes.length, metadata.suitability.accepted_count);
   assert.equal(metadata.suitability.catalog_item_count, metadata.suitability.catalog_candidate_count + metadata.suitability.duplicate_product_count);
   assert.equal(metadata.suitability.catalog_candidate_count, metadata.suitability.accepted_count + metadata.suitability.rejected_count);
@@ -57,6 +58,7 @@ test("ships the real data bundle and removes the starter preview", async () => {
   assert.ok(metadata.scenes.every((scene) => scene.cloud_mask_aoi_pct <= metadata.suitability.aoi_cloud_mask_max_pct));
   assert.ok(metadata.scenes.every((scene) => scene.geometry_p90_deviation_m <= metadata.suitability.geometry_p90_max_deviation_m));
   assert.ok(metadata.scenes.every((scene) => scene.geometry_max_deviation_m <= metadata.suitability.geometry_max_deviation_m));
+  assert.ok(metadata.scenes.every((scene) => Math.abs(scene.high_tide.image_offset_minutes) <= metadata.suitability.high_tide_window_minutes));
   assert.equal((await readdir(new URL("../public/data/scenes/", import.meta.url))).filter((name) => name.endsWith(".jpg")).length, metadata.scenes.length);
 
   await Promise.all([

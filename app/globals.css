@@ -139,6 +139,7 @@ main { overflow: hidden; }
 .scene-top { padding: 25px 26px; border-bottom: 1px solid rgba(255,255,255,.1); }
 .scene-top strong { display: block; margin-bottom: 6px; font-size: 22px; font-weight: 500; letter-spacing: -.02em; }
 .scene-top a { color: var(--sea); font: 10px var(--font-geist-mono), monospace; text-transform: uppercase; }
+.tide-window-badge { width: max-content; max-width: 100%; margin-top: 13px; padding: 7px 9px; display: block; border: 1px solid rgba(66,226,210,.3); border-radius: 3px; background: rgba(66,226,210,.07); color: #91d9d2; font: 9px var(--font-geist-mono), monospace; line-height: 1.35; text-transform: uppercase; }
 .correction-figure { padding: 22px 26px; display: grid; grid-template-columns: 1fr auto; gap: 8px 18px; align-items: center; border-bottom: 1px solid rgba(255,255,255,.1); color: #8ea5ab; font: 9px var(--font-geist-mono), monospace; text-transform: uppercase; }
 .raw-line, .corrected-line { width: 48px; height: 0; border-top: 2px dashed #e87261; }
 .corrected-line { border-top-style: solid; border-top-color: var(--sea); }
