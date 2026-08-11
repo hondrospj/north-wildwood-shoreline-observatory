@@ -77,7 +77,10 @@ test("includes keyboard logging and a true Excel export", async () => {
   assert.match(source, /event\.key === "ArrowRight"/);
   assert.match(source, /event\.key === "ArrowLeft"/);
   assert.match(source, /const DEFAULT_ZOOM = 7/);
+  assert.match(source, /const SHORE_FOCUS: Coordinate = \[-74\.787, 38\.9945\]/);
   assert.match(source, /Clear study area/);
+  assert.match(source, /Drag from land to ocean/);
+  assert.match(source, /finishTransect\(drag\.startCoordinate, coordinate\)/);
   assert.match(source, /distanceAlongTransect/);
   assert.match(source, /snapToTransect/);
   assert.match(source, /const sourceAspect = sourceWidth \/ sourceHeight/);

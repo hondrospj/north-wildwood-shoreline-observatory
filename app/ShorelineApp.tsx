@@ -54,7 +54,7 @@ type SavedWork = {
 
 const STORAGE_KEY = "north-wildwood-shoreline-logger-v2";
 const DEFAULT_ZOOM = 7;
-const SHORE_FOCUS: Coordinate = [-74.7845, 38.9945];
+const SHORE_FOCUS: Coordinate = [-74.787, 38.9945];
 
 function cleanDate(value: string) {
   return new Intl.DateTimeFormat("en-US", {
@@ -163,6 +163,7 @@ export function ShorelineApp({ catalog }: { catalog: Catalog }) {
   const [viewportSize, setViewportSize] = useState({ width: 1, height: 1 });
   const [transect, setTransect] = useState<Transect | null>(null);
   const [drawStart, setDrawStart] = useState<Coordinate | null>(null);
+  const [gestureStart, setGestureStart] = useState<Coordinate | null>(null);
   const [hoverCoordinate, setHoverCoordinate] = useState<Coordinate | null>(null);
   const [drawing, setDrawing] = useState(false);
   const [baselines, setBaselines] = useState<Partial<Record<Mode, string>>>({});
@@ -177,6 +178,7 @@ export function ShorelineApp({ catalog }: { catalog: Catalog }) {
     panX: number;
     panY: number;
     moved: boolean;
+    startCoordinate: Coordinate | null;
   } | null>(null);
 
   const scenes = catalog[mode];
@@ -343,23 +345,29 @@ export function ShorelineApp({ catalog }: { catalog: Catalog }) {
     return { x, y };
   }, [imageFrame, pan.x, pan.y, zoom]);
 
+  const finishTransect = useCallback((start: Coordinate, end: Coordinate) => {
+    if (distanceMeters(start, end) < 20) {
+      setNotice("Make the transect at least 20 m long.");
+      return;
+    }
+    setTransect({ start, end });
+    setDrawStart(null);
+    setGestureStart(null);
+    setHoverCoordinate(null);
+    setDrawing(false);
+    setObservations([]);
+    setNotice("Transect set · Click the baseline wet/dry line. The marker snaps to the line.");
+  }, []);
+
   const logCoordinate = useCallback((coordinate: Coordinate) => {
     if (!scene) return;
     if (drawing) {
       if (!drawStart) {
         setDrawStart(coordinate);
-        setNotice("2 of 3 · Click the oceanward end.");
+        setNotice("Click the oceanward end, or drag there from the first point.");
         return;
       }
-      if (distanceMeters(drawStart, coordinate) < 20) {
-        setNotice("Draw a longer transect.");
-        return;
-      }
-      setTransect({ start: drawStart, end: coordinate });
-      setDrawStart(null);
-      setDrawing(false);
-      setObservations([]);
-      setNotice("3 of 3 · Click the baseline wet/dry line. The marker snaps to the transect.");
+      finishTransect(drawStart, coordinate);
       return;
     }
     if (!transect) {
@@ -387,9 +395,12 @@ export function ShorelineApp({ catalog }: { catalog: Catalog }) {
       row,
     ]);
     setNotice(scene.id === baselineId ? "Baseline saved. Press →, then click the wet/dry line." : "Saved. Press →, then click the wet/dry line.");
-  }, [baselineId, drawStart, drawing, mode, scene, transect]);
+  }, [baselineId, drawStart, drawing, finishTransect, mode, scene, transect]);
 
   const onPointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
+    const point = drawing ? eventPoint(event.clientX, event.clientY) : null;
+    const startCoordinate = point ? pointToCoordinate(point, catalog.bounds) : null;
+    if (drawing) setGestureStart(startCoordinate);
     dragRef.current = {
       pointerId: event.pointerId,
       x: event.clientX,
@@ -397,16 +408,23 @@ export function ShorelineApp({ catalog }: { catalog: Catalog }) {
       panX: pan.x,
       panY: pan.y,
       moved: false,
+      startCoordinate,
     };
     event.currentTarget.setPointerCapture(event.pointerId);
   };
 
   const onPointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
+    const drag = dragRef.current;
     if (drawing) {
       const point = eventPoint(event.clientX, event.clientY);
       setHoverCoordinate(point ? pointToCoordinate(point, catalog.bounds) : null);
+      if (drag && drag.pointerId === event.pointerId) {
+        const dx = event.clientX - drag.x;
+        const dy = event.clientY - drag.y;
+        if (Math.hypot(dx, dy) > 4) drag.moved = true;
+      }
+      return;
     }
-    const drag = dragRef.current;
     if (!drag || drag.pointerId !== event.pointerId) return;
     const dx = event.clientX - drag.x;
     const dy = event.clientY - drag.y;
@@ -419,9 +437,15 @@ export function ShorelineApp({ catalog }: { catalog: Catalog }) {
   const onPointerUp = (event: React.PointerEvent<HTMLDivElement>) => {
     const drag = dragRef.current;
     dragRef.current = null;
-    if (!drag || drag.moved) return;
+    setGestureStart(null);
     const point = eventPoint(event.clientX, event.clientY);
-    if (point) logCoordinate(pointToCoordinate(point, catalog.bounds));
+    if (!drag || !point) return;
+    const coordinate = pointToCoordinate(point, catalog.bounds);
+    if (drawing && drag.moved && drag.startCoordinate) {
+      finishTransect(drag.startCoordinate, coordinate);
+      return;
+    }
+    if (!drag.moved) logCoordinate(coordinate);
   };
 
   const beginStudy = () => {
@@ -430,9 +454,10 @@ export function ShorelineApp({ catalog }: { catalog: Catalog }) {
     setObservations([]);
     setDrawing(true);
     setDrawStart(null);
+    setGestureStart(null);
     setHoverCoordinate(null);
     setTransect(null);
-    setNotice("1 of 3 · Click the landward end.");
+    setNotice("Draw the transect · Drag from land to ocean, or click each end.");
     focusShoreline();
   };
 
@@ -442,15 +467,17 @@ export function ShorelineApp({ catalog }: { catalog: Catalog }) {
     setObservations([]);
     setDrawing(true);
     setDrawStart(null);
+    setGestureStart(null);
     setHoverCoordinate(null);
     setTransect(null);
-    setNotice("1 of 3 · Click the landward end.");
+    setNotice("Draw the transect · Drag from land to ocean, or click each end.");
     focusShoreline();
   };
 
   const clearWork = () => {
     setTransect(null);
     setDrawStart(null);
+    setGestureStart(null);
     setHoverCoordinate(null);
     setDrawing(false);
     setBaselines({});
@@ -509,6 +536,10 @@ export function ShorelineApp({ catalog }: { catalog: Catalog }) {
   const transectStartPoint = transect ? coordinateToPoint(transect.start, catalog.bounds) : null;
   const transectEndPoint = transect ? coordinateToPoint(transect.end, catalog.bounds) : null;
   const pendingStartPoint = drawStart ? coordinateToPoint(drawStart, catalog.bounds) : null;
+  const gestureStartPoint = drawing && gestureStart
+    ? coordinateToPoint(gestureStart, catalog.bounds)
+    : null;
+  const previewStartPoint = pendingStartPoint ?? gestureStartPoint;
   const hoverPoint = hoverCoordinate ? coordinateToPoint(hoverCoordinate, catalog.bounds) : null;
 
   return (
@@ -562,6 +593,7 @@ export function ShorelineApp({ catalog }: { catalog: Catalog }) {
             onPointerDown={onPointerDown}
             onPointerMove={onPointerMove}
             onPointerUp={onPointerUp}
+            onPointerCancel={() => { dragRef.current = null; setGestureStart(null); }}
             onPointerLeave={() => setHoverCoordinate(null)}
             onWheel={(event) => {
               event.preventDefault();
@@ -581,10 +613,10 @@ export function ShorelineApp({ catalog }: { catalog: Catalog }) {
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={scene.image} alt={`Sentinel-2 North Wildwood on ${cleanDate(scene.datetime)}`} draggable="false" />
               <svg className="measurement-layer" viewBox="0 0 1000 1000" preserveAspectRatio="none" aria-hidden="true">
-                {pendingStartPoint && hoverPoint && (
-                  <line x1={pendingStartPoint.x * 1000} y1={pendingStartPoint.y * 1000} x2={hoverPoint.x * 1000} y2={hoverPoint.y * 1000} className="transect-preview" />
+                {previewStartPoint && hoverPoint && (
+                  <line x1={previewStartPoint.x * 1000} y1={previewStartPoint.y * 1000} x2={hoverPoint.x * 1000} y2={hoverPoint.y * 1000} className="transect-preview" />
                 )}
-                {pendingStartPoint && <circle cx={pendingStartPoint.x * 1000} cy={pendingStartPoint.y * 1000} r="7" className="transect-end pending" />}
+                {previewStartPoint && <circle cx={previewStartPoint.x * 1000} cy={previewStartPoint.y * 1000} r="7" className="transect-end pending" />}
                 {transectStartPoint && transectEndPoint && (
                   <>
                     <line x1={transectStartPoint.x * 1000} y1={transectStartPoint.y * 1000} x2={transectEndPoint.x * 1000} y2={transectEndPoint.y * 1000} className="transect-line" />
