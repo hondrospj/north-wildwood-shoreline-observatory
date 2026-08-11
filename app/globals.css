@@ -76,12 +76,11 @@ a { color: inherit; text-decoration: none; }
 .transect-preview { stroke: white; stroke-width: 2; stroke-dasharray: 4 5; opacity: .9; vector-effect: non-scaling-stroke; }
 .transect-end { fill: var(--paper); stroke: var(--coral); stroke-width: 2; vector-effect: non-scaling-stroke; }
 .transect-end.pending { fill: var(--coral); }
-.logged-point { fill: rgba(102,225,207,.5); stroke: #09211f; stroke-width: 1.5; vector-effect: non-scaling-stroke; }
-.logged-point.active { fill: var(--accent); stroke: white; stroke-width: 2; }
+.logged-crosshair line { stroke: white; stroke-width: 2; vector-effect: non-scaling-stroke; }
 .image-label { position: absolute; top: 12px; left: 12px; padding: 8px 10px; display: flex; gap: 10px; border-radius: 3px; background: rgba(10,20,24,.82); font: 10px var(--font-geist-mono), monospace; pointer-events: none; }
 .image-label strong { font-weight: 550; }
 .image-label span { color: #9db0b5; }
-.map-instruction { position: absolute; left: 50%; bottom: 14px; z-index: 2; max-width: calc(100% - 220px); padding: 10px 14px; transform: translateX(-50%); border: 1px solid rgba(102,225,207,.6); border-radius: 4px; background: rgba(8,20,23,.9); color: var(--accent); font: 11px var(--font-geist-mono), monospace; text-align: center; pointer-events: none; }
+.map-instruction { position: absolute; left: 50%; bottom: 14px; z-index: 2; max-width: calc(100% - 220px); padding: 8px 12px; transform: translateX(-50%); border-bottom: 2px solid var(--accent); background: rgba(8,20,23,.86); color: var(--accent); font: 11px var(--font-geist-mono), monospace; text-align: center; pointer-events: none; }
 .scale-label { position: absolute; right: 12px; bottom: 12px; padding: 6px 8px; border-radius: 3px; background: rgba(10,20,24,.8); color: #a4b2b6; font: 9px var(--font-geist-mono), monospace; pointer-events: none; }
 
 .log-panel { min-height: 0; display: grid; grid-template-rows: auto 132px auto minmax(0, 1fr) auto; background: var(--panel); }

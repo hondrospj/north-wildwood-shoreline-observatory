@@ -547,6 +547,11 @@ export function ShorelineApp({ catalog }: { catalog: Catalog }) {
     : null;
   const previewStartPoint = pendingStartPoint ?? gestureStartPoint;
   const hoverPoint = hoverCoordinate ? coordinateToPoint(hoverCoordinate, catalog.bounds) : null;
+  const currentLoggedPoint = currentObservation
+    ? coordinateToPoint([currentObservation.longitude, currentObservation.latitude], catalog.bounds)
+    : null;
+  const markerHalfX = (6 * 1000) / (Math.max(imageFrame.width, 1) * zoom);
+  const markerHalfY = (6 * 1000) / (Math.max(imageFrame.height, 1) * zoom);
 
   return (
     <main className="logger-app">
@@ -581,7 +586,7 @@ export function ShorelineApp({ catalog }: { catalog: Catalog }) {
       <div className="logger-workspace">
         <section className="image-panel">
           <div className="work-tools">
-            <button className="primary-action" onClick={beginStudy}>{transect || baselineId ? "Start over with this baseline" : "Start with this baseline"}</button>
+            <button className="primary-action" onClick={beginStudy}>{transect || baselineId ? "Restart from this baseline" : "Draw transect from this baseline"}</button>
             {transect && <button className="small-button" onClick={redrawTransect}>Redraw transect</button>}
             <output>{notice}</output>
             <label className="zoom-control">
@@ -630,14 +635,15 @@ export function ShorelineApp({ catalog }: { catalog: Catalog }) {
                     <circle cx={transectEndPoint.x * 1000} cy={transectEndPoint.y * 1000} r="5" className="transect-end" />
                   </>
                 )}
-                {modeObservations.map((row) => {
-                  const point = coordinateToPoint([row.longitude, row.latitude], catalog.bounds);
-                  const active = row.sceneId === scene.id;
-                  return <circle key={row.sceneId} cx={point.x * 1000} cy={point.y * 1000} r={active ? 6 : 3.5} className={active ? "logged-point active" : "logged-point"} />;
-                })}
+                {currentLoggedPoint && (
+                  <g className="logged-crosshair">
+                    <line x1={currentLoggedPoint.x * 1000 - markerHalfX} y1={currentLoggedPoint.y * 1000} x2={currentLoggedPoint.x * 1000 + markerHalfX} y2={currentLoggedPoint.y * 1000} />
+                    <line x1={currentLoggedPoint.x * 1000} y1={currentLoggedPoint.y * 1000 - markerHalfY} x2={currentLoggedPoint.x * 1000} y2={currentLoggedPoint.y * 1000 + markerHalfY} />
+                  </g>
+                )}
               </svg>
             </div>
-            <div className="map-instruction">{notice}</div>
+            {drawing && <div className="map-instruction">{notice}</div>}
             <div className="image-label"><strong>{cleanDate(scene.datetime)}</strong><span>Clear study area</span></div>
             <div className="scale-label">Sentinel-2 · 10 m</div>
           </div>

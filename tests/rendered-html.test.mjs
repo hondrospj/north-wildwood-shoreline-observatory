@@ -25,7 +25,7 @@ test("server-renders the minimal shoreline logger", async () => {
   assert.match(html, /shoreline logger/i);
   assert.match(html, /All clear/);
   assert.match(html, /Low tide/);
-  assert.match(html, /Start with this baseline/);
+  assert.match(html, /Draw transect from this baseline/);
   assert.match(html, /Center shore/);
   assert.match(html, /Export \.xlsx/);
   assert.match(html, /og:image[^>]+https:\/\/shoreline-observatory\.example\/og\.png/i);
@@ -86,6 +86,9 @@ test("includes keyboard logging and a true Excel export", async () => {
   assert.match(source, /const sourceAspect = sourceWidth \/ sourceHeight/);
   assert.match(source, /initialFocusDoneRef\.current = true/);
   assert.match(source, /\[sourceHeight, sourceWidth, viewportSize\.height, viewportSize\.width\]/);
+  assert.match(source, /className="logged-crosshair"/);
+  assert.match(source, /\{drawing && <div className="map-instruction">/);
+  assert.doesNotMatch(source, /className=\{active \? "logged-point active"/);
   assert.match(source, /north-wildwood-shoreline-log\.xlsx/);
   assert.equal(packageJson.dependencies.xlsx, "^0.18.5");
 });
