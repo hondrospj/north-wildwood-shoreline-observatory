@@ -23,7 +23,7 @@ test("server-renders the minimal shoreline logger", async () => {
   const html = await response.text();
   assert.match(html, /<title>North Wildwood Shoreline Observatory<\/title>/i);
   assert.match(html, /shoreline logger/i);
-  assert.match(html, /All clear/);
+  assert.match(html, /Twice monthly/);
   assert.match(html, /Low tide/);
   assert.match(html, /Draw transect from this baseline/);
   assert.match(html, /Center shore/);
@@ -32,15 +32,22 @@ test("server-renders the minimal shoreline logger", async () => {
   assert.doesNotMatch(html, /A decade of shoreline movement|Beach sectors|How it works|codex-preview/i);
 });
 
-test("ships every strict cloud-free image and a strict low-tide subset", async () => {
+test("ships at most two strict cloud-free images per month and a strict low-tide subset", async () => {
   const catalog = JSON.parse(
     await readFile(new URL("../public/data/monthly-catalog.json", import.meta.url), "utf8"),
   );
   assert.deepEqual(catalog.range, ["2015-08", "2026-08"]);
-  assert.ok(catalog.clear.length > 400);
+  assert.ok(catalog.clear.length > 150);
   assert.equal(new Set(catalog.clear.map((scene) => scene.id)).size, catalog.clear.length);
   assert.equal(new Set(catalog.clear.map((scene) => scene.image)).size, catalog.clear.length);
-  assert.ok(catalog.low_tide.length > 75);
+  assert.ok(catalog.low_tide.length > 50);
+  for (const scenes of [catalog.clear, catalog.low_tide]) {
+    const monthlyCounts = new Map();
+    for (const scene of scenes) {
+      monthlyCounts.set(scene.month, (monthlyCounts.get(scene.month) ?? 0) + 1);
+    }
+    assert.ok([...monthlyCounts.values()].every((count) => count <= 2));
+  }
   assert.ok(
     catalog.low_tide.every(
       (scene) =>
@@ -76,6 +83,9 @@ test("includes keyboard logging and a true Excel export", async () => {
   const packageJson = JSON.parse(packageRaw);
   assert.match(source, /event\.key === "ArrowRight"/);
   assert.match(source, /event\.key === "ArrowLeft"/);
+  assert.match(source, /aria-label="Fast image scrubber"/);
+  assert.match(source, /lastWheelSceneRef/);
+  assert.match(source, /changeScene\(delta > 0 \? steps : -steps\)/);
   assert.match(source, /\(event\.metaKey \|\| event\.ctrlKey\)/);
   assert.match(source, /event\.key\.toLowerCase\(\) === "z"/);
   assert.match(source, /Last shoreline point undone/);

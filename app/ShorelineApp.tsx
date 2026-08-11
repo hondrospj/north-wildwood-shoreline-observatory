@@ -28,7 +28,7 @@ type Catalog = {
   bounds: number[];
   resolution_m: number;
   range: string[];
-  selection: { low_tide_window_minutes: number };
+  selection: { low_tide_window_minutes: number; maximum_images_per_month: number };
   clear: Scene[];
   low_tide: Scene[];
 };
@@ -172,6 +172,7 @@ export function ShorelineApp({ catalog }: { catalog: Catalog }) {
   const [notice, setNotice] = useState("Choose a date, then start with this baseline.");
   const viewportRef = useRef<HTMLDivElement>(null);
   const initialFocusDoneRef = useRef(false);
+  const lastWheelSceneRef = useRef(0);
   const dragRef = useRef<{
     pointerId: number;
     x: number;
@@ -304,7 +305,7 @@ export function ShorelineApp({ catalog }: { catalog: Catalog }) {
   const changeMode = (nextMode: Mode) => {
     setMode(nextMode);
     setSceneIndex(0);
-    setNotice(nextMode === "low_tide" ? "Low-tide images only. Choose a baseline." : "Choose a baseline image.");
+    setNotice(nextMode === "low_tide" ? "Low-tide images only. Choose a baseline." : "Two clear images per month. Choose a baseline.");
   };
 
   const clampPan = useCallback((next: { x: number; y: number }, nextZoom: number) => {
@@ -528,7 +529,7 @@ export function ShorelineApp({ catalog }: { catalog: Catalog }) {
           (item) => item.mode === row.mode && item.sceneId === baselines[row.mode],
         );
         return {
-          Mode: row.mode === "low_tide" ? "Low tide" : "All clear",
+          Mode: row.mode === "low_tide" ? "Low tide" : "Twice monthly",
           Date: row.date.slice(0, 10),
           Month: row.month,
           Latitude: row.latitude,
@@ -581,7 +582,7 @@ export function ShorelineApp({ catalog }: { catalog: Catalog }) {
       <header className="logger-header">
         <div className="logger-title"><strong>North Wildwood</strong><span>shoreline logger</span></div>
         <div className="mode-switch" aria-label="Imagery set">
-          <button className={mode === "clear" ? "active" : ""} onClick={() => changeMode("clear")}>All clear</button>
+          <button className={mode === "clear" ? "active" : ""} onClick={() => changeMode("clear")}>Twice monthly</button>
           <button className={mode === "low_tide" ? "active" : ""} onClick={() => changeMode("low_tide")}>Low tide</button>
         </div>
         <div className="frame-control">
@@ -602,6 +603,16 @@ export function ShorelineApp({ catalog }: { catalog: Catalog }) {
           />
           <button onClick={() => changeScene(1)} disabled={sceneIndex === scenes.length - 1} aria-label="Next image" aria-keyshortcuts="ArrowRight">→</button>
           <span>{sceneIndex + 1}/{scenes.length}</span>
+          <input
+            className="frame-scrubber"
+            type="range"
+            min="0"
+            max={Math.max(0, scenes.length - 1)}
+            step="1"
+            value={sceneIndex}
+            onChange={(event) => setSceneIndex(Number(event.target.value))}
+            aria-label="Fast image scrubber"
+          />
         </div>
         <button className="export-button" onClick={exportExcel} disabled={!observations.length}>Export .xlsx</button>
       </header>
@@ -629,9 +640,22 @@ export function ShorelineApp({ catalog }: { catalog: Catalog }) {
             onPointerUp={onPointerUp}
             onPointerCancel={() => { dragRef.current = null; setGestureStart(null); }}
             onPointerLeave={() => setHoverCoordinate(null)}
+            title="Scroll to change images · Command/Ctrl-scroll to zoom"
             onWheel={(event) => {
               event.preventDefault();
-              setZoomAt(zoom * (event.deltaY < 0 ? 1.18 : 0.85), event.clientX, event.clientY);
+              if (event.metaKey || event.ctrlKey) {
+                setZoomAt(zoom * (event.deltaY < 0 ? 1.18 : 0.85), event.clientX, event.clientY);
+                return;
+              }
+              const now = performance.now();
+              if (now - lastWheelSceneRef.current < 55) return;
+              lastWheelSceneRef.current = now;
+              const delta = Math.abs(event.deltaY) >= Math.abs(event.deltaX) ? event.deltaY : event.deltaX;
+              if (!delta) return;
+              const steps = event.shiftKey
+                ? 6
+                : Math.max(1, Math.min(6, Math.round(Math.abs(delta) / 80)));
+              changeScene(delta > 0 ? steps : -steps);
             }}
           >
             <div

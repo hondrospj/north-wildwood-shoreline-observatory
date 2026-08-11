@@ -1,8 +1,8 @@
 # North Wildwood Shoreline Logger
 
-A minimal Sentinel-2 shoreline measurement app. It includes every acquisition from August 2015 onward with zero cloud, shadow, cirrus, or snow/ice Scene Classification Layer pixels over the North Wildwood oceanfront and no more than 0.5% invalid pixels. A separate view contains the clear acquisitions captured within 90 minutes of NOAA-predicted low tide.
+A minimal Sentinel-2 shoreline measurement app. It includes up to two acquisitions per month from August 2015 onward: the best qualifying scene from each half-month with zero cloud, shadow, cirrus, or snow/ice Scene Classification Layer pixels over the North Wildwood oceanfront and no more than 0.5% invalid pixels. A separate view applies the same two-per-month cap to clear acquisitions captured within 90 minutes of NOAA-predicted low tide.
 
-Choose a baseline image, draw a transect with two clicks, then click the wet/dry line once per image. `←` and `→` move through the catalog. Logged coordinates, distance along the transect, shoreline width, and baseline change are stored locally in the browser and export as an Excel workbook.
+Choose a baseline image, draw a transect with two clicks, then click the wet/dry line once per image. `←` and `→`, the timeline scrubber, or the mouse wheel move through the catalog; hold Command/Ctrl while scrolling to zoom. Logged coordinates, distance along the transect, shoreline width, and baseline change are stored locally in the browser and export as an Excel workbook.
 
 Selected imagery is served from Bunny CDN. The upload key is read from macOS Keychain and is never written to the repository.
 

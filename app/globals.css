@@ -31,7 +31,7 @@ a { color: inherit; text-decoration: none; }
   z-index: 5;
   padding: 0 16px;
   display: grid;
-  grid-template-columns: minmax(170px, 1fr) auto minmax(300px, 1fr) minmax(110px, 1fr);
+  grid-template-columns: minmax(170px, 1fr) auto minmax(420px, 1fr) minmax(110px, 1fr);
   align-items: center;
   gap: 14px;
   border-bottom: 1px solid var(--line);
@@ -46,7 +46,8 @@ a { color: inherit; text-decoration: none; }
 .frame-control { justify-self: center; display: flex; align-items: center; gap: 6px; }
 .frame-control button { width: 28px; height: 28px; padding: 0; border: 1px solid var(--line); border-radius: 4px; background: var(--panel); color: var(--accent); cursor: pointer; }
 .frame-control button:disabled { opacity: .25; cursor: default; }
-.frame-control input { width: 136px; height: 28px; padding: 0 7px; border: 1px solid var(--line); border-radius: 4px; background: var(--panel); color: var(--paper); color-scheme: dark; font: 10px var(--font-geist-mono), monospace; }
+.frame-control input[type="date"] { width: 136px; height: 28px; padding: 0 7px; border: 1px solid var(--line); border-radius: 4px; background: var(--panel); color: var(--paper); color-scheme: dark; font: 10px var(--font-geist-mono), monospace; }
+.frame-control .frame-scrubber { width: 110px; height: 28px; padding: 0; border: 0; background: transparent; accent-color: var(--accent); cursor: ew-resize; }
 .frame-control span { min-width: 44px; color: var(--muted); font: 9px var(--font-geist-mono), monospace; }
 .export-button { justify-self: end; padding: 8px 12px; border: 1px solid #428f84; border-radius: 4px; background: #173a38; color: var(--accent); cursor: pointer; font: 10px var(--font-geist-mono), monospace; text-transform: uppercase; }
 .export-button:disabled { border-color: var(--line); background: transparent; color: #536267; cursor: default; }
@@ -127,7 +128,9 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 2px solid 
 @media (max-width: 640px) {
   .logger-header { grid-template-columns: 1fr auto; }
   .logger-title span { display: none; }
-  .frame-control input { width: 124px; }
+  .frame-control { flex-wrap: wrap; }
+  .frame-control input[type="date"] { width: 124px; }
+  .frame-control .frame-scrubber { width: 100px; }
   .logger-workspace { min-width: 0; }
   .image-panel { min-height: 620px; grid-template-rows: auto minmax(0, 1fr); }
   .work-tools { padding: 7px; flex-wrap: wrap; }

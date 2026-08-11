@@ -290,20 +290,65 @@ def attach_quality_and_tide(
 
 
 def select_catalogs(scenes: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
-    clear = [
+    eligible = [
         scene
         for scene in scenes
         if scene["study_cloud_pixels"] == 0
         and scene["study_snow_pixels"] == 0
         and scene["study_invalid_pct"] <= MAX_STUDY_INVALID_PCT
     ]
-    low_tide = [
+    clear = select_twice_monthly(eligible)
+    low_tide = select_twice_monthly([
         scene
-        for scene in clear
+        for scene in eligible
         if abs(scene["nearest_low_tide"]["image_offset_minutes"])
         <= LOW_TIDE_WINDOW_MINUTES
-    ]
+    ])
     return clear, low_tide
+
+
+def select_twice_monthly(scenes: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Choose the best scene from each half-month, with a two-scene monthly cap."""
+    grouped: dict[str, list[dict[str, Any]]] = {}
+    for scene in scenes:
+        grouped.setdefault(month_key(scene["datetime"]), []).append(scene)
+
+    selected: list[dict[str, Any]] = []
+    for month in sorted(grouped):
+        candidates = grouped[month]
+        chosen: list[dict[str, Any]] = []
+        for start_day, end_day, midpoint in ((1, 15, 8), (16, 31, 23)):
+            half = [
+                scene
+                for scene in candidates
+                if start_day <= parse_dt(scene["datetime"]).day <= end_day
+            ]
+            if half:
+                chosen.append(
+                    min(
+                        half,
+                        key=lambda scene: (
+                            scene["study_invalid_pct"],
+                            scene["catalog_cloud_pct"],
+                            abs(parse_dt(scene["datetime"]).day - midpoint),
+                            scene["datetime"],
+                        ),
+                    )
+                )
+
+        if len(chosen) < 2:
+            remaining = [scene for scene in candidates if scene not in chosen]
+            remaining.sort(
+                key=lambda scene: (
+                    scene["study_invalid_pct"],
+                    scene["catalog_cloud_pct"],
+                    scene["datetime"],
+                )
+            )
+            chosen.extend(remaining[: 2 - len(chosen)])
+
+        selected.extend(sorted(chosen, key=lambda scene: scene["datetime"]))
+    return selected
 
 
 def download_visual(scene: dict[str, Any]) -> tuple[str, list[int]]:
@@ -482,9 +527,10 @@ def main() -> None:
         "tide_station": shoreline.TIDE_STATION,
         "range": [START_MONTH, monthly_range()[-1]],
         "selection": {
-            "clear": "Every Sentinel-2 L2A acquisition with zero cloud, shadow, cirrus, or snow/ice SCL pixels over the oceanfront study area and no more than 0.5% invalid pixels",
-            "low_tide": f"Cloud-free acquisitions within +/- {LOW_TIDE_WINDOW_MINUTES:.0f} minutes of a NOAA-predicted low tide",
+            "clear": "Up to two Sentinel-2 L2A acquisitions per month: the best qualifying image from each half-month, with zero cloud, shadow, cirrus, or snow/ice SCL pixels over the oceanfront study area and no more than 0.5% invalid pixels",
+            "low_tide": f"Up to two cloud-free acquisitions per month within +/- {LOW_TIDE_WINDOW_MINUTES:.0f} minutes of a NOAA-predicted low tide",
             "low_tide_window_minutes": LOW_TIDE_WINDOW_MINUTES,
+            "maximum_images_per_month": 2,
             "maximum_study_cloud_pixels": 0,
             "maximum_study_snow_pixels": 0,
             "maximum_study_invalid_pct": MAX_STUDY_INVALID_PCT,
@@ -495,7 +541,7 @@ def main() -> None:
     CATALOG_PATH.write_text(json.dumps(catalog, indent=2))
     WORK_CATALOG_PATH.write_text(json.dumps(catalog, indent=2))
     print(
-        f"Selected {len(clear)} cloud-free scenes and {len(low_tide)} low-tide scenes",
+        f"Selected {len(clear)} twice-monthly clear scenes and {len(low_tide)} low-tide scenes",
         flush=True,
     )
     if args.upload_bunny:
