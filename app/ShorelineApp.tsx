@@ -28,7 +28,7 @@ type Catalog = {
   bounds: number[];
   resolution_m: number;
   range: string[];
-  selection: { low_tide_window_minutes: number; maximum_images_per_month: number };
+  selection: { low_tide_window_minutes: number; maximum_clear_images_per_month: number };
   clear: Scene[];
   low_tide: Scene[];
 };
@@ -305,7 +305,7 @@ export function ShorelineApp({ catalog }: { catalog: Catalog }) {
   const changeMode = (nextMode: Mode) => {
     setMode(nextMode);
     setSceneIndex(0);
-    setNotice(nextMode === "low_tide" ? "Low-tide images only. Choose a baseline." : "Two clear images per month. Choose a baseline.");
+    setNotice(nextMode === "low_tide" ? "All cloud-free images within ±1:45 of low tide. Choose a baseline." : "Two clear images per month. Choose a baseline.");
   };
 
   const clampPan = useCallback((next: { x: number; y: number }, nextZoom: number) => {
@@ -583,7 +583,7 @@ export function ShorelineApp({ catalog }: { catalog: Catalog }) {
         <div className="logger-title"><strong>North Wildwood</strong><span>shoreline logger</span></div>
         <div className="mode-switch" aria-label="Imagery set">
           <button className={mode === "clear" ? "active" : ""} onClick={() => changeMode("clear")}>Twice monthly</button>
-          <button className={mode === "low_tide" ? "active" : ""} onClick={() => changeMode("low_tide")}>Low tide</button>
+          <button className={mode === "low_tide" ? "active" : ""} onClick={() => changeMode("low_tide")}>Low tide ±1:45</button>
         </div>
         <div className="frame-control">
           <button onClick={() => changeScene(-1)} disabled={sceneIndex === 0} aria-label="Previous image" aria-keyshortcuts="ArrowLeft">←</button>

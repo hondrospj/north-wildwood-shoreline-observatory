@@ -33,7 +33,7 @@ STUDY_CLOUD_CACHE = ROOT / "work" / "study-cloud-cache"
 
 START_MONTH = "2015-08"
 END_YEAR = 2026
-LOW_TIDE_WINDOW_MINUTES = 90.0
+LOW_TIDE_WINDOW_MINUTES = 105.0
 
 # The exposed North Wildwood oceanfront. Every included image must contain zero
 # Sentinel-2 SCL cloud, shadow, cirrus, or snow/ice pixels in this box. A tiny
@@ -298,12 +298,12 @@ def select_catalogs(scenes: list[dict[str, Any]]) -> tuple[list[dict[str, Any]],
         and scene["study_invalid_pct"] <= MAX_STUDY_INVALID_PCT
     ]
     clear = select_twice_monthly(eligible)
-    low_tide = select_twice_monthly([
+    low_tide = [
         scene
         for scene in eligible
         if abs(scene["nearest_low_tide"]["image_offset_minutes"])
         <= LOW_TIDE_WINDOW_MINUTES
-    ])
+    ]
     return clear, low_tide
 
 
@@ -528,9 +528,9 @@ def main() -> None:
         "range": [START_MONTH, monthly_range()[-1]],
         "selection": {
             "clear": "Up to two Sentinel-2 L2A acquisitions per month: the best qualifying image from each half-month, with zero cloud, shadow, cirrus, or snow/ice SCL pixels over the oceanfront study area and no more than 0.5% invalid pixels",
-            "low_tide": f"Up to two cloud-free acquisitions per month within +/- {LOW_TIDE_WINDOW_MINUTES:.0f} minutes of a NOAA-predicted low tide",
+            "low_tide": f"Every qualifying cloud-free acquisition within +/- {LOW_TIDE_WINDOW_MINUTES:.0f} minutes of a NOAA-predicted low tide",
             "low_tide_window_minutes": LOW_TIDE_WINDOW_MINUTES,
-            "maximum_images_per_month": 2,
+            "maximum_clear_images_per_month": 2,
             "maximum_study_cloud_pixels": 0,
             "maximum_study_snow_pixels": 0,
             "maximum_study_invalid_pct": MAX_STUDY_INVALID_PCT,

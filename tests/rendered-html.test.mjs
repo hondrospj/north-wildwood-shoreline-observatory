@@ -32,7 +32,7 @@ test("server-renders the minimal shoreline logger", async () => {
   assert.doesNotMatch(html, /A decade of shoreline movement|Beach sectors|How it works|codex-preview/i);
 });
 
-test("ships at most two strict cloud-free images per month and a strict low-tide subset", async () => {
+test("ships at most two regular images per month and every strict low-tide image", async () => {
   const catalog = JSON.parse(
     await readFile(new URL("../public/data/monthly-catalog.json", import.meta.url), "utf8"),
   );
@@ -40,14 +40,14 @@ test("ships at most two strict cloud-free images per month and a strict low-tide
   assert.ok(catalog.clear.length > 150);
   assert.equal(new Set(catalog.clear.map((scene) => scene.id)).size, catalog.clear.length);
   assert.equal(new Set(catalog.clear.map((scene) => scene.image)).size, catalog.clear.length);
-  assert.ok(catalog.low_tide.length > 50);
-  for (const scenes of [catalog.clear, catalog.low_tide]) {
-    const monthlyCounts = new Map();
-    for (const scene of scenes) {
-      monthlyCounts.set(scene.month, (monthlyCounts.get(scene.month) ?? 0) + 1);
-    }
-    assert.ok([...monthlyCounts.values()].every((count) => count <= 2));
+  assert.ok(catalog.low_tide.length > 80);
+  const monthlyCounts = new Map();
+  for (const scene of catalog.clear) {
+    monthlyCounts.set(scene.month, (monthlyCounts.get(scene.month) ?? 0) + 1);
   }
+  assert.ok([...monthlyCounts.values()].every((count) => count <= 2));
+  assert.equal(catalog.selection.low_tide_window_minutes, 105);
+  assert.equal(catalog.selection.maximum_clear_images_per_month, 2);
   assert.ok(
     catalog.low_tide.every(
       (scene) =>

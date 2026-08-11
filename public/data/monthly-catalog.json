@@ -1,5 +1,5 @@
 {
-  "generated": "2026-08-11T02:04:25.607975Z",
+  "generated": "2026-08-11T02:13:04.025011Z",
   "bounds": [
     -74.825,
     38.98,
@@ -20,9 +20,9 @@
   ],
   "selection": {
     "clear": "Up to two Sentinel-2 L2A acquisitions per month: the best qualifying image from each half-month, with zero cloud, shadow, cirrus, or snow/ice SCL pixels over the oceanfront study area and no more than 0.5% invalid pixels",
-    "low_tide": "Up to two cloud-free acquisitions per month within +/- 90 minutes of a NOAA-predicted low tide",
-    "low_tide_window_minutes": 90.0,
-    "maximum_images_per_month": 2,
+    "low_tide": "Every qualifying cloud-free acquisition within +/- 105 minutes of a NOAA-predicted low tide",
+    "low_tide_window_minutes": 105.0,
+    "maximum_clear_images_per_month": 2,
     "maximum_study_cloud_pixels": 0,
     "maximum_study_snow_pixels": 0,
     "maximum_study_invalid_pct": 0.5
@@ -5767,6 +5767,54 @@
       "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2A_MSIL2A_20160119T154552_R011_T18SWJ_20210527T201800"
     },
     {
+      "id": "S2A_MSIL2A_20160418T153932_R011_T18SWJ_20210211T044250",
+      "month": "2016-04",
+      "datetime": "2016-04-18T15:39:32.030000Z",
+      "image": "https://floodmapperv1.b-cdn.net/NorthWildwoodShoreline/scenes/sentinel-20160418T153932.jpg",
+      "image_shape": [
+        477,
+        556
+      ],
+      "catalog_cloud_pct": 11.99,
+      "estimated_aoi_cloud_pct": 0.0,
+      "quality_source": "Sentinel-2 SCL oceanfront mask",
+      "study_pixel_count": 2770,
+      "study_cloud_pixels": 0,
+      "study_invalid_pixels": 0,
+      "study_snow_pixels": 0,
+      "study_obscured_pixels": 0,
+      "nearest_low_tide": {
+        "time": "2016-04-18T17:10:00Z",
+        "level_m_msl": -0.683,
+        "image_offset_minutes": -90.5
+      },
+      "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2A_MSIL2A_20160418T153932_R011_T18SWJ_20210211T044250"
+    },
+    {
+      "id": "S2A_MSIL2A_20170702T154421_R011_T18SWJ_20210210T034814",
+      "month": "2017-07",
+      "datetime": "2017-07-02T15:44:21.026000Z",
+      "image": "https://floodmapperv1.b-cdn.net/NorthWildwoodShoreline/scenes/sentinel-20170702T154421.jpg",
+      "image_shape": [
+        477,
+        556
+      ],
+      "catalog_cloud_pct": 3.27,
+      "estimated_aoi_cloud_pct": 0.0,
+      "quality_source": "Sentinel-2 SCL oceanfront mask",
+      "study_pixel_count": 2770,
+      "study_cloud_pixels": 0,
+      "study_invalid_pixels": 0,
+      "study_snow_pixels": 0,
+      "study_obscured_pixels": 0,
+      "nearest_low_tide": {
+        "time": "2017-07-02T14:12:00Z",
+        "level_m_msl": -0.645,
+        "image_offset_minutes": 92.4
+      },
+      "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2A_MSIL2A_20170702T154421_R011_T18SWJ_20210210T034814"
+    },
+    {
       "id": "S2A_MSIL2A_20170831T153911_R011_T18SWJ_20210201T155053",
       "month": "2017-08",
       "datetime": "2017-08-31T15:39:11.026000Z",
@@ -5813,6 +5861,30 @@
         "image_offset_minutes": 62.0
       },
       "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2B_MSIL2A_20170915T153859_R011_T18SWJ_20210202T033511"
+    },
+    {
+      "id": "S2A_MSIL2A_20171102T160131_R054_T18SWJ_20201014T175816",
+      "month": "2017-11",
+      "datetime": "2017-11-02T16:01:31.026000Z",
+      "image": "https://floodmapperv1.b-cdn.net/NorthWildwoodShoreline/scenes/sentinel-20171102T160131.jpg",
+      "image_shape": [
+        477,
+        556
+      ],
+      "catalog_cloud_pct": 10.32,
+      "estimated_aoi_cloud_pct": 0.0,
+      "quality_source": "Sentinel-2 SCL oceanfront mask",
+      "study_pixel_count": 2770,
+      "study_cloud_pixels": 0,
+      "study_invalid_pixels": 0,
+      "study_snow_pixels": 0,
+      "study_obscured_pixels": 0,
+      "nearest_low_tide": {
+        "time": "2017-11-02T17:37:00Z",
+        "level_m_msl": -0.779,
+        "image_offset_minutes": -95.5
+      },
+      "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2A_MSIL2A_20171102T160131_R054_T18SWJ_20201014T175816"
     },
     {
       "id": "S2B_MSIL2A_20171114T154459_R011_T18SWJ_20201014T195403",
@@ -5887,6 +5959,54 @@
       "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2A_MSIL2A_20171229T154641_R011_T18SWJ_20201014T171430"
     },
     {
+      "id": "S2B_MSIL2A_20180126T155519_R054_T18SWJ_20201014T090328",
+      "month": "2018-01",
+      "datetime": "2018-01-26T15:55:19.027000Z",
+      "image": "https://floodmapperv1.b-cdn.net/NorthWildwoodShoreline/scenes/sentinel-20180126T155519.jpg",
+      "image_shape": [
+        477,
+        556
+      ],
+      "catalog_cloud_pct": 0.23,
+      "estimated_aoi_cloud_pct": 0.0,
+      "quality_source": "Sentinel-2 SCL oceanfront mask",
+      "study_pixel_count": 2770,
+      "study_cloud_pixels": 0,
+      "study_invalid_pixels": 0,
+      "study_snow_pixels": 0,
+      "study_obscured_pixels": 0,
+      "nearest_low_tide": {
+        "time": "2018-01-26T14:23:00Z",
+        "level_m_msl": -0.733,
+        "image_offset_minutes": 92.3
+      },
+      "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2B_MSIL2A_20180126T155519_R054_T18SWJ_20201014T090328"
+    },
+    {
+      "id": "S2A_MSIL2A_20180227T154211_R011_T18SWJ_20201014T013342",
+      "month": "2018-02",
+      "datetime": "2018-02-27T15:42:11.026000Z",
+      "image": "https://floodmapperv1.b-cdn.net/NorthWildwoodShoreline/scenes/sentinel-20180227T154211.jpg",
+      "image_shape": [
+        477,
+        556
+      ],
+      "catalog_cloud_pct": 0.21,
+      "estimated_aoi_cloud_pct": 0.0,
+      "quality_source": "Sentinel-2 SCL oceanfront mask",
+      "study_pixel_count": 2770,
+      "study_cloud_pixels": 0,
+      "study_invalid_pixels": 0,
+      "study_snow_pixels": 0,
+      "study_obscured_pixels": 0,
+      "nearest_low_tide": {
+        "time": "2018-02-27T17:23:00Z",
+        "level_m_msl": -0.889,
+        "image_offset_minutes": -100.8
+      },
+      "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2A_MSIL2A_20180227T154211_R011_T18SWJ_20201014T013342"
+    },
+    {
       "id": "S2A_MSIL2A_20180411T155011_R054_T18SWJ_20201012T205831",
       "month": "2018-04",
       "datetime": "2018-04-11T15:50:11.026000Z",
@@ -5935,6 +6055,30 @@
       "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2B_MSIL2A_20180523T153819_R011_T18SWJ_20201012T132901"
     },
     {
+      "id": "S2A_MSIL2A_20181018T155241_R054_T18SWJ_20201009T124701",
+      "month": "2018-10",
+      "datetime": "2018-10-18T15:52:41.024000Z",
+      "image": "https://floodmapperv1.b-cdn.net/NorthWildwoodShoreline/scenes/sentinel-20181018T155241.jpg",
+      "image_shape": [
+        477,
+        556
+      ],
+      "catalog_cloud_pct": 19.47,
+      "estimated_aoi_cloud_pct": 0.0,
+      "quality_source": "Sentinel-2 SCL oceanfront mask",
+      "study_pixel_count": 2770,
+      "study_cloud_pixels": 0,
+      "study_invalid_pixels": 0,
+      "study_snow_pixels": 0,
+      "study_obscured_pixels": 0,
+      "nearest_low_tide": {
+        "time": "2018-10-18T14:13:00Z",
+        "level_m_msl": -0.408,
+        "image_offset_minutes": 99.7
+      },
+      "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2A_MSIL2A_20181018T155241_R054_T18SWJ_20201009T124701"
+    },
+    {
       "id": "S2A_MSIL2A_20181104T154421_R011_T18SWJ_20201008T154111",
       "month": "2018-11",
       "datetime": "2018-11-04T15:44:21.024000Z",
@@ -5957,6 +6101,30 @@
         "image_offset_minutes": -47.6
       },
       "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2A_MSIL2A_20181104T154421_R011_T18SWJ_20201008T154111"
+    },
+    {
+      "id": "S2A_MSIL2A_20181204T154621_R011_T18SWJ_20201008T071911",
+      "month": "2018-12",
+      "datetime": "2018-12-04T15:46:21.024000Z",
+      "image": "https://floodmapperv1.b-cdn.net/NorthWildwoodShoreline/scenes/sentinel-20181204T154621.jpg",
+      "image_shape": [
+        477,
+        556
+      ],
+      "catalog_cloud_pct": 29.43,
+      "estimated_aoi_cloud_pct": 0.0,
+      "quality_source": "Sentinel-2 SCL oceanfront mask",
+      "study_pixel_count": 2770,
+      "study_cloud_pixels": 0,
+      "study_invalid_pixels": 0,
+      "study_snow_pixels": 0,
+      "study_obscured_pixels": 0,
+      "nearest_low_tide": {
+        "time": "2018-12-04T17:18:00Z",
+        "level_m_msl": -0.796,
+        "image_offset_minutes": -91.6
+      },
+      "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2A_MSIL2A_20181204T154621_R011_T18SWJ_20201008T071911"
     },
     {
       "id": "S2B_MSIL2A_20190131T155509_R054_T18SWJ_20201008T062106",
@@ -6101,6 +6269,54 @@
         "image_offset_minutes": 56.3
       },
       "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2B_MSIL2A_20190727T153819_R011_T18SWJ_20201109T151810"
+    },
+    {
+      "id": "S2B_MSIL2A_20190730T154819_R054_T18SWJ_20201005T200617",
+      "month": "2019-07",
+      "datetime": "2019-07-30T15:48:19.024000Z",
+      "image": "https://floodmapperv1.b-cdn.net/NorthWildwoodShoreline/scenes/sentinel-20190730T154819.jpg",
+      "image_shape": [
+        477,
+        556
+      ],
+      "catalog_cloud_pct": 0.79,
+      "estimated_aoi_cloud_pct": 0.0,
+      "quality_source": "Sentinel-2 SCL oceanfront mask",
+      "study_pixel_count": 2770,
+      "study_cloud_pixels": 0,
+      "study_invalid_pixels": 0,
+      "study_snow_pixels": 0,
+      "study_obscured_pixels": 0,
+      "nearest_low_tide": {
+        "time": "2019-07-30T17:26:00Z",
+        "level_m_msl": -0.796,
+        "image_offset_minutes": -97.7
+      },
+      "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2B_MSIL2A_20190730T154819_R054_T18SWJ_20201005T200617"
+    },
+    {
+      "id": "S2B_MSIL2A_20190809T154819_R054_T18SWJ_20201004T222822",
+      "month": "2019-08",
+      "datetime": "2019-08-09T15:48:19.025000Z",
+      "image": "https://floodmapperv1.b-cdn.net/NorthWildwoodShoreline/scenes/sentinel-20190809T154819.jpg",
+      "image_shape": [
+        477,
+        556
+      ],
+      "catalog_cloud_pct": 2.75,
+      "estimated_aoi_cloud_pct": 0.0,
+      "quality_source": "Sentinel-2 SCL oceanfront mask",
+      "study_pixel_count": 2770,
+      "study_cloud_pixels": 0,
+      "study_invalid_pixels": 0,
+      "study_snow_pixels": 0,
+      "study_obscured_pixels": 0,
+      "nearest_low_tide": {
+        "time": "2019-08-09T14:13:00Z",
+        "level_m_msl": -0.643,
+        "image_offset_minutes": 95.3
+      },
+      "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2B_MSIL2A_20190809T154819_R054_T18SWJ_20201004T222822"
     },
     {
       "id": "S2A_MSIL2A_20190811T153911_R011_T18SWJ_20201004T230319",
@@ -6367,6 +6583,30 @@
       "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2A_MSIL2A_20200417T153911_R011_T18SWJ_20200923T212643"
     },
     {
+      "id": "S2B_MSIL2A_20200515T154809_R054_T18SWJ_20200918T085307",
+      "month": "2020-05",
+      "datetime": "2020-05-15T15:48:09.024000Z",
+      "image": "https://floodmapperv1.b-cdn.net/NorthWildwoodShoreline/scenes/sentinel-20200515T154809.jpg",
+      "image_shape": [
+        477,
+        556
+      ],
+      "catalog_cloud_pct": 8.24,
+      "estimated_aoi_cloud_pct": 0.0,
+      "quality_source": "Sentinel-2 SCL oceanfront mask",
+      "study_pixel_count": 2770,
+      "study_cloud_pixels": 0,
+      "study_invalid_pixels": 0,
+      "study_snow_pixels": 0,
+      "study_obscured_pixels": 0,
+      "nearest_low_tide": {
+        "time": "2020-05-15T14:10:00Z",
+        "level_m_msl": -0.566,
+        "image_offset_minutes": 98.2
+      },
+      "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2B_MSIL2A_20200515T154809_R054_T18SWJ_20200918T085307"
+    },
+    {
       "id": "S2A_MSIL2A_20200729T154911_R054_T18SWJ_20200818T002120",
       "month": "2020-07",
       "datetime": "2020-07-29T15:49:11.024000Z",
@@ -6437,6 +6677,30 @@
         "image_offset_minutes": -71.5
       },
       "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2A_MSIL2A_20201014T154231_R011_T18SWJ_20201019T013749"
+    },
+    {
+      "id": "S2A_MSIL2A_20201123T154601_R011_T18SWJ_20210421T034558",
+      "month": "2020-11",
+      "datetime": "2020-11-23T15:46:01.025000Z",
+      "image": "https://floodmapperv1.b-cdn.net/NorthWildwoodShoreline/scenes/sentinel-20201123T154601.jpg",
+      "image_shape": [
+        477,
+        556
+      ],
+      "catalog_cloud_pct": 66.75,
+      "estimated_aoi_cloud_pct": 0.0,
+      "quality_source": "Sentinel-2 SCL oceanfront mask",
+      "study_pixel_count": 2770,
+      "study_cloud_pixels": 0,
+      "study_invalid_pixels": 0,
+      "study_snow_pixels": 0,
+      "study_obscured_pixels": 0,
+      "nearest_low_tide": {
+        "time": "2020-11-23T14:04:00Z",
+        "level_m_msl": -0.512,
+        "image_offset_minutes": 102.0
+      },
+      "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2A_MSIL2A_20201123T154601_R011_T18SWJ_20210421T034558"
     },
     {
       "id": "S2B_MSIL2A_20201211T155649_R054_T18SWJ_20201214T043432",
@@ -6581,6 +6845,30 @@
         "image_offset_minutes": 58.9
       },
       "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2A_MSIL2A_20210221T154251_R011_T18SWJ_20210223T213627"
+    },
+    {
+      "id": "S2A_MSIL2A_20210224T155231_R054_T18SWJ_20210225T033049",
+      "month": "2021-02",
+      "datetime": "2021-02-24T15:52:31.024000Z",
+      "image": "https://floodmapperv1.b-cdn.net/NorthWildwoodShoreline/scenes/sentinel-20210224T155231.jpg",
+      "image_shape": [
+        477,
+        556
+      ],
+      "catalog_cloud_pct": 5.9,
+      "estimated_aoi_cloud_pct": 0.0,
+      "quality_source": "Sentinel-2 SCL oceanfront mask",
+      "study_pixel_count": 2770,
+      "study_cloud_pixels": 0,
+      "study_invalid_pixels": 0,
+      "study_snow_pixels": 0,
+      "study_obscured_pixels": 0,
+      "nearest_low_tide": {
+        "time": "2021-02-24T17:30:00Z",
+        "level_m_msl": -0.721,
+        "image_offset_minutes": -97.5
+      },
+      "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2A_MSIL2A_20210224T155231_R054_T18SWJ_20210225T033049"
     },
     {
       "id": "S2B_MSIL2A_20210308T154009_R011_T18SWJ_20210309T073424",
@@ -6751,6 +7039,30 @@
       "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2B_MSIL2A_20210904T153809_R011_T18SWJ_20210905T012841"
     },
     {
+      "id": "S2B_MSIL2A_20211116T155529_R054_T18SWJ_20211117T095837",
+      "month": "2021-11",
+      "datetime": "2021-11-16T15:55:29.024000Z",
+      "image": "https://floodmapperv1.b-cdn.net/NorthWildwoodShoreline/scenes/sentinel-20211116T155529.jpg",
+      "image_shape": [
+        477,
+        556
+      ],
+      "catalog_cloud_pct": 0.4,
+      "estimated_aoi_cloud_pct": 0.0,
+      "quality_source": "Sentinel-2 SCL oceanfront mask",
+      "study_pixel_count": 2770,
+      "study_cloud_pixels": 0,
+      "study_invalid_pixels": 0,
+      "study_snow_pixels": 0,
+      "study_obscured_pixels": 0,
+      "nearest_low_tide": {
+        "time": "2021-11-16T17:34:00Z",
+        "level_m_msl": -0.668,
+        "image_offset_minutes": -98.5
+      },
+      "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2B_MSIL2A_20211116T155529_R054_T18SWJ_20211117T095837"
+    },
+    {
       "id": "S2A_MSIL2A_20211201T155621_R054_T18SWJ_20211202T011928",
       "month": "2021-12",
       "datetime": "2021-12-01T15:56:21.024000Z",
@@ -6847,6 +7159,30 @@
       "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2A_MSIL2A_20220427T153821_R011_T18SWJ_20240606T000817"
     },
     {
+      "id": "S2A_MSIL2A_20220626T153821_R011_T18SWJ_20220627T085017",
+      "month": "2022-06",
+      "datetime": "2022-06-26T15:38:21.024000Z",
+      "image": "https://floodmapperv1.b-cdn.net/NorthWildwoodShoreline/scenes/sentinel-20220626T153821.jpg",
+      "image_shape": [
+        477,
+        556
+      ],
+      "catalog_cloud_pct": 4.41,
+      "estimated_aoi_cloud_pct": 0.0,
+      "quality_source": "Sentinel-2 SCL oceanfront mask",
+      "study_pixel_count": 2770,
+      "study_cloud_pixels": 0,
+      "study_invalid_pixels": 0,
+      "study_snow_pixels": 0,
+      "study_obscured_pixels": 0,
+      "nearest_low_tide": {
+        "time": "2022-06-26T17:18:00Z",
+        "level_m_msl": -0.656,
+        "image_offset_minutes": -99.6
+      },
+      "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2A_MSIL2A_20220626T153821_R011_T18SWJ_20220627T085017"
+    },
+    {
       "id": "S2B_MSIL2A_20220711T153819_R011_T18SWJ_20220713T060820",
       "month": "2022-07",
       "datetime": "2022-07-11T15:38:19.024000Z",
@@ -6917,6 +7253,30 @@
         "image_offset_minutes": -79.3
       },
       "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2A_MSIL2A_20221007T155141_R054_T18SWJ_20221008T073220"
+    },
+    {
+      "id": "S2B_MSIL2A_20221019T154249_R011_T18SWJ_20221020T011844",
+      "month": "2022-10",
+      "datetime": "2022-10-19T15:42:49.024000Z",
+      "image": "https://floodmapperv1.b-cdn.net/NorthWildwoodShoreline/scenes/sentinel-20221019T154249.jpg",
+      "image_shape": [
+        477,
+        556
+      ],
+      "catalog_cloud_pct": 11.74,
+      "estimated_aoi_cloud_pct": 0.1083,
+      "quality_source": "Sentinel-2 SCL oceanfront mask",
+      "study_pixel_count": 2770,
+      "study_cloud_pixels": 0,
+      "study_invalid_pixels": 3,
+      "study_snow_pixels": 0,
+      "study_obscured_pixels": 3,
+      "nearest_low_tide": {
+        "time": "2022-10-19T14:13:00Z",
+        "level_m_msl": -0.397,
+        "image_offset_minutes": 89.8
+      },
+      "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2B_MSIL2A_20221019T154249_R011_T18SWJ_20221020T011844"
     },
     {
       "id": "S2B_MSIL2A_20221022T155309_R054_T18SWJ_20221023T134916",
@@ -6991,6 +7351,30 @@
       "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2B_MSIL2A_20221218T154649_R011_T18SWJ_20221219T103455"
     },
     {
+      "id": "S2B_MSIL2A_20221221T155659_R054_T18SWJ_20221223T123516",
+      "month": "2022-12",
+      "datetime": "2022-12-21T15:56:59.024000Z",
+      "image": "https://floodmapperv1.b-cdn.net/NorthWildwoodShoreline/scenes/sentinel-20221221T155659.jpg",
+      "image_shape": [
+        477,
+        556
+      ],
+      "catalog_cloud_pct": 40.77,
+      "estimated_aoi_cloud_pct": 0.0,
+      "quality_source": "Sentinel-2 SCL oceanfront mask",
+      "study_pixel_count": 2770,
+      "study_cloud_pixels": 0,
+      "study_invalid_pixels": 0,
+      "study_snow_pixels": 0,
+      "study_obscured_pixels": 0,
+      "nearest_low_tide": {
+        "time": "2022-12-21T17:34:00Z",
+        "level_m_msl": -0.854,
+        "image_offset_minutes": -97.0
+      },
+      "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2B_MSIL2A_20221221T155659_R054_T18SWJ_20221223T123516"
+    },
+    {
       "id": "S2A_MSIL2A_20230102T154641_R011_T18SWJ_20240807T080559",
       "month": "2023-01",
       "datetime": "2023-01-02T15:46:41.024000Z",
@@ -7039,6 +7423,30 @@
       "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2A_MSIL2A_20230316T155001_R054_T18SWJ_20240805T224329"
     },
     {
+      "id": "S2A_MSIL2A_20230402T153811_R011_T18SWJ_20240829T040752",
+      "month": "2023-04",
+      "datetime": "2023-04-02T15:38:11.024000Z",
+      "image": "https://floodmapperv1.b-cdn.net/NorthWildwoodShoreline/scenes/sentinel-20230402T153811.jpg",
+      "image_shape": [
+        477,
+        556
+      ],
+      "catalog_cloud_pct": 0.9,
+      "estimated_aoi_cloud_pct": 0.0,
+      "quality_source": "Sentinel-2 SCL oceanfront mask",
+      "study_pixel_count": 2770,
+      "study_cloud_pixels": 0,
+      "study_invalid_pixels": 0,
+      "study_snow_pixels": 0,
+      "study_obscured_pixels": 0,
+      "nearest_low_tide": {
+        "time": "2023-04-02T17:15:00Z",
+        "level_m_msl": -0.613,
+        "image_offset_minutes": -96.8
+      },
+      "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2A_MSIL2A_20230402T153811_R011_T18SWJ_20240829T040752"
+    },
+    {
       "id": "S2A_MSIL2A_20230515T154811_R054_T18SWJ_20230516T004926",
       "month": "2023-05",
       "datetime": "2023-05-15T15:48:11.024000Z",
@@ -7085,6 +7493,30 @@
         "image_offset_minutes": -61.3
       },
       "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2A_MSIL2A_20230601T155141_R011_T18SWJ_20240812T201136"
+    },
+    {
+      "id": "S2A_MSIL2A_20230711T153821_R011_T18SWJ_20241019T212830",
+      "month": "2023-07",
+      "datetime": "2023-07-11T15:38:21.024000Z",
+      "image": "https://floodmapperv1.b-cdn.net/NorthWildwoodShoreline/scenes/sentinel-20230711T153821.jpg",
+      "image_shape": [
+        477,
+        556
+      ],
+      "catalog_cloud_pct": 0.05,
+      "estimated_aoi_cloud_pct": 0.0,
+      "quality_source": "Sentinel-2 SCL oceanfront mask",
+      "study_pixel_count": 2770,
+      "study_cloud_pixels": 0,
+      "study_invalid_pixels": 0,
+      "study_snow_pixels": 0,
+      "study_obscured_pixels": 0,
+      "nearest_low_tide": {
+        "time": "2023-07-11T13:57:00Z",
+        "level_m_msl": -0.713,
+        "image_offset_minutes": 101.4
+      },
+      "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2A_MSIL2A_20230711T153821_R011_T18SWJ_20241019T212830"
     },
     {
       "id": "S2A_MSIL2A_20230813T154941_R054_T18SWJ_20241026T173506",
@@ -7207,6 +7639,30 @@
       "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2B_MSIL2A_20231123T154549_R011_T18SWJ_20241023T001323"
     },
     {
+      "id": "S2B_MSIL2A_20240204T155449_R054_T18SWJ_20240204T213311",
+      "month": "2024-02",
+      "datetime": "2024-02-04T15:54:49.024000Z",
+      "image": "https://floodmapperv1.b-cdn.net/NorthWildwoodShoreline/scenes/sentinel-20240204T155449.jpg",
+      "image_shape": [
+        477,
+        556
+      ],
+      "catalog_cloud_pct": 0.01,
+      "estimated_aoi_cloud_pct": 0.4332,
+      "quality_source": "Sentinel-2 SCL oceanfront mask",
+      "study_pixel_count": 2770,
+      "study_cloud_pixels": 0,
+      "study_invalid_pixels": 12,
+      "study_snow_pixels": 0,
+      "study_obscured_pixels": 12,
+      "nearest_low_tide": {
+        "time": "2024-02-04T14:21:00Z",
+        "level_m_msl": -0.587,
+        "image_offset_minutes": 93.8
+      },
+      "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2B_MSIL2A_20240204T155449_R054_T18SWJ_20240204T213311"
+    },
+    {
       "id": "S2A_MSIL2A_20240206T154431_R011_T18SWJ_20240206T221324",
       "month": "2024-02",
       "datetime": "2024-02-06T15:44:31.024000Z",
@@ -7253,6 +7709,54 @@
         "image_offset_minutes": -25.8
       },
       "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2A_MSIL2A_20240219T155311_R054_T18SWJ_20240219T224542"
+    },
+    {
+      "id": "S2A_MSIL2A_20240615T153941_R011_T18SWJ_20240616T003952",
+      "month": "2024-06",
+      "datetime": "2024-06-15T15:39:41.024000Z",
+      "image": "https://floodmapperv1.b-cdn.net/NorthWildwoodShoreline/scenes/sentinel-20240615T153941.jpg",
+      "image_shape": [
+        477,
+        556
+      ],
+      "catalog_cloud_pct": 5.59,
+      "estimated_aoi_cloud_pct": 0.0,
+      "quality_source": "Sentinel-2 SCL oceanfront mask",
+      "study_pixel_count": 2770,
+      "study_cloud_pixels": 0,
+      "study_invalid_pixels": 0,
+      "study_snow_pixels": 0,
+      "study_obscured_pixels": 0,
+      "nearest_low_tide": {
+        "time": "2024-06-15T14:00:00Z",
+        "level_m_msl": -0.552,
+        "image_offset_minutes": 99.7
+      },
+      "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2A_MSIL2A_20240615T153941_R011_T18SWJ_20240616T003952"
+    },
+    {
+      "id": "S2A_MSIL2A_20240814T153941_R011_T18SWJ_20240814T223950",
+      "month": "2024-08",
+      "datetime": "2024-08-14T15:39:41.024000Z",
+      "image": "https://floodmapperv1.b-cdn.net/NorthWildwoodShoreline/scenes/sentinel-20240814T153941.jpg",
+      "image_shape": [
+        477,
+        556
+      ],
+      "catalog_cloud_pct": 9.43,
+      "estimated_aoi_cloud_pct": 0.0,
+      "quality_source": "Sentinel-2 SCL oceanfront mask",
+      "study_pixel_count": 2770,
+      "study_cloud_pixels": 0,
+      "study_invalid_pixels": 0,
+      "study_snow_pixels": 0,
+      "study_obscured_pixels": 0,
+      "nearest_low_tide": {
+        "time": "2024-08-14T13:59:00Z",
+        "level_m_msl": -0.489,
+        "image_offset_minutes": 100.7
+      },
+      "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2A_MSIL2A_20240814T153941_R011_T18SWJ_20240814T223950"
     },
     {
       "id": "S2A_MSIL2A_20241013T154211_R011_T18SWJ_20241013T211450",
@@ -7399,6 +7903,54 @@
       "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2C_MSIL2A_20250223T155301_R054_T18SWJ_20250223T193511"
     },
     {
+      "id": "S2A_MSIL2A_20250327T155701_R054_T18SWJ_20250327T190718",
+      "month": "2025-03",
+      "datetime": "2025-03-27T15:57:01.024000Z",
+      "image": "https://floodmapperv1.b-cdn.net/NorthWildwoodShoreline/scenes/sentinel-20250327T155701.jpg",
+      "image_shape": [
+        477,
+        556
+      ],
+      "catalog_cloud_pct": 2.11,
+      "estimated_aoi_cloud_pct": 0.0,
+      "quality_source": "Sentinel-2 SCL oceanfront mask",
+      "study_pixel_count": 2770,
+      "study_cloud_pixels": 0,
+      "study_invalid_pixels": 0,
+      "study_snow_pixels": 0,
+      "study_obscured_pixels": 0,
+      "nearest_low_tide": {
+        "time": "2025-03-27T17:41:00Z",
+        "level_m_msl": -0.86,
+        "image_offset_minutes": -104.0
+      },
+      "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2A_MSIL2A_20250327T155701_R054_T18SWJ_20250327T190718"
+    },
+    {
+      "id": "S2B_MSIL2A_20250409T154819_R054_T18SWJ_20250409T194449",
+      "month": "2025-04",
+      "datetime": "2025-04-09T15:48:19.024000Z",
+      "image": "https://floodmapperv1.b-cdn.net/NorthWildwoodShoreline/scenes/sentinel-20250409T154819.jpg",
+      "image_shape": [
+        477,
+        556
+      ],
+      "catalog_cloud_pct": 3.29,
+      "estimated_aoi_cloud_pct": 0.0,
+      "quality_source": "Sentinel-2 SCL oceanfront mask",
+      "study_pixel_count": 2770,
+      "study_cloud_pixels": 0,
+      "study_invalid_pixels": 0,
+      "study_snow_pixels": 0,
+      "study_obscured_pixels": 0,
+      "nearest_low_tide": {
+        "time": "2025-04-09T17:27:00Z",
+        "level_m_msl": -0.676,
+        "image_offset_minutes": -98.7
+      },
+      "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2B_MSIL2A_20250409T154819_R054_T18SWJ_20250409T194449"
+    },
+    {
       "id": "S2A_MSIL2A_20250423T154711_R011_T18SWJ_20250424T013115",
       "month": "2025-04",
       "datetime": "2025-04-23T15:47:11.024000Z",
@@ -7469,6 +8021,30 @@
         "image_offset_minutes": 36.0
       },
       "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2A_MSIL2A_20250903T155701_R054_T18SWJ_20250903T223812"
+    },
+    {
+      "id": "S2C_MSIL2A_20251031T155421_R054_T18SWJ_20251031T191216",
+      "month": "2025-10",
+      "datetime": "2025-10-31T15:54:21.025000Z",
+      "image": "https://floodmapperv1.b-cdn.net/NorthWildwoodShoreline/scenes/sentinel-20251031T155421.jpg",
+      "image_shape": [
+        477,
+        556
+      ],
+      "catalog_cloud_pct": 38.07,
+      "estimated_aoi_cloud_pct": 0.0,
+      "quality_source": "Sentinel-2 SCL oceanfront mask",
+      "study_pixel_count": 2770,
+      "study_cloud_pixels": 0,
+      "study_invalid_pixels": 0,
+      "study_snow_pixels": 0,
+      "study_obscured_pixels": 0,
+      "nearest_low_tide": {
+        "time": "2025-10-31T14:17:00Z",
+        "level_m_msl": -0.508,
+        "image_offset_minutes": 97.4
+      },
+      "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2C_MSIL2A_20251031T155421_R054_T18SWJ_20251031T191216"
     },
     {
       "id": "S2B_MSIL2A_20251102T154319_R011_T18SWJ_20251102T193858",
@@ -7565,6 +8141,30 @@
         "image_offset_minutes": -57.2
       },
       "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2B_MSIL2A_20260213T155249_R054_T18SWJ_20260213T193321"
+    },
+    {
+      "id": "S2C_MSIL2A_20260228T155211_R054_T18SWJ_20260228T191009",
+      "month": "2026-02",
+      "datetime": "2026-02-28T15:52:11.025000Z",
+      "image": "https://floodmapperv1.b-cdn.net/NorthWildwoodShoreline/scenes/sentinel-20260228T155211.jpg",
+      "image_shape": [
+        477,
+        556
+      ],
+      "catalog_cloud_pct": 0.19,
+      "estimated_aoi_cloud_pct": 0.0,
+      "quality_source": "Sentinel-2 SCL oceanfront mask",
+      "study_pixel_count": 2770,
+      "study_cloud_pixels": 0,
+      "study_invalid_pixels": 0,
+      "study_snow_pixels": 0,
+      "study_obscured_pixels": 0,
+      "nearest_low_tide": {
+        "time": "2026-02-28T17:23:00Z",
+        "level_m_msl": -0.784,
+        "image_offset_minutes": -90.8
+      },
+      "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2C_MSIL2A_20260228T155211_R054_T18SWJ_20260228T191009"
     },
     {
       "id": "S2B_MSIL2A_20260411T153939_R011_T18SWJ_20260411T193441",
