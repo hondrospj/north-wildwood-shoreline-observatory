@@ -8,6 +8,10 @@ type Scene = {
   datetime: string;
   cloud_mask_aoi_pct: number;
   ndwi_threshold: number;
+  wet_dry_point_count: number;
+  wet_dry_median_ndwi_contrast: number;
+  wet_dry_median_dry_side_ndwi: number;
+  wet_dry_median_wet_side_ndwi: number;
   tide: { level_m_msl: number; time: string; source: string };
   high_tide: { level_m_msl: number; time: string; source: string; image_offset_minutes: number };
   wave: { height_m: number; dominant_period_s: number; time: string; source: string };
@@ -31,6 +35,7 @@ type Metadata = {
     aoi_cloud_mask_max_pct: number;
     minimum_shoreline_points: number;
     high_tide_window_minutes: number;
+    minimum_wet_dry_ndwi_contrast: number;
     catalog_candidate_count: number;
     accepted_count: number;
     rejected_count: number;
@@ -130,7 +135,7 @@ function CoastCanvas({ metadata, shorelines, selectedDatetime, showAll }: { meta
     return () => observer.disconnect();
   }, [metadata, shorelines, selectedDatetime, showAll]);
 
-  return <canvas ref={ref} className="coast-canvas" aria-label="Corrected shoreline positions over satellite imagery" />;
+  return <canvas ref={ref} className="coast-canvas" aria-label="Corrected wet/dry-line positions over satellite imagery" />;
 }
 
 function TrendChart({ trend, selectedDatetime }: { trend: Trend; selectedDatetime: string }) {
@@ -257,7 +262,7 @@ export function ShorelineApp({ metadata, trend, shorelines }: { metadata: Metada
         <div className="hero-copy">
           <p className="eyebrow">Cape May County · New Jersey</p>
           <h1>A decade of shoreline movement, <em>normalized to the same sea state.</em></h1>
-          <p className="lede">Every suitable Sentinel-2 L2A acquisition is captured within ±1 hr 30 min of NOAA high tide, then normalized to remove the visual influence of tide and wave setup.</p>
+          <p className="lede">Every suitable Sentinel-2 L2A acquisition is captured within ±1 hr 30 min of NOAA high tide. Its ocean-facing wet/dry line is then normalized to remove the visual influence of tide and wave setup.</p>
         </div>
         <div className="hero-stat">
           <span className="stat-kicker">{cleanDate(trend.baseline_datetime)} → {cleanDate(trend.latest_datetime)}</span>
@@ -309,7 +314,7 @@ export function ShorelineApp({ metadata, trend, shorelines }: { metadata: Metada
                 <input className="acquisition-range" type="range" min="0" max={metadata.scenes.length - 1} step="1" value={selectedIndex} onChange={(event) => setSelectedIndex(Number(event.target.value))} aria-label={`Acquisition ${selectedIndex + 1} of ${metadata.scenes.length}`} />
                 <span className="acquisition-count">{selectedIndex + 1} / {metadata.scenes.length}</span>
               </div>
-              <label className="toggle"><input type="checkbox" checked={showAll} onChange={(event) => setShowAll(event.target.checked)} disabled={view === "compare"} /><span />All {metadata.scenes.length} corrected lines</label>
+              <label className="toggle"><input type="checkbox" checked={showAll} onChange={(event) => setShowAll(event.target.checked)} disabled={view === "compare"} /><span />All {metadata.scenes.length} corrected wet/dry lines</label>
             </div>
           </div>
 
@@ -321,10 +326,10 @@ export function ShorelineApp({ metadata, trend, shorelines }: { metadata: Metada
               <span className="tide-window-badge">✓ {highTideOffset(scene.high_tide.image_offset_minutes)} high tide</span>
             </div>
             <div className="correction-figure">
-              <span>Observed waterline</span><i className="raw-line" />
+              <span>Observed wet/dry line</span><i className="raw-line" />
               <div className="correction-arrow"><b>{signed(scene.horizontal_correction_m)} m</b><i>→</i></div>
               <i className="corrected-line" />
-              <span>MSL-normalized shoreline</span>
+              <span>MSL-normalized wet/dry line</span>
             </div>
             <dl className="scene-metrics">
               <div><dt>Tide at capture</dt><dd>{signed(scene.tide.level_m_msl)} m <small>MSL</small></dd></div>
@@ -335,6 +340,8 @@ export function ShorelineApp({ metadata, trend, shorelines }: { metadata: Metada
               <div><dt>Uncertainty</dt><dd>±{scene.uncertainty_m.toFixed(1)} m</dd></div>
               <div><dt>AOI cloud mask</dt><dd>{scene.cloud_mask_aoi_pct.toFixed(2)}%</dd></div>
               <div><dt>Water threshold</dt><dd>{scene.ndwi_threshold.toFixed(3)}</dd></div>
+              <div><dt>Wet/dry samples</dt><dd>{scene.wet_dry_point_count}</dd></div>
+              <div><dt>Median wet/dry contrast</dt><dd>{scene.wet_dry_median_ndwi_contrast.toFixed(3)}</dd></div>
             </dl>
             {scene.wave.source.includes("fallback") && (
               <div className="caveat"><b>Wave caveat</b><span>This scene uses regional wave climatology because a matching buoy observation was unavailable. Its tide term still comes from NOAA.</span></div>
@@ -345,8 +352,8 @@ export function ShorelineApp({ metadata, trend, shorelines }: { metadata: Metada
 
       <section id="change" className="change-section shell">
         <div className="section-heading">
-          <div><p className="eyebrow">Measured change</p><h2>Retreat is visible along the full exposed beach.</h2></div>
-          <p className="section-note">Negative values indicate landward movement from the {cleanDate(trend.baseline_datetime)} MSL-normalized baseline.</p>
+          <div><p className="eyebrow">Measured change</p><h2>Retreat dominates the exposed beach.</h2></div>
+          <p className="section-note">Negative values indicate landward movement from the {cleanDate(trend.baseline_datetime)} MSL-normalized wet/dry-line baseline.</p>
         </div>
         <div className="metric-row">
           <article><span>Median movement</span><strong>{signed(trend.net_median_change_m)} m</strong><small>{trend.baseline_year} to {trend.latest_year}</small></article>
@@ -383,9 +390,9 @@ export function ShorelineApp({ metadata, trend, shorelines }: { metadata: Metada
         </div>
         <ol className="method-steps">
           <li><span>01</span><div><strong>Screen every acquisition</strong><p>Every retained capture must fall within ±1 hr 30 min of NOAA-predicted high tide. Tile cloud must also be below {metadata.suitability.catalog_cloud_max_pct}% and the local mask below {metadata.suitability.aoi_cloud_mask_max_pct}%. No yearly sampling.</p></div></li>
-          <li><span>02</span><div><strong>Find the waterline</strong><p>Green and near-infrared bands form NDWI. An adaptive threshold traces the ocean-facing boundary; traces need at least {metadata.suitability.minimum_shoreline_points} points and must pass a temporal-coherence screen.</p></div></li>
+          <li><span>02</span><div><strong>Sample the wet/dry line</strong><p>Green and near-infrared bands form NDWI. The ocean mask anchors a local search for the strongest dry-to-wet transition. Three clear pixels are sampled on each side; the landward median must be below the adaptive threshold, the seaward median above it, and their NDWI contrast at least {metadata.suitability.minimum_wet_dry_ndwi_contrast.toFixed(2)}. Traces need at least {metadata.suitability.minimum_shoreline_points} validated points.</p></div></li>
           <li><span>03</span><div><strong>Normalize the sea state</strong><p>The exact NOAA water level at capture and offshore wave height/period estimate displacement and Stockdon wave setup.</p></div></li>
-          <li><span>04</span><div><strong>Compare alongshore</strong><p>Each line shifts along its local seaward normal using a 0.045 beach slope, then is sampled on consistent transects.</p></div></li>
+          <li><span>04</span><div><strong>Compare alongshore</strong><p>Each wet/dry line shifts along its local seaward normal using a 0.045 beach slope, passes a temporal-coherence screen, then is sampled on consistent transects.</p></div></li>
         </ol>
         <div className="quality-panel">
           <div>

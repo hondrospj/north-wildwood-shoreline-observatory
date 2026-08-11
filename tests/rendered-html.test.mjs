@@ -31,6 +31,8 @@ test("server-renders the complete shoreline observatory", async () => {
   assert.match(html, /Every suitable acquisition/);
   assert.match(html, /±1 hr 30 min/);
   assert.match(html, /No yearly sampling/);
+  assert.match(html, /Sample the wet\/dry line/);
+  assert.match(html, /Observed wet\/dry line/);
   assert.match(html, /og:image[^>]+https:\/\/shoreline-observatory\.example\/og\.png/i);
   assert.doesNotMatch(html, /codex-preview|Your site is taking shape|react-loading-skeleton/i);
 });
@@ -53,9 +55,14 @@ test("ships the real data bundle and removes the starter preview", async () => {
   assert.equal(trend.observation_count, metadata.scenes.length);
   assert.equal(trend.observations.length, metadata.scenes.length);
   assert.ok(trend.net_median_change_m < 0);
-  assert.equal(trend.retreat_share_pct, 100);
+  assert.ok(trend.retreat_share_pct > 80);
   assert.equal(geojson.features.filter((feature) => feature.properties.geometry_kind === "corrected").length, metadata.scenes.length);
+  assert.ok(geojson.features.every((feature) => feature.properties.shoreline_proxy === "wet/dry line"));
   assert.ok(metadata.scenes.every((scene) => scene.cloud_mask_aoi_pct <= metadata.suitability.aoi_cloud_mask_max_pct));
+  assert.ok(metadata.scenes.every((scene) => scene.wet_dry_point_count >= metadata.suitability.minimum_shoreline_points));
+  assert.ok(metadata.scenes.every((scene) => scene.wet_dry_median_ndwi_contrast >= metadata.suitability.minimum_wet_dry_ndwi_contrast));
+  assert.ok(metadata.scenes.every((scene) => scene.wet_dry_median_dry_side_ndwi < scene.ndwi_threshold));
+  assert.ok(metadata.scenes.every((scene) => scene.wet_dry_median_wet_side_ndwi > scene.ndwi_threshold));
   assert.ok(metadata.scenes.every((scene) => scene.geometry_p90_deviation_m <= metadata.suitability.geometry_p90_max_deviation_m));
   assert.ok(metadata.scenes.every((scene) => scene.geometry_max_deviation_m <= metadata.suitability.geometry_max_deviation_m));
   assert.ok(metadata.scenes.every((scene) => Math.abs(scene.high_tide.image_offset_minutes) <= metadata.suitability.high_tide_window_minutes));

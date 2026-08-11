@@ -51,6 +51,9 @@ CATALOG_CLOUD_MAX_PCT = 20.0
 AOI_CLOUD_MAX_PCT = 12.5
 MIN_SHORELINE_POINTS = 80
 HIGH_TIDE_WINDOW_MINUTES = 90.0
+WET_DRY_SEARCH_PIXELS = 4
+WET_DRY_SIDE_PIXELS = 3
+MIN_WET_DRY_NDWI_CONTRAST = 0.04
 GEOMETRY_P90_MAX_DEVIATION_M = 200.0
 GEOMETRY_MAX_DEVIATION_M = 300.0
 MGRS_TILE = "18SWJ"
@@ -345,6 +348,60 @@ def smooth(values: np.ndarray, window: int = 9) -> np.ndarray:
     return output
 
 
+def wet_dry_transition(
+    ndwi_row: np.ndarray,
+    clear_row: np.ndarray,
+    water_col: int,
+    threshold: float,
+) -> tuple[float, float, float, float] | None:
+    """Locate and validate the dry-to-wet spectral step beside the ocean edge.
+
+    The ocean mask anchors the search so dark roofs, roads, and back-bay water
+    cannot be selected. Within that small search window, the line is placed at
+    the strongest seaward NDWI increase whose landward sample is dry and whose
+    seaward sample is wet. Returned column coordinates sit between the two
+    Sentinel pixels rather than at either pixel center.
+    """
+    # Side medians suppress single-pixel noise without shifting the boundary.
+    values = ndwi_row.astype("float64")
+    start = max(WET_DRY_SIDE_PIXELS, water_col - WET_DRY_SEARCH_PIXELS)
+    stop = min(
+        len(values) - WET_DRY_SIDE_PIXELS - 1,
+        water_col + WET_DRY_SEARCH_PIXELS,
+    )
+    candidates: list[tuple[float, float, float, float, float]] = []
+    for dry_col in range(start, stop + 1):
+        wet_col = dry_col + 1
+        dry_slice = slice(dry_col - WET_DRY_SIDE_PIXELS + 1, dry_col + 1)
+        wet_slice = slice(wet_col, wet_col + WET_DRY_SIDE_PIXELS)
+        if not np.all(clear_row[dry_slice]) or not np.all(clear_row[wet_slice]):
+            continue
+        dry_value = float(np.nanmedian(values[dry_slice]))
+        wet_value = float(np.nanmedian(values[wet_slice]))
+        contrast = wet_value - dry_value
+        immediate_step = float(values[wet_col] - values[dry_col])
+        if (
+            not np.isfinite(contrast)
+            or contrast < MIN_WET_DRY_NDWI_CONTRAST
+            or dry_value >= threshold
+            or wet_value <= threshold
+        ):
+            continue
+        candidates.append(
+            (contrast, immediate_step, dry_col + 1.0, dry_value, wet_value)
+        )
+    if not candidates:
+        return None
+    contrast, _, column, dry_value, wet_value = max(
+        candidates,
+        key=lambda value: (
+            value[0] + max(value[1], 0.0),
+            -abs(value[2] - water_col),
+        ),
+    )
+    return column, contrast, dry_value, wet_value
+
+
 def crop_window(dataset: rasterio.DatasetReader):
     bounds = transform_bounds("EPSG:4326", dataset.crs, *AOI, densify_pts=21)
     return from_bounds(*bounds, transform=dataset.transform).round_offsets().round_lengths()
@@ -411,6 +468,9 @@ def read_scene(scene: dict[str, Any]) -> dict[str, Any]:
 
     rows = np.arange(0, water.shape[0], 2)
     xs, ys = [], []
+    wet_dry_contrasts: list[float] = []
+    dry_side_values: list[float] = []
+    wet_side_values: list[float] = []
     for row in rows:
         center_x, center_y = transform * (0, row + 0.5)
         _, lat_values = warp_transform(crs, "EPSG:4326", [center_x], [center_y])
@@ -433,11 +493,31 @@ def read_scene(scene: dict[str, Any]) -> dict[str, Any]:
             px, py = transform * (col + 0.5, row + 0.5)
             lon, candidate_lat = warp_transform(crs, "EPSG:4326", [px], [py])
             if SHORE_LON_RANGE[0] <= lon[0] <= SHORE_LON_RANGE[1]:
-                candidate_x.append((px, py, lon[0], candidate_lat[0]))
+                transition = wet_dry_transition(ndwi[row], clear[row], int(col), threshold)
+                if transition is None:
+                    continue
+                wet_dry_col, contrast, dry_value, wet_value = transition
+                wet_dry_px, wet_dry_py = transform * (wet_dry_col, row + 0.5)
+                candidate_x.append(
+                    (
+                        wet_dry_px,
+                        wet_dry_py,
+                        lon[0],
+                        candidate_lat[0],
+                        contrast,
+                        dry_value,
+                        wet_value,
+                    )
+                )
         if candidate_x:
-            px, py, _, _ = max(candidate_x, key=lambda value: value[0])
+            px, py, _, _, contrast, dry_value, wet_value = max(
+                candidate_x, key=lambda value: value[0]
+            )
             xs.append(px)
             ys.append(py)
+            wet_dry_contrasts.append(contrast)
+            dry_side_values.append(dry_value)
+            wet_side_values.append(wet_value)
 
     if len(xs) < MIN_SHORELINE_POINTS:
         sample_row = water.shape[0] // 2
@@ -451,7 +531,8 @@ def read_scene(scene: dict[str, Any]) -> dict[str, Any]:
             transition_lons.append((round(lon[0], 5), round(lat[0], 5)))
         print(f"  sample transitions={transition_lons[:20]}", flush=True)
         raise UnsuitableScene(
-            f"Only {len(xs)} shoreline points extracted; minimum is {MIN_SHORELINE_POINTS}"
+            f"Only {len(xs)} validated wet/dry-line points extracted; "
+            f"minimum is {MIN_SHORELINE_POINTS}"
         )
 
     xs_array = smooth(np.asarray(xs, dtype="float64"), 11)
@@ -503,7 +584,12 @@ def read_scene(scene: dict[str, Any]) -> dict[str, Any]:
         "cloud_cover_tile_pct": round(float(record["properties"].get("eo:cloud_cover", 0)), 2),
         "cloud_mask_aoi_pct": round(local_cloud_fraction * 100, 2),
         "ndwi_threshold": round(threshold, 3),
+        "wet_dry_point_count": len(xs),
+        "wet_dry_median_ndwi_contrast": round(float(np.median(wet_dry_contrasts)), 3),
+        "wet_dry_median_dry_side_ndwi": round(float(np.median(dry_side_values)), 3),
+        "wet_dry_median_wet_side_ndwi": round(float(np.median(wet_side_values)), 3),
         "tide": tide,
+        "high_tide": scene["high_tide"],
         "wave": wave,
         "wave_setup_m": round(setup, 3),
         "horizontal_correction_m": round(correction, 1),
@@ -529,7 +615,7 @@ def lon_delta_m(delta_lon: np.ndarray, latitude: np.ndarray | float) -> np.ndarr
 
 
 def screen_high_tide(records: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
-    """Keep captures made no more than 90 minutes from a NOAA high tide."""
+    """Keep catalog captures made no more than 90 minutes from a NOAA high tide."""
     month_keys = sorted({(record["year"], parse_dt(record["datetime"]).month) for record in records})
     monthly_events: dict[tuple[int, int], list[dict[str, Any]]] = {}
     with ThreadPoolExecutor(max_workers=6) as executor:
@@ -550,7 +636,7 @@ def screen_high_tide(records: list[dict[str, Any]]) -> tuple[list[dict[str, Any]
         if abs(offset_minutes) > HIGH_TIDE_WINDOW_MINUTES:
             rejected.append(
                 {
-                    "scene": {"id": record["scene_id"], "datetime": record["datetime"]},
+                    "scene": {"id": record["id"], "datetime": record["datetime"]},
                     "reason": (
                         f"Capture is {abs(offset_minutes):.1f} minutes from nearest high tide; "
                         f"maximum is {HIGH_TIDE_WINDOW_MINUTES:.0f} minutes"
@@ -558,11 +644,15 @@ def screen_high_tide(records: list[dict[str, Any]]) -> tuple[list[dict[str, Any]
                 }
             )
             continue
-        record["high_tide"] = {
-            **nearest,
-            "image_offset_minutes": round(offset_minutes, 1),
-        }
-        accepted.append(record)
+        accepted.append(
+            {
+                **record,
+                "high_tide": {
+                    **nearest,
+                    "image_offset_minutes": round(offset_minutes, 1),
+                },
+            }
+        )
     return accepted, rejected
 
 
@@ -628,7 +718,11 @@ def build_outputs(records: list[dict[str, Any]], diagnostics: dict[str, Any]) ->
         features.append(
             {
                 "type": "Feature",
-                "properties": {**common, "geometry_kind": "corrected"},
+                "properties": {
+                    **common,
+                    "geometry_kind": "corrected",
+                    "shoreline_proxy": "wet/dry line",
+                },
                 "geometry": {"type": "LineString", "coordinates": corrected_coords},
             }
         )
@@ -732,6 +826,9 @@ def build_outputs(records: list[dict[str, Any]], diagnostics: dict[str, Any]) ->
             "aoi_cloud_mask_max_pct": AOI_CLOUD_MAX_PCT,
             "minimum_shoreline_points": MIN_SHORELINE_POINTS,
             "high_tide_window_minutes": HIGH_TIDE_WINDOW_MINUTES,
+            "wet_dry_search_pixels": WET_DRY_SEARCH_PIXELS,
+            "wet_dry_side_pixels": WET_DRY_SIDE_PIXELS,
+            "minimum_wet_dry_ndwi_contrast": MIN_WET_DRY_NDWI_CONTRAST,
             "geometry_p90_max_deviation_m": GEOMETRY_P90_MAX_DEVIATION_M,
             "geometry_max_deviation_m": GEOMETRY_MAX_DEVIATION_M,
             **diagnostics,
@@ -742,18 +839,20 @@ def build_outputs(records: list[dict[str, Any]], diagnostics: dict[str, Any]) ->
         ],
         "method": {
             "water_index": "NDWI = (B03 - B08) / (B03 + B08), adaptive Otsu threshold",
+            "shoreline_proxy": "Ocean-facing wet/dry line: strongest validated seaward NDWI step next to the ocean-connected water mask",
+            "wet_dry_validation": "Median of three clear pixels sampled on each side; dry-side NDWI must be below the scene threshold, wet-side NDWI above it, and contrast at least 0.04",
             "cloud_mask": "Sentinel-2 Scene Classification Layer; classes 0,1,3,8,9,10,11 excluded",
             "tide": "Nearest NOAA CO-OPS Cape May water level, MSL datum",
             "high_tide_screen": "Capture must fall within +/- 90 minutes of a NOAA-predicted Cape May high tide",
             "waves": "Nearest NOAA NDBC 44009 significant wave height and dominant period",
             "wave_setup": "Stockdon setup term: 0.35 * beach slope * sqrt(H0 * L0)",
-            "horizontal_normalization": "Observed line shifted along local seaward normal by (tide + setup) / beach slope",
+            "horizontal_normalization": "Observed wet/dry line shifted along local seaward normal by (tide + setup) / beach slope",
         },
     }
     (PUBLIC_DATA / "metadata.json").write_text(json.dumps(metadata, indent=2))
 
 
-PIPELINE_VERSION = 2
+PIPELINE_VERSION = 3
 
 
 def process_scene(scene: dict[str, Any]) -> dict[str, Any]:
@@ -806,9 +905,15 @@ def main() -> None:
         f"{CATALOG_CLOUD_MAX_PCT:.0f}%",
         flush=True,
     )
+    high_tide_scenes, high_tide_rejected = screen_high_tide(scenes)
+    print(
+        f"High-tide screen: {len(high_tide_scenes)} inside +/- "
+        f"{HIGH_TIDE_WINDOW_MINUTES:.0f} minutes; {len(high_tide_rejected)} rejected",
+        flush=True,
+    )
     results: list[dict[str, Any]] = []
     with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
-        futures = {executor.submit(process_scene, scene): scene for scene in scenes}
+        futures = {executor.submit(process_scene, scene): scene for scene in high_tide_scenes}
         for completed, future in enumerate(as_completed(futures), start=1):
             scene = futures[future]
             result = future.result()
@@ -824,7 +929,7 @@ def main() -> None:
             elif status != "accepted":
                 detail = f" {result.get('reason', '')}"
             print(
-                f"[{completed:03d}/{len(scenes):03d}] {status:8s} "
+                f"[{completed:03d}/{len(high_tide_scenes):03d}] {status:8s} "
                 f"{scene['datetime'][:10]}{detail}",
                 flush=True,
             )
@@ -845,8 +950,7 @@ def main() -> None:
 
     extracted = [result["record"] for result in results if result["status"] == "accepted"]
     rejected = [result for result in results if result["status"] == "rejected"]
-    high_tide_records, high_tide_rejected = screen_high_tide(extracted)
-    records, geometry_rejected = screen_geometry(high_tide_records)
+    records, geometry_rejected = screen_geometry(extracted)
     diagnostics = {
         "catalog_item_count": raw_catalog_count,
         "catalog_candidate_count": len(scenes),

@@ -1,13 +1,13 @@
 {
-  "baseline_year": 2015,
+  "baseline_year": 2017,
   "latest_year": 2026,
-  "baseline_datetime": "2015-08-05T16:02:06.027000Z",
-  "latest_datetime": "2026-06-03T15:48:09.024000Z",
-  "observation_count": 96,
-  "net_median_change_m": -81.9,
-  "retreat_share_pct": 100.0,
-  "max_retreat_m": -134.5,
-  "max_advance_m": -18.2,
+  "baseline_datetime": "2017-06-12T15:39:11.026000Z",
+  "latest_datetime": "2026-05-04T15:48:09.024000Z",
+  "observation_count": 58,
+  "net_median_change_m": -77.9,
+  "retreat_share_pct": 92.2,
+  "max_retreat_m": -127.2,
+  "max_advance_m": 48.1,
   "latitudes": [
     38.9855,
     38.985725,
@@ -101,875 +101,595 @@
     39.0055
   ],
   "change_m": [
-    -71.7,
-    -75.1,
-    -73.4,
-    -63.4,
-    -36.1,
-    -18.2,
-    -33.9,
-    -53.9,
-    -57.4,
-    -62.5,
-    -92.5,
-    -72.7,
-    -59.8,
-    -57.2,
-    -68.7,
-    -75.3,
-    -79.9,
-    -49.7,
-    -78.9,
-    -103.4,
-    -89.8,
-    -77.8,
-    -86.6,
-    -94.6,
-    -86.1,
-    -76.0,
-    -77.3,
-    -89.9,
-    -84.5,
-    -94.0,
-    -106.6,
-    -102.2,
-    -101.5,
-    -114.2,
-    -116.5,
-    -118.6,
-    -115.3,
-    -107.3,
-    -123.9,
-    -127.4,
-    -117.3,
-    -106.1,
-    -96.2,
-    -92.6,
-    -86.5,
-    -86.6,
-    -74.8,
-    -66.1,
-    -59.1,
-    -65.3,
-    -35.4,
-    -25.2,
-    -23.3,
-    -33.8,
-    -25.3,
-    -26.4,
-    -26.5,
-    -33.9,
-    -44.8,
-    -35.4,
-    -35.0,
+    48.1,
+    28.4,
+    3.5,
+    -8.1,
+    -18.4,
     -34.7,
-    -46.5,
-    -64.2,
-    -74.5,
-    -83.8,
-    -94.9,
-    -88.7,
-    -90.3,
-    -85.4,
+    -76.3,
+    -80.2,
+    -87.9,
+    -80.3,
+    -76.5,
+    -67.9,
+    -68.0,
+    -75.6,
+    -78.1,
+    -88.1,
+    -81.6,
+    -78.0,
+    -87.8,
+    -98.1,
     -91.6,
-    -94.3,
-    -94.4,
-    -94.2,
-    -101.9,
-    -119.3,
-    -124.4,
-    -124.5,
-    -127.5,
-    -134.5,
-    -134.4,
-    -134.4,
-    -133.7,
-    -127.6,
-    -102.6,
-    -80.1,
-    -62.7,
-    -54.2,
-    -54.3,
-    -42.8
+    -87.9,
+    -88.1,
+    -97.8,
+    -89.9,
+    -77.7,
+    -84.6,
+    -83.0,
+    -88.1,
+    -95.3,
+    -107.8,
+    -95.8,
+    -93.1,
+    -90.7,
+    -97.8,
+    -90.8,
+    -105.0,
+    -112.1,
+    -123.7,
+    -122.0,
+    -122.9,
+    -119.7,
+    -127.2,
+    -115.8,
+    -107.8,
+    -107.8,
+    -113.1,
+    -115.8,
+    -109.4,
+    -99.0,
+    -78.7,
+    -92.4,
+    -78.7,
+    -70.9,
+    -67.9,
+    -67.9,
+    -70.9,
+    -71.0,
+    -75.5,
+    -82.9,
+    -87.1,
+    -83.0,
+    -78.8,
+    -74.7,
+    -70.6,
+    -68.7,
+    -58.2,
+    -68.1,
+    -62.3,
+    -49.3,
+    -48.4,
+    -48.4,
+    -48.4,
+    -48.3,
+    -45.0,
+    -32.7,
+    -28.4,
+    -28.4,
+    -28.4,
+    -28.4,
+    -28.4,
+    -27.7,
+    -18.1,
+    -18.4,
+    -18.0,
+    -4.7,
+    4.4,
+    11.8,
+    11.6,
+    11.6
   ],
   "zones": [
     {
       "name": "South beach",
-      "median_change_m": -75.1,
-      "min_change_m": -103.4,
-      "max_change_m": -18.2
+      "median_change_m": -80.2,
+      "min_change_m": -98.1,
+      "max_change_m": 48.1
     },
     {
       "name": "Central beach",
-      "median_change_m": -86.5,
-      "min_change_m": -127.4,
-      "max_change_m": -23.3
+      "median_change_m": -96.8,
+      "min_change_m": -127.2,
+      "max_change_m": -67.9
     },
     {
       "name": "North beach",
-      "median_change_m": -94.2,
-      "min_change_m": -134.5,
-      "max_change_m": -34.7
+      "median_change_m": -32.7,
+      "min_change_m": -83.0,
+      "max_change_m": 11.8
     }
   ],
   "observations": [
     {
-      "datetime": "2015-08-05T16:02:06.027000Z",
-      "year": 2015,
+      "datetime": "2017-06-12T15:39:11.026000Z",
+      "year": 2017,
       "median_change_m": 0.0,
       "p10_change_m": 0.0,
       "p90_change_m": 0.0
     },
     {
-      "datetime": "2016-10-18T16:01:22.026000Z",
-      "year": 2016,
-      "median_change_m": -23.8,
-      "p10_change_m": -92.4,
-      "p90_change_m": 44.7
-    },
-    {
-      "datetime": "2016-11-17T16:01:32.026000Z",
-      "year": 2016,
-      "median_change_m": -33.6,
-      "p10_change_m": -104.1,
-      "p90_change_m": 31.2
-    },
-    {
-      "datetime": "2017-03-17T15:49:51.026000Z",
-      "year": 2017,
-      "median_change_m": -10.0,
-      "p10_change_m": -90.9,
-      "p90_change_m": 55.9
-    },
-    {
-      "datetime": "2017-04-16T16:01:31.026000Z",
-      "year": 2017,
-      "median_change_m": -46.0,
-      "p10_change_m": -118.9,
-      "p90_change_m": 13.3
-    },
-    {
-      "datetime": "2017-05-16T15:49:11.026000Z",
-      "year": 2017,
-      "median_change_m": -34.8,
-      "p10_change_m": -115.2,
-      "p90_change_m": 13.9
-    },
-    {
-      "datetime": "2017-06-12T15:39:11.026000Z",
-      "year": 2017,
-      "median_change_m": -9.5,
-      "p10_change_m": -77.3,
-      "p90_change_m": 30.9
-    },
-    {
-      "datetime": "2017-06-15T16:01:31.026000Z",
-      "year": 2017,
-      "median_change_m": -6.3,
-      "p10_change_m": -106.2,
-      "p90_change_m": 57.9
-    },
-    {
-      "datetime": "2017-08-11T15:39:11.026000Z",
-      "year": 2017,
-      "median_change_m": -19.9,
-      "p10_change_m": -108.4,
-      "p90_change_m": 32.4
-    },
-    {
       "datetime": "2017-08-26T15:38:59.027000Z",
       "year": 2017,
-      "median_change_m": -8.0,
-      "p10_change_m": -111.3,
-      "p90_change_m": 30.5
-    },
-    {
-      "datetime": "2017-09-08T15:48:59.027000Z",
-      "year": 2017,
-      "median_change_m": 27.7,
-      "p10_change_m": -93.6,
-      "p90_change_m": 80.4
+      "median_change_m": -16.5,
+      "p10_change_m": -35.3,
+      "p90_change_m": 4.1
     },
     {
       "datetime": "2017-09-23T16:01:21.026000Z",
       "year": 2017,
-      "median_change_m": -18.4,
-      "p10_change_m": -100.9,
-      "p90_change_m": 33.6
-    },
-    {
-      "datetime": "2018-02-05T15:54:29.027000Z",
-      "year": 2018,
-      "median_change_m": 50.6,
-      "p10_change_m": -122.9,
-      "p90_change_m": 78.9
-    },
-    {
-      "datetime": "2018-05-01T15:49:11.024000Z",
-      "year": 2018,
-      "median_change_m": -37.1,
-      "p10_change_m": -125.2,
-      "p90_change_m": 8.9
+      "median_change_m": -16.8,
+      "p10_change_m": -46.7,
+      "p90_change_m": 15.7
     },
     {
       "datetime": "2018-07-02T15:38:09.024000Z",
       "year": 2018,
-      "median_change_m": -16.0,
-      "p10_change_m": -148.3,
-      "p90_change_m": 5.0
-    },
-    {
-      "datetime": "2018-07-17T15:39:11.024000Z",
-      "year": 2018,
-      "median_change_m": -34.1,
-      "p10_change_m": -157.5,
-      "p90_change_m": -7.8
-    },
-    {
-      "datetime": "2018-08-01T15:41:09.024000Z",
-      "year": 2018,
-      "median_change_m": -42.2,
-      "p10_change_m": -167.6,
-      "p90_change_m": -7.7
+      "median_change_m": -26.1,
+      "p10_change_m": -80.0,
+      "p90_change_m": 1.0
     },
     {
       "datetime": "2018-08-29T15:49:01.024000Z",
       "year": 2018,
-      "median_change_m": -17.8,
-      "p10_change_m": -161.3,
-      "p90_change_m": 8.3
+      "median_change_m": -20.0,
+      "p10_change_m": -73.4,
+      "p90_change_m": 8.9
     },
     {
       "datetime": "2018-09-30T15:40:29.024000Z",
       "year": 2018,
-      "median_change_m": -26.6,
-      "p10_change_m": -156.2,
-      "p90_change_m": 28.6
-    },
-    {
-      "datetime": "2018-12-27T15:56:51.024000Z",
-      "year": 2018,
-      "median_change_m": -51.5,
-      "p10_change_m": -156.7,
-      "p90_change_m": -15.9
+      "median_change_m": -21.6,
+      "p10_change_m": -77.0,
+      "p90_change_m": 6.3
     },
     {
       "datetime": "2019-01-11T15:56:29.024000Z",
       "year": 2019,
-      "median_change_m": 5.2,
-      "p10_change_m": -151.8,
-      "p90_change_m": 34.7
-    },
-    {
-      "datetime": "2019-03-12T15:52:09.024000Z",
-      "year": 2019,
-      "median_change_m": -41.5,
-      "p10_change_m": -172.1,
-      "p90_change_m": -9.0
-    },
-    {
-      "datetime": "2019-04-21T15:48:19.024000Z",
-      "year": 2019,
-      "median_change_m": -26.1,
-      "p10_change_m": -112.9,
-      "p90_change_m": 4.8
+      "median_change_m": -7.4,
+      "p10_change_m": -85.3,
+      "p90_change_m": 36.8
     },
     {
       "datetime": "2019-04-23T15:39:11.024000Z",
       "year": 2019,
-      "median_change_m": -53.0,
-      "p10_change_m": -110.7,
-      "p90_change_m": -20.2
-    },
-    {
-      "datetime": "2019-05-06T15:49:11.024000Z",
-      "year": 2019,
-      "median_change_m": -28.1,
-      "p10_change_m": -114.8,
-      "p90_change_m": 5.3
-    },
-    {
-      "datetime": "2019-06-05T15:49:11.024000Z",
-      "year": 2019,
-      "median_change_m": -0.2,
-      "p10_change_m": -122.4,
-      "p90_change_m": 26.8
-    },
-    {
-      "datetime": "2019-07-20T15:48:19.024000Z",
-      "year": 2019,
-      "median_change_m": -22.8,
-      "p10_change_m": -145.7,
-      "p90_change_m": -4.6
-    },
-    {
-      "datetime": "2019-07-22T15:39:11.024000Z",
-      "year": 2019,
-      "median_change_m": -41.2,
-      "p10_change_m": -153.1,
-      "p90_change_m": -12.4
+      "median_change_m": -43.8,
+      "p10_change_m": -113.6,
+      "p90_change_m": -12.1
     },
     {
       "datetime": "2019-08-19T15:48:19.024000Z",
       "year": 2019,
-      "median_change_m": -17.6,
-      "p10_change_m": -101.0,
-      "p90_change_m": 2.4
-    },
-    {
-      "datetime": "2019-11-02T15:54:21.024000Z",
-      "year": 2019,
-      "median_change_m": -19.4,
-      "p10_change_m": -68.2,
-      "p90_change_m": 38.1
-    },
-    {
-      "datetime": "2019-11-29T15:46:11.024000Z",
-      "year": 2019,
-      "median_change_m": -50.5,
-      "p10_change_m": -91.1,
-      "p90_change_m": -1.1
-    },
-    {
-      "datetime": "2020-01-26T15:55:29.024000Z",
-      "year": 2020,
-      "median_change_m": 11.7,
-      "p10_change_m": -39.7,
-      "p90_change_m": 72.4
+      "median_change_m": -11.9,
+      "p10_change_m": -78.1,
+      "p90_change_m": 27.7
     },
     {
       "datetime": "2020-03-26T15:48:09.024000Z",
       "year": 2020,
-      "median_change_m": -14.9,
-      "p10_change_m": -65.8,
-      "p90_change_m": 44.5
-    },
-    {
-      "datetime": "2020-04-25T15:48:09.024000Z",
-      "year": 2020,
-      "median_change_m": -53.1,
-      "p10_change_m": -81.5,
-      "p90_change_m": -16.5
+      "median_change_m": -5.7,
+      "p10_change_m": -94.6,
+      "p90_change_m": 34.3
     },
     {
       "datetime": "2020-05-10T15:49:11.024000Z",
       "year": 2020,
-      "median_change_m": -51.6,
-      "p10_change_m": -71.5,
-      "p90_change_m": -11.1
+      "median_change_m": -25.4,
+      "p10_change_m": -105.5,
+      "p90_change_m": 21.3
     },
     {
       "datetime": "2020-07-06T15:39:11.024000Z",
       "year": 2020,
-      "median_change_m": -20.8,
-      "p10_change_m": -44.8,
-      "p90_change_m": 1.1
-    },
-    {
-      "datetime": "2020-07-09T15:49:11.024000Z",
-      "year": 2020,
-      "median_change_m": -44.2,
-      "p10_change_m": -99.0,
-      "p90_change_m": 1.7
+      "median_change_m": 2.9,
+      "p10_change_m": -68.9,
+      "p90_change_m": 53.2
     },
     {
       "datetime": "2020-08-05T15:39:11.024000Z",
       "year": 2020,
-      "median_change_m": 34.5,
-      "p10_change_m": -4.6,
-      "p90_change_m": 62.6
+      "median_change_m": 39.5,
+      "p10_change_m": -9.2,
+      "p90_change_m": 115.1
     },
     {
       "datetime": "2020-09-04T15:39:11.024000Z",
       "year": 2020,
-      "median_change_m": -27.3,
-      "p10_change_m": -49.9,
-      "p90_change_m": 9.9
-    },
-    {
-      "datetime": "2020-09-22T15:48:59.024000Z",
-      "year": 2020,
-      "median_change_m": 9.7,
-      "p10_change_m": -44.2,
-      "p90_change_m": 67.5
-    },
-    {
-      "datetime": "2020-10-07T15:51:41.024000Z",
-      "year": 2020,
-      "median_change_m": -50.3,
-      "p10_change_m": -80.1,
-      "p90_change_m": -19.9
+      "median_change_m": -10.6,
+      "p10_change_m": -92.7,
+      "p90_change_m": 53.5
     },
     {
       "datetime": "2021-03-03T15:41:41.024000Z",
       "year": 2021,
-      "median_change_m": -45.8,
-      "p10_change_m": -73.7,
-      "p90_change_m": -0.4
-    },
-    {
-      "datetime": "2021-05-15T15:49:11.024000Z",
-      "year": 2021,
-      "median_change_m": -42.7,
-      "p10_change_m": -78.1,
-      "p90_change_m": -16.1
+      "median_change_m": -19.0,
+      "p10_change_m": -106.2,
+      "p90_change_m": 16.2
     },
     {
       "datetime": "2021-08-10T15:39:11.024000Z",
       "year": 2021,
-      "median_change_m": -14.2,
-      "p10_change_m": -44.0,
-      "p90_change_m": 4.2
+      "median_change_m": -7.2,
+      "p10_change_m": -83.1,
+      "p90_change_m": 101.4
     },
     {
       "datetime": "2021-08-25T15:38:09.024000Z",
       "year": 2021,
-      "median_change_m": -26.7,
-      "p10_change_m": -46.7,
-      "p90_change_m": -1.6
+      "median_change_m": -26.6,
+      "p10_change_m": -97.0,
+      "p90_change_m": 59.1
     },
     {
       "datetime": "2021-11-23T15:45:49.024000Z",
       "year": 2021,
-      "median_change_m": -31.3,
-      "p10_change_m": -59.1,
-      "p90_change_m": 16.2
+      "median_change_m": 17.7,
+      "p10_change_m": -105.1,
+      "p90_change_m": 45.7
     },
     {
       "datetime": "2021-12-23T15:46:49.024000Z",
       "year": 2021,
-      "median_change_m": -12.0,
-      "p10_change_m": -42.0,
-      "p90_change_m": 34.5
-    },
-    {
-      "datetime": "2022-02-19T15:53:11.024000Z",
-      "year": 2022,
-      "median_change_m": -32.3,
-      "p10_change_m": -72.1,
-      "p90_change_m": 39.6
+      "median_change_m": 31.8,
+      "p10_change_m": -70.7,
+      "p90_change_m": 88.5
     },
     {
       "datetime": "2022-02-21T15:41:49.024000Z",
       "year": 2022,
-      "median_change_m": -42.8,
-      "p10_change_m": -86.0,
-      "p90_change_m": 23.4
+      "median_change_m": -47.9,
+      "p10_change_m": -136.3,
+      "p90_change_m": 129.5
     },
     {
       "datetime": "2022-03-21T15:49:41.024000Z",
       "year": 2022,
-      "median_change_m": -52.6,
-      "p10_change_m": -83.1,
-      "p90_change_m": 17.8
+      "median_change_m": -48.3,
+      "p10_change_m": -131.6,
+      "p90_change_m": 116.8
     },
     {
       "datetime": "2022-04-20T15:49:41.024000Z",
       "year": 2022,
-      "median_change_m": -51.6,
-      "p10_change_m": -84.9,
-      "p90_change_m": 11.2
+      "median_change_m": -49.6,
+      "p10_change_m": -128.3,
+      "p90_change_m": 108.2
     },
     {
       "datetime": "2022-05-17T15:38:21.024000Z",
       "year": 2022,
-      "median_change_m": -43.5,
-      "p10_change_m": -78.7,
-      "p90_change_m": -2.3
+      "median_change_m": -47.7,
+      "p10_change_m": -116.1,
+      "p90_change_m": 94.9
     },
     {
       "datetime": "2022-06-04T15:48:09.024000Z",
       "year": 2022,
-      "median_change_m": -63.2,
-      "p10_change_m": -82.7,
-      "p90_change_m": -24.2
-    },
-    {
-      "datetime": "2022-07-01T15:38:19.024000Z",
-      "year": 2022,
-      "median_change_m": -34.5,
-      "p10_change_m": -69.7,
-      "p90_change_m": -7.5
-    },
-    {
-      "datetime": "2022-07-04T15:48:19.024000Z",
-      "year": 2022,
-      "median_change_m": -48.5,
-      "p10_change_m": -73.1,
-      "p90_change_m": -20.8
+      "median_change_m": -68.6,
+      "p10_change_m": -109.5,
+      "p90_change_m": 72.9
     },
     {
       "datetime": "2022-08-03T15:48:19.024000Z",
       "year": 2022,
-      "median_change_m": -53.3,
-      "p10_change_m": -82.5,
-      "p90_change_m": -29.7
+      "median_change_m": -54.8,
+      "p10_change_m": -113.5,
+      "p90_change_m": 63.3
     },
     {
       "datetime": "2022-08-13T15:48:19.024000Z",
       "year": 2022,
-      "median_change_m": -30.6,
-      "p10_change_m": -56.5,
-      "p90_change_m": -10.6
+      "median_change_m": -33.2,
+      "p10_change_m": -82.1,
+      "p90_change_m": 76.2
     },
     {
       "datetime": "2022-08-30T15:38:09.024000Z",
       "year": 2022,
-      "median_change_m": -40.2,
-      "p10_change_m": -64.2,
-      "p90_change_m": -12.9
+      "median_change_m": -44.3,
+      "p10_change_m": -134.8,
+      "p90_change_m": 80.9
     },
     {
       "datetime": "2022-10-27T15:53:41.024000Z",
       "year": 2022,
-      "median_change_m": -55.1,
-      "p10_change_m": -82.7,
-      "p90_change_m": -18.0
+      "median_change_m": -49.7,
+      "p10_change_m": -108.1,
+      "p90_change_m": 48.7
     },
     {
       "datetime": "2022-11-26T15:56:11.024000Z",
       "year": 2022,
-      "median_change_m": -42.1,
-      "p10_change_m": -69.8,
-      "p90_change_m": -6.8
-    },
-    {
-      "datetime": "2022-12-13T15:46:41.024000Z",
-      "year": 2022,
-      "median_change_m": -46.3,
-      "p10_change_m": -71.9,
-      "p90_change_m": -7.9
-    },
-    {
-      "datetime": "2023-02-24T15:52:31.024000Z",
-      "year": 2023,
-      "median_change_m": -77.1,
-      "p10_change_m": -103.1,
-      "p90_change_m": -43.5
+      "median_change_m": -34.9,
+      "p10_change_m": -98.3,
+      "p90_change_m": 51.7
     },
     {
       "datetime": "2023-03-26T15:49:01.024000Z",
       "year": 2023,
-      "median_change_m": -72.1,
-      "p10_change_m": -109.4,
-      "p90_change_m": -44.9
-    },
-    {
-      "datetime": "2023-04-10T15:48:19.024000Z",
-      "year": 2023,
-      "median_change_m": -62.9,
-      "p10_change_m": -101.8,
-      "p90_change_m": -26.4
+      "median_change_m": -71.6,
+      "p10_change_m": -132.6,
+      "p90_change_m": 7.6
     },
     {
       "datetime": "2023-05-10T15:48:19.024000Z",
       "year": 2023,
-      "median_change_m": -74.5,
-      "p10_change_m": -106.9,
-      "p90_change_m": -47.2
+      "median_change_m": -70.3,
+      "p10_change_m": -130.0,
+      "p90_change_m": -10.2
     },
     {
       "datetime": "2023-05-22T15:38:11.024000Z",
       "year": 2023,
-      "median_change_m": -53.8,
-      "p10_change_m": -92.9,
-      "p90_change_m": -23.4
+      "median_change_m": -44.5,
+      "p10_change_m": -104.7,
+      "p90_change_m": 4.1
     },
     {
-      "datetime": "2023-08-20T15:38:21.024000Z",
+      "datetime": "2023-08-18T15:48:19.024000Z",
       "year": 2023,
-      "median_change_m": -68.7,
-      "p10_change_m": -103.1,
-      "p90_change_m": -31.1
+      "median_change_m": -62.4,
+      "p10_change_m": -138.7,
+      "p90_change_m": 4.7
     },
     {
       "datetime": "2023-09-02T15:48:21.024000Z",
       "year": 2023,
-      "median_change_m": -60.7,
-      "p10_change_m": -106.3,
-      "p90_change_m": -37.9
+      "median_change_m": -51.4,
+      "p10_change_m": -121.0,
+      "p90_change_m": -5.5
     },
     {
       "datetime": "2023-09-19T15:39:21.024000Z",
       "year": 2023,
-      "median_change_m": -71.3,
-      "p10_change_m": -110.8,
-      "p90_change_m": -36.8
-    },
-    {
-      "datetime": "2023-10-02T15:51:01.024000Z",
-      "year": 2023,
-      "median_change_m": -83.7,
-      "p10_change_m": -112.7,
-      "p90_change_m": -44.5
+      "median_change_m": -53.8,
+      "p10_change_m": -131.7,
+      "p90_change_m": -25.8
     },
     {
       "datetime": "2023-10-04T15:40:09.024000Z",
       "year": 2023,
-      "median_change_m": -91.5,
-      "p10_change_m": -143.5,
-      "p90_change_m": -65.9
+      "median_change_m": -78.3,
+      "p10_change_m": -146.1,
+      "p90_change_m": -27.6
     },
     {
       "datetime": "2023-10-19T15:42:51.024000Z",
       "year": 2023,
-      "median_change_m": -77.0,
-      "p10_change_m": -119.0,
-      "p90_change_m": -50.0
+      "median_change_m": -66.7,
+      "p10_change_m": -132.0,
+      "p90_change_m": -9.6
     },
     {
       "datetime": "2023-11-16T15:55:29.024000Z",
       "year": 2023,
-      "median_change_m": -71.1,
-      "p10_change_m": -112.2,
-      "p90_change_m": -36.0
+      "median_change_m": -55.7,
+      "p10_change_m": -122.7,
+      "p90_change_m": -3.1
     },
     {
       "datetime": "2024-02-14T15:52:49.024000Z",
       "year": 2024,
-      "median_change_m": -88.0,
-      "p10_change_m": -128.8,
-      "p90_change_m": -59.5
+      "median_change_m": -81.2,
+      "p10_change_m": -150.4,
+      "p90_change_m": -26.7
     },
     {
       "datetime": "2024-02-26T15:42:21.024000Z",
       "year": 2024,
-      "median_change_m": -78.2,
-      "p10_change_m": -121.6,
-      "p90_change_m": -50.5
+      "median_change_m": -63.7,
+      "p10_change_m": -131.8,
+      "p90_change_m": -14.0
+    },
+    {
+      "datetime": "2024-03-12T15:39:29.024000Z",
+      "year": 2024,
+      "median_change_m": -68.5,
+      "p10_change_m": -134.5,
+      "p90_change_m": -16.7
     },
     {
       "datetime": "2024-04-26T15:39:41.024000Z",
       "year": 2024,
-      "median_change_m": -85.0,
-      "p10_change_m": -130.0,
-      "p90_change_m": -62.9
+      "median_change_m": -75.6,
+      "p10_change_m": -142.6,
+      "p90_change_m": -55.6
     },
     {
       "datetime": "2024-04-29T15:49:41.024000Z",
       "year": 2024,
-      "median_change_m": -102.5,
-      "p10_change_m": -147.7,
-      "p90_change_m": -76.9
+      "median_change_m": -90.4,
+      "p10_change_m": -157.8,
+      "p90_change_m": -37.4
     },
     {
       "datetime": "2024-06-08T15:49:41.024000Z",
       "year": 2024,
-      "median_change_m": -74.5,
-      "p10_change_m": -119.2,
-      "p90_change_m": -34.0
+      "median_change_m": -62.9,
+      "p10_change_m": -134.5,
+      "p90_change_m": -15.2
     },
     {
       "datetime": "2024-08-22T15:48:09.024000Z",
       "year": 2024,
-      "median_change_m": -33.5,
-      "p10_change_m": -83.5,
-      "p90_change_m": -1.4
+      "median_change_m": -26.5,
+      "p10_change_m": -59.4,
+      "p90_change_m": 16.6
     },
     {
       "datetime": "2024-09-08T15:38:19.024000Z",
       "year": 2024,
-      "median_change_m": -38.3,
-      "p10_change_m": -86.8,
-      "p90_change_m": 2.0
+      "median_change_m": -29.3,
+      "p10_change_m": -61.4,
+      "p90_change_m": 9.5
     },
     {
       "datetime": "2024-10-06T15:51:31.024000Z",
       "year": 2024,
-      "median_change_m": -49.0,
-      "p10_change_m": -99.7,
-      "p90_change_m": 1.9
+      "median_change_m": -44.5,
+      "p10_change_m": -85.7,
+      "p90_change_m": -12.2
     },
     {
       "datetime": "2024-10-21T15:52:19.024000Z",
       "year": 2024,
-      "median_change_m": -49.4,
-      "p10_change_m": -92.7,
-      "p90_change_m": -3.0
-    },
-    {
-      "datetime": "2025-03-02T15:42:11.025000Z",
-      "year": 2025,
-      "median_change_m": -16.1,
-      "p10_change_m": -63.9,
-      "p90_change_m": 11.4
+      "median_change_m": -50.0,
+      "p10_change_m": -83.5,
+      "p90_change_m": -19.4
     },
     {
       "datetime": "2025-04-01T15:40:01.025000Z",
       "year": 2025,
-      "median_change_m": -57.7,
-      "p10_change_m": -85.7,
-      "p90_change_m": -21.3
+      "median_change_m": -62.3,
+      "p10_change_m": -93.1,
+      "p90_change_m": -2.0
     },
     {
       "datetime": "2025-04-29T15:48:19.024000Z",
       "year": 2025,
-      "median_change_m": -34.3,
-      "p10_change_m": -73.7,
-      "p90_change_m": 6.6
+      "median_change_m": -36.3,
+      "p10_change_m": -69.8,
+      "p90_change_m": 12.2
     },
     {
       "datetime": "2025-07-28T15:48:09.024000Z",
       "year": 2025,
-      "median_change_m": -56.4,
-      "p10_change_m": -87.6,
-      "p90_change_m": -16.5
+      "median_change_m": -48.8,
+      "p10_change_m": -82.7,
+      "p90_change_m": -9.3
     },
     {
       "datetime": "2025-08-27T15:48:19.024000Z",
       "year": 2025,
-      "median_change_m": -74.8,
-      "p10_change_m": -102.5,
-      "p90_change_m": -26.4
-    },
-    {
-      "datetime": "2025-09-23T15:38:59.024000Z",
-      "year": 2025,
-      "median_change_m": -68.3,
-      "p10_change_m": -103.3,
-      "p90_change_m": -26.5
+      "median_change_m": -64.2,
+      "p10_change_m": -107.5,
+      "p90_change_m": -19.5
     },
     {
       "datetime": "2025-12-22T15:45:59.024000Z",
       "year": 2025,
       "median_change_m": -67.0,
-      "p10_change_m": -105.6,
-      "p90_change_m": -24.8
+      "p10_change_m": -103.3,
+      "p90_change_m": -8.9
     },
     {
       "datetime": "2026-01-21T15:44:49.024000Z",
       "year": 2026,
-      "median_change_m": -73.0,
-      "p10_change_m": -114.8,
-      "p90_change_m": -23.3
+      "median_change_m": -58.1,
+      "p10_change_m": -102.3,
+      "p90_change_m": -16.5
     },
     {
       "datetime": "2026-04-06T15:38:11.025000Z",
       "year": 2026,
-      "median_change_m": -77.7,
-      "p10_change_m": -114.2,
-      "p90_change_m": -37.8
+      "median_change_m": -78.9,
+      "p10_change_m": -102.5,
+      "p90_change_m": -21.2
     },
     {
       "datetime": "2026-04-21T15:38:09.024000Z",
       "year": 2026,
-      "median_change_m": -83.8,
-      "p10_change_m": -125.5,
-      "p90_change_m": -36.2
+      "median_change_m": -75.4,
+      "p10_change_m": -107.0,
+      "p90_change_m": -45.0
     },
     {
       "datetime": "2026-04-21T15:57:11.024000Z",
       "year": 2026,
-      "median_change_m": -82.5,
-      "p10_change_m": -116.6,
-      "p90_change_m": -42.3
+      "median_change_m": -75.3,
+      "p10_change_m": -107.2,
+      "p90_change_m": -25.7
     },
     {
       "datetime": "2026-05-04T15:48:09.024000Z",
       "year": 2026,
-      "median_change_m": -86.0,
-      "p10_change_m": -124.4,
-      "p90_change_m": -38.4
-    },
-    {
-      "datetime": "2026-05-19T15:48:11.025000Z",
-      "year": 2026,
-      "median_change_m": -69.4,
-      "p10_change_m": -116.6,
-      "p90_change_m": -3.6
-    },
-    {
-      "datetime": "2026-06-03T15:48:09.024000Z",
-      "year": 2026,
-      "median_change_m": -81.9,
-      "p10_change_m": -123.9,
-      "p90_change_m": -34.6
+      "median_change_m": -77.9,
+      "p10_change_m": -109.7,
+      "p90_change_m": -17.1
     }
   ],
   "yearly": [
     {
-      "year": 2015,
-      "observation_count": 1,
-      "median_change_m": 0.0,
-      "p10_change_m": 0.0,
-      "p90_change_m": 0.0
-    },
-    {
-      "year": 2016,
-      "observation_count": 2,
-      "median_change_m": -28.7,
-      "p10_change_m": -32.6,
-      "p90_change_m": -24.8
-    },
-    {
       "year": 2017,
-      "observation_count": 9,
-      "median_change_m": -10.0,
-      "p10_change_m": -37.0,
-      "p90_change_m": 0.5
+      "observation_count": 3,
+      "median_change_m": -16.5,
+      "p10_change_m": -16.7,
+      "p90_change_m": -3.3
     },
     {
       "year": 2018,
-      "observation_count": 8,
-      "median_change_m": -30.4,
-      "p10_change_m": -45.0,
-      "p90_change_m": 4.0
+      "observation_count": 3,
+      "median_change_m": -21.6,
+      "p10_change_m": -25.2,
+      "p90_change_m": -20.3
     },
     {
       "year": 2019,
-      "observation_count": 11,
-      "median_change_m": -26.1,
-      "p10_change_m": -50.5,
-      "p90_change_m": -0.2
+      "observation_count": 3,
+      "median_change_m": -11.9,
+      "p10_change_m": -37.4,
+      "p90_change_m": -8.3
     },
     {
       "year": 2020,
-      "observation_count": 10,
-      "median_change_m": -24.1,
-      "p10_change_m": -51.8,
-      "p90_change_m": 14.0
+      "observation_count": 5,
+      "median_change_m": -5.7,
+      "p10_change_m": -19.5,
+      "p90_change_m": 24.9
     },
     {
       "year": 2021,
-      "observation_count": 6,
-      "median_change_m": -29.0,
-      "p10_change_m": -44.2,
-      "p90_change_m": -13.1
+      "observation_count": 5,
+      "median_change_m": -7.2,
+      "p10_change_m": -23.6,
+      "p90_change_m": 26.2
     },
     {
       "year": 2022,
-      "observation_count": 14,
-      "median_change_m": -44.9,
-      "p10_change_m": -54.6,
-      "p90_change_m": -33.0
+      "observation_count": 10,
+      "median_change_m": -48.1,
+      "p10_change_m": -56.2,
+      "p90_change_m": -34.7
     },
     {
       "year": 2023,
-      "observation_count": 12,
-      "median_change_m": -71.7,
-      "p10_change_m": -83.0,
-      "p90_change_m": -60.9
+      "observation_count": 9,
+      "median_change_m": -62.4,
+      "p10_change_m": -72.9,
+      "p90_change_m": -50.0
     },
     {
       "year": 2024,
-      "observation_count": 9,
-      "median_change_m": -74.5,
-      "p10_change_m": -90.9,
-      "p90_change_m": -37.3
+      "observation_count": 10,
+      "median_change_m": -63.3,
+      "p10_change_m": -82.1,
+      "p90_change_m": -29.0
     },
     {
       "year": 2025,
-      "observation_count": 7,
-      "median_change_m": -57.7,
-      "p10_change_m": -70.9,
-      "p90_change_m": -27.0
+      "observation_count": 5,
+      "median_change_m": -62.3,
+      "p10_change_m": -65.9,
+      "p90_change_m": -41.3
     },
     {
       "year": 2026,
-      "observation_count": 7,
-      "median_change_m": -81.9,
-      "p10_change_m": -84.7,
-      "p90_change_m": -71.6
+      "observation_count": 5,
+      "median_change_m": -75.4,
+      "p10_change_m": -78.5,
+      "p90_change_m": -65.0
     }
   ]
 }

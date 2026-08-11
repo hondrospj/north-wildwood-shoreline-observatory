@@ -1,6 +1,6 @@
 {
   "title": "North Wildwood Shoreline Observatory",
-  "generated": "2026-08-11T00:30:37.645173Z",
+  "generated": "2026-08-11T00:41:58.414195Z",
   "aoi": [
     -74.825,
     38.98,
@@ -23,236 +23,23 @@
     "aoi_cloud_mask_max_pct": 12.5,
     "minimum_shoreline_points": 80,
     "high_tide_window_minutes": 90.0,
+    "wet_dry_search_pixels": 4,
+    "wet_dry_side_pixels": 3,
+    "minimum_wet_dry_ndwi_contrast": 0.04,
     "geometry_p90_max_deviation_m": 200.0,
     "geometry_max_deviation_m": 300.0,
     "catalog_item_count": 477,
     "catalog_candidate_count": 434,
     "duplicate_product_count": 43,
-    "accepted_count": 96,
-    "rejected_count": 338,
-    "cloud_or_extraction_rejected_count": 53,
-    "high_tide_rejected_count": 278,
-    "geometry_rejected_count": 7,
+    "accepted_count": 58,
+    "rejected_count": 376,
+    "cloud_or_extraction_rejected_count": 50,
+    "high_tide_rejected_count": 318,
+    "geometry_rejected_count": 8,
     "date_start": "2015-08-05T16:02:06.027000Z",
     "date_end": "2026-08-07T15:48:11.025000Z"
   },
   "scenes": [
-    {
-      "year": 2015,
-      "scene_id": "S2A_MSIL2A_20150805T160206_R054_T18SWJ_20210411T183211",
-      "datetime": "2015-08-05T16:02:06.027000Z",
-      "cloud_cover_tile_pct": 12.9,
-      "cloud_mask_aoi_pct": 6.7,
-      "ndwi_threshold": 0.012,
-      "tide": {
-        "level_m_msl": 0.794,
-        "time": "2015-08-05T16:00:00Z",
-        "source": "verified"
-      },
-      "wave": {
-        "height_m": 1.09,
-        "dominant_period_s": 7.1,
-        "time": "2015-08-05T15:50:00Z",
-        "source": "NDBC historical"
-      },
-      "wave_setup_m": 0.146,
-      "horizontal_correction_m": 20.9,
-      "uncertainty_m": 17.8,
-      "image": "/data/scenes/sentinel-20150805T160206.jpg",
-      "image_shape": [
-        477,
-        556
-      ],
-      "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2A_MSIL2A_20150805T160206_R054_T18SWJ_20210411T183211",
-      "high_tide": {
-        "time": "2015-08-05T17:21:00Z",
-        "level_m_msl": 0.939,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": -78.9
-      },
-      "geometry_p90_deviation_m": 89.6,
-      "geometry_max_deviation_m": 120.4
-    },
-    {
-      "year": 2016,
-      "scene_id": "S2A_MSIL2A_20161018T160122_R054_T18SWJ_20210213T115531",
-      "datetime": "2016-10-18T16:01:22.026000Z",
-      "cloud_cover_tile_pct": 0.2,
-      "cloud_mask_aoi_pct": 4.87,
-      "ndwi_threshold": 0.22,
-      "tide": {
-        "level_m_msl": 1.138,
-        "time": "2016-10-18T16:00:00Z",
-        "source": "verified"
-      },
-      "wave": {
-        "height_m": 0.8,
-        "dominant_period_s": 7.0,
-        "time": "2016-10-18T16:01:22.026000Z",
-        "source": "regional climatology fallback"
-      },
-      "wave_setup_m": 0.123,
-      "horizontal_correction_m": 28.0,
-      "uncertainty_m": 19.0,
-      "image": "/data/scenes/sentinel-20161018T160122.jpg",
-      "image_shape": [
-        477,
-        556
-      ],
-      "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2A_MSIL2A_20161018T160122_R054_T18SWJ_20210213T115531",
-      "high_tide": {
-        "time": "2016-10-18T14:45:00Z",
-        "level_m_msl": 1.225,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": 76.4
-      },
-      "geometry_p90_deviation_m": 80.4,
-      "geometry_max_deviation_m": 102.2
-    },
-    {
-      "year": 2016,
-      "scene_id": "S2A_MSIL2A_20161117T160132_R054_T18SWJ_20210528T232522",
-      "datetime": "2016-11-17T16:01:32.026000Z",
-      "cloud_cover_tile_pct": 0.49,
-      "cloud_mask_aoi_pct": 10.65,
-      "ndwi_threshold": 0.22,
-      "tide": {
-        "level_m_msl": 1.134,
-        "time": "2016-11-17T16:00:00Z",
-        "source": "verified"
-      },
-      "wave": {
-        "height_m": 0.8,
-        "dominant_period_s": 7.0,
-        "time": "2016-11-17T16:01:32.026000Z",
-        "source": "regional climatology fallback"
-      },
-      "wave_setup_m": 0.123,
-      "horizontal_correction_m": 27.9,
-      "uncertainty_m": 19.0,
-      "image": "/data/scenes/sentinel-20161117T160132.jpg",
-      "image_shape": [
-        477,
-        556
-      ],
-      "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2A_MSIL2A_20161117T160132_R054_T18SWJ_20210528T232522",
-      "high_tide": {
-        "time": "2016-11-17T15:19:00Z",
-        "level_m_msl": 1.155,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": 42.5
-      },
-      "geometry_p90_deviation_m": 70.7,
-      "geometry_max_deviation_m": 91.8
-    },
-    {
-      "year": 2017,
-      "scene_id": "S2A_MSIL2A_20170317T154951_R054_T18SWJ_20210208T232045",
-      "datetime": "2017-03-17T15:49:51.026000Z",
-      "cloud_cover_tile_pct": 1.11,
-      "cloud_mask_aoi_pct": 5.68,
-      "ndwi_threshold": 0.192,
-      "tide": {
-        "level_m_msl": 0.361,
-        "time": "2017-03-17T15:48:00Z",
-        "source": "verified"
-      },
-      "wave": {
-        "height_m": 0.8,
-        "dominant_period_s": 7.0,
-        "time": "2017-03-17T15:49:51.026000Z",
-        "source": "regional climatology fallback"
-      },
-      "wave_setup_m": 0.123,
-      "horizontal_correction_m": 10.8,
-      "uncertainty_m": 15.9,
-      "image": "/data/scenes/sentinel-20170317T154951.jpg",
-      "image_shape": [
-        477,
-        556
-      ],
-      "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2A_MSIL2A_20170317T154951_R054_T18SWJ_20210208T232045",
-      "high_tide": {
-        "time": "2017-03-17T16:36:00Z",
-        "level_m_msl": 0.538,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": -46.1
-      },
-      "geometry_p90_deviation_m": 97.7,
-      "geometry_max_deviation_m": 109.6
-    },
-    {
-      "year": 2017,
-      "scene_id": "S2A_MSIL2A_20170416T160131_R054_T18SWJ_20210209T081106",
-      "datetime": "2017-04-16T16:01:31.026000Z",
-      "cloud_cover_tile_pct": 6.25,
-      "cloud_mask_aoi_pct": 4.07,
-      "ndwi_threshold": 0.097,
-      "tide": {
-        "level_m_msl": 0.413,
-        "time": "2017-04-16T16:00:00Z",
-        "source": "verified"
-      },
-      "wave": {
-        "height_m": 1.19,
-        "dominant_period_s": 5.9,
-        "time": "2017-04-16T15:50:00Z",
-        "source": "NDBC historical"
-      },
-      "wave_setup_m": 0.127,
-      "horizontal_correction_m": 12.0,
-      "uncertainty_m": 16.2,
-      "image": "/data/scenes/sentinel-20170416T160131.jpg",
-      "image_shape": [
-        477,
-        556
-      ],
-      "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2A_MSIL2A_20170416T160131_R054_T18SWJ_20210209T081106",
-      "high_tide": {
-        "time": "2017-04-16T16:47:00Z",
-        "level_m_msl": 0.479,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": -45.5
-      },
-      "geometry_p90_deviation_m": 52.3,
-      "geometry_max_deviation_m": 76.9
-    },
-    {
-      "year": 2017,
-      "scene_id": "S2A_MSIL2A_20170516T154911_R054_T18SWJ_20210209T155818",
-      "datetime": "2017-05-16T15:49:11.026000Z",
-      "cloud_cover_tile_pct": 8.18,
-      "cloud_mask_aoi_pct": 2.86,
-      "ndwi_threshold": -0.002,
-      "tide": {
-        "level_m_msl": 0.528,
-        "time": "2017-05-16T15:48:00Z",
-        "source": "verified"
-      },
-      "wave": {
-        "height_m": 0.44,
-        "dominant_period_s": 13.8,
-        "time": "2017-05-16T15:50:00Z",
-        "source": "NDBC historical"
-      },
-      "wave_setup_m": 0.18,
-      "horizontal_correction_m": 15.7,
-      "uncertainty_m": 16.8,
-      "image": "/data/scenes/sentinel-20170516T154911.jpg",
-      "image_shape": [
-        477,
-        556
-      ],
-      "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2A_MSIL2A_20170516T154911_R054_T18SWJ_20210209T155818",
-      "high_tide": {
-        "time": "2017-05-16T17:05:00Z",
-        "level_m_msl": 0.467,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": -75.8
-      },
-      "geometry_p90_deviation_m": 50.7,
-      "geometry_max_deviation_m": 62.4
-    },
     {
       "year": 2017,
       "scene_id": "S2A_MSIL2A_20170612T153911_R011_T18SWJ_20210209T222703",
@@ -260,10 +47,20 @@
       "cloud_cover_tile_pct": 0.18,
       "cloud_mask_aoi_pct": 3.8,
       "ndwi_threshold": 0.138,
+      "wet_dry_point_count": 82,
+      "wet_dry_median_ndwi_contrast": 0.325,
+      "wet_dry_median_dry_side_ndwi": -0.035,
+      "wet_dry_median_wet_side_ndwi": 0.301,
       "tide": {
         "level_m_msl": 0.55,
         "time": "2017-06-12T15:42:00Z",
         "source": "verified"
+      },
+      "high_tide": {
+        "time": "2017-06-12T15:16:00Z",
+        "level_m_msl": 0.527,
+        "source": "NOAA predicted high tide",
+        "image_offset_minutes": 23.2
       },
       "wave": {
         "height_m": 0.75,
@@ -280,86 +77,8 @@
         556
       ],
       "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2A_MSIL2A_20170612T153911_R011_T18SWJ_20210209T222703",
-      "high_tide": {
-        "time": "2017-06-12T15:16:00Z",
-        "level_m_msl": 0.527,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": 23.2
-      },
-      "geometry_p90_deviation_m": 71.5,
-      "geometry_max_deviation_m": 99.7
-    },
-    {
-      "year": 2017,
-      "scene_id": "S2A_MSIL2A_20170615T160131_R054_T18SWJ_20210209T231305",
-      "datetime": "2017-06-15T16:01:31.026000Z",
-      "cloud_cover_tile_pct": 12.53,
-      "cloud_mask_aoi_pct": 5.08,
-      "ndwi_threshold": -0.02,
-      "tide": {
-        "level_m_msl": 0.609,
-        "time": "2017-06-15T16:00:00Z",
-        "source": "verified"
-      },
-      "wave": {
-        "height_m": 0.73,
-        "dominant_period_s": 4.0,
-        "time": "2017-06-15T15:50:00Z",
-        "source": "NDBC historical"
-      },
-      "wave_setup_m": 0.067,
-      "horizontal_correction_m": 15.0,
-      "uncertainty_m": 16.7,
-      "image": "/data/scenes/sentinel-20170615T160131.jpg",
-      "image_shape": [
-        477,
-        556
-      ],
-      "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2A_MSIL2A_20170615T160131_R054_T18SWJ_20210209T231305",
-      "high_tide": {
-        "time": "2017-06-15T17:25:00Z",
-        "level_m_msl": 0.541,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": -83.5
-      },
-      "geometry_p90_deviation_m": 90.2,
-      "geometry_max_deviation_m": 125.6
-    },
-    {
-      "year": 2017,
-      "scene_id": "S2A_MSIL2A_20170811T153911_R011_T18SWJ_20210210T224734",
-      "datetime": "2017-08-11T15:39:11.026000Z",
-      "cloud_cover_tile_pct": 6.92,
-      "cloud_mask_aoi_pct": 6.96,
-      "ndwi_threshold": 0.22,
-      "tide": {
-        "level_m_msl": 0.85,
-        "time": "2017-08-11T15:42:00Z",
-        "source": "verified"
-      },
-      "wave": {
-        "height_m": 0.59,
-        "dominant_period_s": 7.7,
-        "time": "2017-08-11T15:50:00Z",
-        "source": "NDBC historical"
-      },
-      "wave_setup_m": 0.116,
-      "horizontal_correction_m": 21.5,
-      "uncertainty_m": 17.9,
-      "image": "/data/scenes/sentinel-20170811T153911.jpg",
-      "image_shape": [
-        477,
-        556
-      ],
-      "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2A_MSIL2A_20170811T153911_R011_T18SWJ_20210210T224734",
-      "high_tide": {
-        "time": "2017-08-11T15:48:00Z",
-        "level_m_msl": 0.79,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": -8.8
-      },
-      "geometry_p90_deviation_m": 73.3,
-      "geometry_max_deviation_m": 90.2
+      "geometry_p90_deviation_m": 94.9,
+      "geometry_max_deviation_m": 113.6
     },
     {
       "year": 2017,
@@ -368,10 +87,20 @@
       "cloud_cover_tile_pct": 8.54,
       "cloud_mask_aoi_pct": 8.0,
       "ndwi_threshold": 0.123,
+      "wet_dry_point_count": 82,
+      "wet_dry_median_ndwi_contrast": 0.433,
+      "wet_dry_median_dry_side_ndwi": -0.072,
+      "wet_dry_median_wet_side_ndwi": 0.362,
       "tide": {
         "level_m_msl": 0.844,
         "time": "2017-08-26T15:36:00Z",
         "source": "verified"
+      },
+      "high_tide": {
+        "time": "2017-08-26T16:44:00Z",
+        "level_m_msl": 0.827,
+        "source": "NOAA predicted high tide",
+        "image_offset_minutes": -65.0
       },
       "wave": {
         "height_m": 0.61,
@@ -388,50 +117,8 @@
         556
       ],
       "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2B_MSIL2A_20170826T153859_R011_T18SWJ_20210201T114734",
-      "high_tide": {
-        "time": "2017-08-26T16:44:00Z",
-        "level_m_msl": 0.827,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": -65.0
-      },
-      "geometry_p90_deviation_m": 77.3,
-      "geometry_max_deviation_m": 93.9
-    },
-    {
-      "year": 2017,
-      "scene_id": "S2B_MSIL2A_20170908T154859_R054_T18SWJ_20210201T215619",
-      "datetime": "2017-09-08T15:48:59.027000Z",
-      "cloud_cover_tile_pct": 3.6,
-      "cloud_mask_aoi_pct": 7.0,
-      "ndwi_threshold": 0.157,
-      "tide": {
-        "level_m_msl": 0.744,
-        "time": "2017-09-08T15:48:00Z",
-        "source": "verified"
-      },
-      "wave": {
-        "height_m": 1.63,
-        "dominant_period_s": 14.8,
-        "time": "2017-09-08T15:50:00Z",
-        "source": "NDBC historical"
-      },
-      "wave_setup_m": 0.372,
-      "horizontal_correction_m": 24.8,
-      "uncertainty_m": 18.5,
-      "image": "/data/scenes/sentinel-20170908T154859.jpg",
-      "image_shape": [
-        477,
-        556
-      ],
-      "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2B_MSIL2A_20170908T154859_R054_T18SWJ_20210201T215619",
-      "high_tide": {
-        "time": "2017-09-08T14:39:00Z",
-        "level_m_msl": 0.942,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": 70.0
-      },
-      "geometry_p90_deviation_m": 121.8,
-      "geometry_max_deviation_m": 136.7
+      "geometry_p90_deviation_m": 91.3,
+      "geometry_max_deviation_m": 106.4
     },
     {
       "year": 2017,
@@ -440,10 +127,20 @@
       "cloud_cover_tile_pct": 7.18,
       "cloud_mask_aoi_pct": 6.36,
       "ndwi_threshold": 0.22,
+      "wet_dry_point_count": 113,
+      "wet_dry_median_ndwi_contrast": 0.323,
+      "wet_dry_median_dry_side_ndwi": -0.009,
+      "wet_dry_median_wet_side_ndwi": 0.333,
       "tide": {
         "level_m_msl": 1.181,
         "time": "2017-09-23T16:00:00Z",
         "source": "verified"
+      },
+      "high_tide": {
+        "time": "2017-09-23T15:25:00Z",
+        "level_m_msl": 0.93,
+        "source": "NOAA predicted high tide",
+        "image_offset_minutes": 36.4
       },
       "wave": {
         "height_m": 1.5,
@@ -460,86 +157,8 @@
         556
       ],
       "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2A_MSIL2A_20170923T160121_R054_T18SWJ_20210202T083415",
-      "high_tide": {
-        "time": "2017-09-23T15:25:00Z",
-        "level_m_msl": 0.93,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": 36.4
-      },
-      "geometry_p90_deviation_m": 70.6,
-      "geometry_max_deviation_m": 85.3
-    },
-    {
-      "year": 2018,
-      "scene_id": "S2B_MSIL2A_20180205T155429_R054_T18SWJ_20201013T191759",
-      "datetime": "2018-02-05T15:54:29.027000Z",
-      "cloud_cover_tile_pct": 5.58,
-      "cloud_mask_aoi_pct": 3.83,
-      "ndwi_threshold": 0.142,
-      "tide": {
-        "level_m_msl": 0.467,
-        "time": "2018-02-05T15:54:00Z",
-        "source": "verified"
-      },
-      "wave": {
-        "height_m": 1.66,
-        "dominant_period_s": 4.8,
-        "time": "2018-02-05T15:50:00Z",
-        "source": "NDBC historical"
-      },
-      "wave_setup_m": 0.122,
-      "horizontal_correction_m": 13.1,
-      "uncertainty_m": 16.4,
-      "image": "/data/scenes/sentinel-20180205T155429.jpg",
-      "image_shape": [
-        477,
-        556
-      ],
-      "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2B_MSIL2A_20180205T155429_R054_T18SWJ_20201013T191759",
-      "high_tide": {
-        "time": "2018-02-05T17:14:00Z",
-        "level_m_msl": 0.668,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": -79.5
-      },
-      "geometry_p90_deviation_m": 111.9,
-      "geometry_max_deviation_m": 126.6
-    },
-    {
-      "year": 2018,
-      "scene_id": "S2A_MSIL2A_20180501T154911_R054_T18SWJ_20201012T043605",
-      "datetime": "2018-05-01T15:49:11.024000Z",
-      "cloud_cover_tile_pct": 0.6,
-      "cloud_mask_aoi_pct": 3.99,
-      "ndwi_threshold": 0.012,
-      "tide": {
-        "level_m_msl": 0.503,
-        "time": "2018-05-01T15:48:00Z",
-        "source": "verified"
-      },
-      "wave": {
-        "height_m": 0.49,
-        "dominant_period_s": 9.1,
-        "time": "2018-05-01T15:50:00Z",
-        "source": "NDBC historical"
-      },
-      "wave_setup_m": 0.125,
-      "horizontal_correction_m": 14.0,
-      "uncertainty_m": 16.5,
-      "image": "/data/scenes/sentinel-20180501T154911.jpg",
-      "image_shape": [
-        477,
-        556
-      ],
-      "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2A_MSIL2A_20180501T154911_R054_T18SWJ_20201012T043605",
-      "high_tide": {
-        "time": "2018-05-01T14:23:00Z",
-        "level_m_msl": 0.697,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": 86.2
-      },
-      "geometry_p90_deviation_m": 54.8,
-      "geometry_max_deviation_m": 69.1
+      "geometry_p90_deviation_m": 86.8,
+      "geometry_max_deviation_m": 116.4
     },
     {
       "year": 2018,
@@ -548,10 +167,20 @@
       "cloud_cover_tile_pct": 0.49,
       "cloud_mask_aoi_pct": 3.23,
       "ndwi_threshold": 0.183,
+      "wet_dry_point_count": 97,
+      "wet_dry_median_ndwi_contrast": 0.417,
+      "wet_dry_median_dry_side_ndwi": -0.051,
+      "wet_dry_median_wet_side_ndwi": 0.388,
       "tide": {
         "level_m_msl": 0.67,
         "time": "2018-07-02T15:36:00Z",
         "source": "verified"
+      },
+      "high_tide": {
+        "time": "2018-07-02T16:10:00Z",
+        "level_m_msl": 0.525,
+        "source": "NOAA predicted high tide",
+        "image_offset_minutes": -31.8
       },
       "wave": {
         "height_m": 0.44,
@@ -568,86 +197,8 @@
         556
       ],
       "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2B_MSIL2A_20180702T153809_R011_T18SWJ_20201011T111621",
-      "high_tide": {
-        "time": "2018-07-02T16:10:00Z",
-        "level_m_msl": 0.525,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": -31.8
-      },
-      "geometry_p90_deviation_m": 61.9,
-      "geometry_max_deviation_m": 95.4
-    },
-    {
-      "year": 2018,
-      "scene_id": "S2A_MSIL2A_20180717T153911_R011_T18SWJ_20201011T164942",
-      "datetime": "2018-07-17T15:39:11.024000Z",
-      "cloud_cover_tile_pct": 2.76,
-      "cloud_mask_aoi_pct": 4.0,
-      "ndwi_threshold": 0.168,
-      "tide": {
-        "level_m_msl": 0.727,
-        "time": "2018-07-17T15:42:00Z",
-        "source": "verified"
-      },
-      "wave": {
-        "height_m": 0.86,
-        "dominant_period_s": 5.6,
-        "time": "2018-07-17T15:50:00Z",
-        "source": "NDBC historical"
-      },
-      "wave_setup_m": 0.102,
-      "horizontal_correction_m": 18.4,
-      "uncertainty_m": 17.3,
-      "image": "/data/scenes/sentinel-20180717T153911.jpg",
-      "image_shape": [
-        477,
-        556
-      ],
-      "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2A_MSIL2A_20180717T153911_R011_T18SWJ_20201011T164942",
-      "high_tide": {
-        "time": "2018-07-17T17:01:00Z",
-        "level_m_msl": 0.809,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": -81.8
-      },
-      "geometry_p90_deviation_m": 59.7,
-      "geometry_max_deviation_m": 104.3
-    },
-    {
-      "year": 2018,
-      "scene_id": "S2B_MSIL2A_20180801T154109_R011_T18SWJ_20201020T015522",
-      "datetime": "2018-08-01T15:41:09.024000Z",
-      "cloud_cover_tile_pct": 12.76,
-      "cloud_mask_aoi_pct": 6.67,
-      "ndwi_threshold": 0.178,
-      "tide": {
-        "level_m_msl": 0.746,
-        "time": "2018-08-01T15:42:00Z",
-        "source": "verified"
-      },
-      "wave": {
-        "height_m": 1.31,
-        "dominant_period_s": 6.2,
-        "time": "2018-08-01T15:50:00Z",
-        "source": "NDBC historical"
-      },
-      "wave_setup_m": 0.14,
-      "horizontal_correction_m": 19.7,
-      "uncertainty_m": 17.5,
-      "image": "/data/scenes/sentinel-20180801T154109.jpg",
-      "image_shape": [
-        477,
-        556
-      ],
-      "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2B_MSIL2A_20180801T154109_R011_T18SWJ_20201020T015522",
-      "high_tide": {
-        "time": "2018-08-01T16:19:00Z",
-        "level_m_msl": 0.655,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": -37.8
-      },
-      "geometry_p90_deviation_m": 74.4,
-      "geometry_max_deviation_m": 113.0
+      "geometry_p90_deviation_m": 76.8,
+      "geometry_max_deviation_m": 101.9
     },
     {
       "year": 2018,
@@ -656,10 +207,20 @@
       "cloud_cover_tile_pct": 0.49,
       "cloud_mask_aoi_pct": 6.97,
       "ndwi_threshold": 0.112,
+      "wet_dry_point_count": 89,
+      "wet_dry_median_ndwi_contrast": 0.367,
+      "wet_dry_median_dry_side_ndwi": -0.042,
+      "wet_dry_median_wet_side_ndwi": 0.322,
       "tide": {
         "level_m_msl": 0.801,
         "time": "2018-08-29T15:48:00Z",
         "source": "verified"
+      },
+      "high_tide": {
+        "time": "2018-08-29T15:09:00Z",
+        "level_m_msl": 0.79,
+        "source": "NOAA predicted high tide",
+        "image_offset_minutes": 40.0
       },
       "wave": {
         "height_m": 0.61,
@@ -676,14 +237,8 @@
         556
       ],
       "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2A_MSIL2A_20180829T154901_R054_T18SWJ_20201103T112606",
-      "high_tide": {
-        "time": "2018-08-29T15:09:00Z",
-        "level_m_msl": 0.79,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": 40.0
-      },
-      "geometry_p90_deviation_m": 61.9,
-      "geometry_max_deviation_m": 113.4
+      "geometry_p90_deviation_m": 81.1,
+      "geometry_max_deviation_m": 115.1
     },
     {
       "year": 2018,
@@ -692,10 +247,20 @@
       "cloud_cover_tile_pct": 1.82,
       "cloud_mask_aoi_pct": 9.94,
       "ndwi_threshold": 0.22,
+      "wet_dry_point_count": 83,
+      "wet_dry_median_ndwi_contrast": 0.365,
+      "wet_dry_median_dry_side_ndwi": -0.006,
+      "wet_dry_median_wet_side_ndwi": 0.394,
       "tide": {
         "level_m_msl": 0.936,
         "time": "2018-09-30T15:42:00Z",
         "source": "verified"
+      },
+      "high_tide": {
+        "time": "2018-09-30T16:55:00Z",
+        "level_m_msl": 0.949,
+        "source": "NOAA predicted high tide",
+        "image_offset_minutes": -74.5
       },
       "wave": {
         "height_m": 1.19,
@@ -712,50 +277,8 @@
         556
       ],
       "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2B_MSIL2A_20180930T154029_R011_T18SWJ_20201009T064343",
-      "high_tide": {
-        "time": "2018-09-30T16:55:00Z",
-        "level_m_msl": 0.949,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": -74.5
-      },
-      "geometry_p90_deviation_m": 93.7,
-      "geometry_max_deviation_m": 148.5
-    },
-    {
-      "year": 2018,
-      "scene_id": "S2A_MSIL2A_20181227T155651_R054_T18SWJ_20201031T002923",
-      "datetime": "2018-12-27T15:56:51.024000Z",
-      "cloud_cover_tile_pct": 5.92,
-      "cloud_mask_aoi_pct": 10.87,
-      "ndwi_threshold": 0.22,
-      "tide": {
-        "level_m_msl": 0.809,
-        "time": "2018-12-27T15:54:00Z",
-        "source": "verified"
-      },
-      "wave": {
-        "height_m": 0.26,
-        "dominant_period_s": 5.9,
-        "time": "2018-12-27T18:50:00Z",
-        "source": "NDBC historical"
-      },
-      "wave_setup_m": 0.059,
-      "horizontal_correction_m": 19.3,
-      "uncertainty_m": 17.5,
-      "image": "/data/scenes/sentinel-20181227T155651.jpg",
-      "image_shape": [
-        477,
-        556
-      ],
-      "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2A_MSIL2A_20181227T155651_R054_T18SWJ_20201031T002923",
-      "high_tide": {
-        "time": "2018-12-27T17:06:00Z",
-        "level_m_msl": 0.88,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": -69.1
-      },
-      "geometry_p90_deviation_m": 62.5,
-      "geometry_max_deviation_m": 103.4
+      "geometry_p90_deviation_m": 118.0,
+      "geometry_max_deviation_m": 148.0
     },
     {
       "year": 2019,
@@ -764,10 +287,20 @@
       "cloud_cover_tile_pct": 5.73,
       "cloud_mask_aoi_pct": 3.74,
       "ndwi_threshold": 0.22,
+      "wet_dry_point_count": 110,
+      "wet_dry_median_ndwi_contrast": 0.41,
+      "wet_dry_median_dry_side_ndwi": 0.093,
+      "wet_dry_median_wet_side_ndwi": 0.501,
       "tide": {
         "level_m_msl": 0.701,
         "time": "2019-01-11T15:54:00Z",
         "source": "verified"
+      },
+      "high_tide": {
+        "time": "2019-01-11T16:47:00Z",
+        "level_m_msl": 0.612,
+        "source": "NOAA predicted high tide",
+        "image_offset_minutes": -50.5
       },
       "wave": {
         "height_m": 1.62,
@@ -784,86 +317,8 @@
         556
       ],
       "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2B_MSIL2A_20190111T155629_R054_T18SWJ_20201008T004714",
-      "high_tide": {
-        "time": "2019-01-11T16:47:00Z",
-        "level_m_msl": 0.612,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": -50.5
-      },
-      "geometry_p90_deviation_m": 76.2,
-      "geometry_max_deviation_m": 99.3
-    },
-    {
-      "year": 2019,
-      "scene_id": "S2B_MSIL2A_20190312T155209_R054_T18SWJ_20201007T060203",
-      "datetime": "2019-03-12T15:52:09.024000Z",
-      "cloud_cover_tile_pct": 0.42,
-      "cloud_mask_aoi_pct": 3.07,
-      "ndwi_threshold": 0.138,
-      "tide": {
-        "level_m_msl": 0.434,
-        "time": "2019-03-12T15:54:00Z",
-        "source": "verified"
-      },
-      "wave": {
-        "height_m": 1.5,
-        "dominant_period_s": 5.3,
-        "time": "2019-03-12T15:50:00Z",
-        "source": "NDBC historical"
-      },
-      "wave_setup_m": 0.128,
-      "horizontal_correction_m": 12.5,
-      "uncertainty_m": 16.2,
-      "image": "/data/scenes/sentinel-20190312T155209.jpg",
-      "image_shape": [
-        477,
-        556
-      ],
-      "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2B_MSIL2A_20190312T155209_R054_T18SWJ_20201007T060203",
-      "high_tide": {
-        "time": "2019-03-12T17:14:00Z",
-        "level_m_msl": 0.495,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": -81.8
-      },
-      "geometry_p90_deviation_m": 64.3,
-      "geometry_max_deviation_m": 130.2
-    },
-    {
-      "year": 2019,
-      "scene_id": "S2B_MSIL2A_20190421T154819_R054_T18SWJ_20201105T141915",
-      "datetime": "2019-04-21T15:48:19.024000Z",
-      "cloud_cover_tile_pct": 9.21,
-      "cloud_mask_aoi_pct": 5.09,
-      "ndwi_threshold": 0.032,
-      "tide": {
-        "level_m_msl": 0.828,
-        "time": "2019-04-21T15:48:00Z",
-        "source": "verified"
-      },
-      "wave": {
-        "height_m": 1.38,
-        "dominant_period_s": 9.1,
-        "time": "2019-04-21T15:50:00Z",
-        "source": "NDBC historical"
-      },
-      "wave_setup_m": 0.21,
-      "horizontal_correction_m": 23.1,
-      "uncertainty_m": 18.2,
-      "image": "/data/scenes/sentinel-20190421T154819.jpg",
-      "image_shape": [
-        477,
-        556
-      ],
-      "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2B_MSIL2A_20190421T154819_R054_T18SWJ_20201105T141915",
-      "high_tide": {
-        "time": "2019-04-21T14:51:00Z",
-        "level_m_msl": 0.781,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": 57.3
-      },
-      "geometry_p90_deviation_m": 56.5,
-      "geometry_max_deviation_m": 129.6
+      "geometry_p90_deviation_m": 91.4,
+      "geometry_max_deviation_m": 105.7
     },
     {
       "year": 2019,
@@ -872,10 +327,20 @@
       "cloud_cover_tile_pct": 0.11,
       "cloud_mask_aoi_pct": 3.45,
       "ndwi_threshold": 0.22,
+      "wet_dry_point_count": 94,
+      "wet_dry_median_ndwi_contrast": 0.391,
+      "wet_dry_median_dry_side_ndwi": -0.06,
+      "wet_dry_median_wet_side_ndwi": 0.334,
       "tide": {
         "level_m_msl": 0.677,
         "time": "2019-04-23T15:42:00Z",
         "source": "verified"
+      },
+      "high_tide": {
+        "time": "2019-04-23T16:24:00Z",
+        "level_m_msl": 0.586,
+        "source": "NOAA predicted high tide",
+        "image_offset_minutes": -44.8
       },
       "wave": {
         "height_m": 0.81,
@@ -892,158 +357,8 @@
         556
       ],
       "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2A_MSIL2A_20190423T153911_R011_T18SWJ_20201105T160248",
-      "high_tide": {
-        "time": "2019-04-23T16:24:00Z",
-        "level_m_msl": 0.586,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": -44.8
-      },
-      "geometry_p90_deviation_m": 45.3,
-      "geometry_max_deviation_m": 139.3
-    },
-    {
-      "year": 2019,
-      "scene_id": "S2A_MSIL2A_20190506T154911_R054_T18SWJ_20201006T104246",
-      "datetime": "2019-05-06T15:49:11.024000Z",
-      "cloud_cover_tile_pct": 1.42,
-      "cloud_mask_aoi_pct": 9.91,
-      "ndwi_threshold": 0.032,
-      "tide": {
-        "level_m_msl": 0.828,
-        "time": "2019-05-06T15:48:00Z",
-        "source": "verified"
-      },
-      "wave": {
-        "height_m": 2.06,
-        "dominant_period_s": 8.3,
-        "time": "2019-05-06T15:50:00Z",
-        "source": "NDBC historical"
-      },
-      "wave_setup_m": 0.234,
-      "horizontal_correction_m": 23.6,
-      "uncertainty_m": 18.2,
-      "image": "/data/scenes/sentinel-20190506T154911.jpg",
-      "image_shape": [
-        477,
-        556
-      ],
-      "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2A_MSIL2A_20190506T154911_R054_T18SWJ_20201006T104246",
-      "high_tide": {
-        "time": "2019-05-06T14:24:00Z",
-        "level_m_msl": 0.655,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": 85.2
-      },
-      "geometry_p90_deviation_m": 46.4,
-      "geometry_max_deviation_m": 119.1
-    },
-    {
-      "year": 2019,
-      "scene_id": "S2A_MSIL2A_20190605T154911_R054_T18SWJ_20201005T222210",
-      "datetime": "2019-06-05T15:49:11.024000Z",
-      "cloud_cover_tile_pct": 15.43,
-      "cloud_mask_aoi_pct": 1.66,
-      "ndwi_threshold": -0.02,
-      "tide": {
-        "level_m_msl": 0.625,
-        "time": "2019-06-05T15:48:00Z",
-        "source": "verified"
-      },
-      "wave": {
-        "height_m": 1.32,
-        "dominant_period_s": 4.8,
-        "time": "2019-06-05T15:50:00Z",
-        "source": "NDBC historical"
-      },
-      "wave_setup_m": 0.109,
-      "horizontal_correction_m": 16.3,
-      "uncertainty_m": 16.9,
-      "image": "/data/scenes/sentinel-20190605T154911.jpg",
-      "image_shape": [
-        477,
-        556
-      ],
-      "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2A_MSIL2A_20190605T154911_R054_T18SWJ_20201005T222210",
-      "high_tide": {
-        "time": "2019-06-05T14:51:00Z",
-        "level_m_msl": 0.628,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": 58.2
-      },
-      "geometry_p90_deviation_m": 65.0,
-      "geometry_max_deviation_m": 116.4
-    },
-    {
-      "year": 2019,
-      "scene_id": "S2B_MSIL2A_20190720T154819_R054_T18SWJ_20201005T171008",
-      "datetime": "2019-07-20T15:48:19.024000Z",
-      "cloud_cover_tile_pct": 5.72,
-      "cloud_mask_aoi_pct": 4.77,
-      "ndwi_threshold": -0.012,
-      "tide": {
-        "level_m_msl": 0.723,
-        "time": "2019-07-20T15:48:00Z",
-        "source": "verified"
-      },
-      "wave": {
-        "height_m": 0.71,
-        "dominant_period_s": 5.6,
-        "time": "2019-07-20T15:50:00Z",
-        "source": "NDBC historical"
-      },
-      "wave_setup_m": 0.093,
-      "horizontal_correction_m": 18.1,
-      "uncertainty_m": 17.3,
-      "image": "/data/scenes/sentinel-20190720T154819.jpg",
-      "image_shape": [
-        477,
-        556
-      ],
-      "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2B_MSIL2A_20190720T154819_R054_T18SWJ_20201005T171008",
-      "high_tide": {
-        "time": "2019-07-20T15:43:00Z",
-        "level_m_msl": 0.57,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": 5.3
-      },
-      "geometry_p90_deviation_m": 43.8,
-      "geometry_max_deviation_m": 119.8
-    },
-    {
-      "year": 2019,
-      "scene_id": "S2A_MSIL2A_20190722T153911_R011_T18SWJ_20201005T175822",
-      "datetime": "2019-07-22T15:39:11.024000Z",
-      "cloud_cover_tile_pct": 0.22,
-      "cloud_mask_aoi_pct": 6.5,
-      "ndwi_threshold": 0.22,
-      "tide": {
-        "level_m_msl": 0.618,
-        "time": "2019-07-22T15:42:00Z",
-        "source": "verified"
-      },
-      "wave": {
-        "height_m": 0.95,
-        "dominant_period_s": 5.9,
-        "time": "2019-07-22T15:50:00Z",
-        "source": "NDBC historical"
-      },
-      "wave_setup_m": 0.113,
-      "horizontal_correction_m": 16.2,
-      "uncertainty_m": 16.9,
-      "image": "/data/scenes/sentinel-20190722T153911.jpg",
-      "image_shape": [
-        477,
-        556
-      ],
-      "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2A_MSIL2A_20190722T153911_R011_T18SWJ_20201005T175822",
-      "high_tide": {
-        "time": "2019-07-22T17:04:00Z",
-        "level_m_msl": 0.576,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": -84.8
-      },
-      "geometry_p90_deviation_m": 44.5,
-      "geometry_max_deviation_m": 126.4
+      "geometry_p90_deviation_m": 75.4,
+      "geometry_max_deviation_m": 150.5
     },
     {
       "year": 2019,
@@ -1052,10 +367,20 @@
       "cloud_cover_tile_pct": 6.39,
       "cloud_mask_aoi_pct": 8.74,
       "ndwi_threshold": 0.032,
+      "wet_dry_point_count": 89,
+      "wet_dry_median_ndwi_contrast": 0.393,
+      "wet_dry_median_dry_side_ndwi": -0.067,
+      "wet_dry_median_wet_side_ndwi": 0.326,
       "tide": {
         "level_m_msl": 0.882,
         "time": "2019-08-19T15:48:00Z",
         "source": "verified"
+      },
+      "high_tide": {
+        "time": "2019-08-19T15:47:00Z",
+        "level_m_msl": 0.695,
+        "source": "NOAA predicted high tide",
+        "image_offset_minutes": 1.3
       },
       "wave": {
         "height_m": 0.8,
@@ -1072,122 +397,8 @@
         556
       ],
       "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2B_MSIL2A_20190819T154819_R054_T18SWJ_20201005T022712",
-      "high_tide": {
-        "time": "2019-08-19T15:47:00Z",
-        "level_m_msl": 0.695,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": 1.3
-      },
-      "geometry_p90_deviation_m": 41.5,
-      "geometry_max_deviation_m": 135.2
-    },
-    {
-      "year": 2019,
-      "scene_id": "S2A_MSIL2A_20191102T155421_R054_T18SWJ_20201003T121526",
-      "datetime": "2019-11-02T15:54:21.024000Z",
-      "cloud_cover_tile_pct": 8.7,
-      "cloud_mask_aoi_pct": 8.99,
-      "ndwi_threshold": 0.22,
-      "tide": {
-        "level_m_msl": 0.888,
-        "time": "2019-11-02T15:54:00Z",
-        "source": "verified"
-      },
-      "wave": {
-        "height_m": 0.9,
-        "dominant_period_s": 7.7,
-        "time": "2019-11-02T15:50:00Z",
-        "source": "NDBC historical"
-      },
-      "wave_setup_m": 0.144,
-      "horizontal_correction_m": 22.9,
-      "uncertainty_m": 18.1,
-      "image": "/data/scenes/sentinel-20191102T155421.jpg",
-      "image_shape": [
-        477,
-        556
-      ],
-      "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2A_MSIL2A_20191102T155421_R054_T18SWJ_20201003T121526",
-      "high_tide": {
-        "time": "2019-11-02T17:17:00Z",
-        "level_m_msl": 0.878,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": -82.6
-      },
-      "geometry_p90_deviation_m": 72.2,
-      "geometry_max_deviation_m": 137.9
-    },
-    {
-      "year": 2019,
-      "scene_id": "S2A_MSIL2A_20191129T154611_R011_T18SWJ_20201003T204418",
-      "datetime": "2019-11-29T15:46:11.024000Z",
-      "cloud_cover_tile_pct": 16.63,
-      "cloud_mask_aoi_pct": 3.12,
-      "ndwi_threshold": 0.172,
-      "tide": {
-        "level_m_msl": 1.17,
-        "time": "2019-11-29T15:48:00Z",
-        "source": "verified"
-      },
-      "wave": {
-        "height_m": 2.03,
-        "dominant_period_s": 5.9,
-        "time": "2019-11-29T15:50:00Z",
-        "source": "NDBC historical"
-      },
-      "wave_setup_m": 0.165,
-      "horizontal_correction_m": 29.7,
-      "uncertainty_m": 19.3,
-      "image": "/data/scenes/sentinel-20191129T154611.jpg",
-      "image_shape": [
-        477,
-        556
-      ],
-      "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2A_MSIL2A_20191129T154611_R011_T18SWJ_20201003T204418",
-      "high_tide": {
-        "time": "2019-11-29T15:12:00Z",
-        "level_m_msl": 0.989,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": 34.2
-      },
-      "geometry_p90_deviation_m": 38.8,
-      "geometry_max_deviation_m": 48.8
-    },
-    {
-      "year": 2020,
-      "scene_id": "S2B_MSIL2A_20200126T155529_R054_T18SWJ_20201002T120132",
-      "datetime": "2020-01-26T15:55:29.024000Z",
-      "cloud_cover_tile_pct": 5.4,
-      "cloud_mask_aoi_pct": 10.98,
-      "ndwi_threshold": 0.22,
-      "tide": {
-        "level_m_msl": 0.943,
-        "time": "2020-01-26T15:54:00Z",
-        "source": "verified"
-      },
-      "wave": {
-        "height_m": 1.44,
-        "dominant_period_s": 10.8,
-        "time": "2020-01-26T15:50:00Z",
-        "source": "NDBC historical"
-      },
-      "wave_setup_m": 0.255,
-      "horizontal_correction_m": 26.6,
-      "uncertainty_m": 18.8,
-      "image": "/data/scenes/sentinel-20200126T155529.jpg",
-      "image_shape": [
-        477,
-        556
-      ],
-      "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2B_MSIL2A_20200126T155529_R054_T18SWJ_20201002T120132",
-      "high_tide": {
-        "time": "2020-01-26T14:28:00Z",
-        "level_m_msl": 0.804,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": 87.5
-      },
-      "geometry_p90_deviation_m": 106.8,
-      "geometry_max_deviation_m": 136.8
+      "geometry_p90_deviation_m": 61.4,
+      "geometry_max_deviation_m": 136.6
     },
     {
       "year": 2020,
@@ -1196,10 +407,20 @@
       "cloud_cover_tile_pct": 0.48,
       "cloud_mask_aoi_pct": 7.78,
       "ndwi_threshold": 0.22,
+      "wet_dry_point_count": 106,
+      "wet_dry_median_ndwi_contrast": 0.313,
+      "wet_dry_median_dry_side_ndwi": -0.031,
+      "wet_dry_median_wet_side_ndwi": 0.29,
       "tide": {
         "level_m_msl": 0.98,
         "time": "2020-03-26T15:48:00Z",
         "source": "verified"
+      },
+      "high_tide": {
+        "time": "2020-03-26T14:46:00Z",
+        "level_m_msl": 0.674,
+        "source": "NOAA predicted high tide",
+        "image_offset_minutes": 62.2
       },
       "wave": {
         "height_m": 2.33,
@@ -1216,50 +437,8 @@
         556
       ],
       "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2B_MSIL2A_20200326T154809_R054_T18SWJ_20201027T111048",
-      "high_tide": {
-        "time": "2020-03-26T14:46:00Z",
-        "level_m_msl": 0.674,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": 62.2
-      },
-      "geometry_p90_deviation_m": 81.8,
-      "geometry_max_deviation_m": 101.4
-    },
-    {
-      "year": 2020,
-      "scene_id": "S2B_MSIL2A_20200425T154809_R054_T18SWJ_20200922T024527",
-      "datetime": "2020-04-25T15:48:09.024000Z",
-      "cloud_cover_tile_pct": 7.0,
-      "cloud_mask_aoi_pct": 2.58,
-      "ndwi_threshold": 0.062,
-      "tide": {
-        "level_m_msl": 0.677,
-        "time": "2020-04-25T15:48:00Z",
-        "source": "verified"
-      },
-      "wave": {
-        "height_m": 1.17,
-        "dominant_period_s": 9.1,
-        "time": "2020-04-25T15:50:00Z",
-        "source": "NDBC historical"
-      },
-      "wave_setup_m": 0.194,
-      "horizontal_correction_m": 19.3,
-      "uncertainty_m": 17.5,
-      "image": "/data/scenes/sentinel-20200425T154809.jpg",
-      "image_shape": [
-        477,
-        556
-      ],
-      "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2B_MSIL2A_20200425T154809_R054_T18SWJ_20200922T024527",
-      "high_tide": {
-        "time": "2020-04-25T14:56:00Z",
-        "level_m_msl": 0.58,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": 52.2
-      },
-      "geometry_p90_deviation_m": 35.4,
-      "geometry_max_deviation_m": 51.0
+      "geometry_p90_deviation_m": 79.1,
+      "geometry_max_deviation_m": 118.5
     },
     {
       "year": 2020,
@@ -1268,10 +447,20 @@
       "cloud_cover_tile_pct": 0.21,
       "cloud_mask_aoi_pct": 2.11,
       "ndwi_threshold": -0.007,
+      "wet_dry_point_count": 111,
+      "wet_dry_median_ndwi_contrast": 0.235,
+      "wet_dry_median_dry_side_ndwi": -0.078,
+      "wet_dry_median_wet_side_ndwi": 0.159,
       "tide": {
         "level_m_msl": 0.364,
         "time": "2020-05-10T15:48:00Z",
         "source": "verified"
+      },
+      "high_tide": {
+        "time": "2020-05-10T15:43:00Z",
+        "level_m_msl": 0.657,
+        "source": "NOAA predicted high tide",
+        "image_offset_minutes": 6.2
       },
       "wave": {
         "height_m": 0.6,
@@ -1288,14 +477,8 @@
         556
       ],
       "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2A_MSIL2A_20200510T154911_R054_T18SWJ_20200919T214625",
-      "high_tide": {
-        "time": "2020-05-10T15:43:00Z",
-        "level_m_msl": 0.657,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": 6.2
-      },
-      "geometry_p90_deviation_m": 34.4,
-      "geometry_max_deviation_m": 49.6
+      "geometry_p90_deviation_m": 37.7,
+      "geometry_max_deviation_m": 47.9
     },
     {
       "year": 2020,
@@ -1304,10 +487,20 @@
       "cloud_cover_tile_pct": 2.57,
       "cloud_mask_aoi_pct": 4.05,
       "ndwi_threshold": 0.168,
+      "wet_dry_point_count": 90,
+      "wet_dry_median_ndwi_contrast": 0.324,
+      "wet_dry_median_dry_side_ndwi": -0.02,
+      "wet_dry_median_wet_side_ndwi": 0.344,
       "tide": {
         "level_m_msl": 0.633,
         "time": "2020-07-06T15:42:00Z",
         "source": "verified"
+      },
+      "high_tide": {
+        "time": "2020-07-06T14:16:00Z",
+        "level_m_msl": 0.62,
+        "source": "NOAA predicted high tide",
+        "image_offset_minutes": 83.2
       },
       "wave": {
         "height_m": 0.62,
@@ -1324,50 +517,8 @@
         556
       ],
       "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2A_MSIL2A_20200706T153911_R011_T18SWJ_20200825T101833",
-      "high_tide": {
-        "time": "2020-07-06T14:16:00Z",
-        "level_m_msl": 0.62,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": 83.2
-      },
-      "geometry_p90_deviation_m": 49.4,
-      "geometry_max_deviation_m": 82.9
-    },
-    {
-      "year": 2020,
-      "scene_id": "S2A_MSIL2A_20200709T154911_R054_T18SWJ_20200912T140710",
-      "datetime": "2020-07-09T15:49:11.024000Z",
-      "cloud_cover_tile_pct": 13.26,
-      "cloud_mask_aoi_pct": 8.0,
-      "ndwi_threshold": -0.02,
-      "tide": {
-        "level_m_msl": 0.815,
-        "time": "2020-07-09T15:48:00Z",
-        "source": "verified"
-      },
-      "wave": {
-        "height_m": 0.67,
-        "dominant_period_s": 8.3,
-        "time": "2020-07-08T22:50:00Z",
-        "source": "NDBC historical"
-      },
-      "wave_setup_m": 0.134,
-      "horizontal_correction_m": 21.1,
-      "uncertainty_m": 17.8,
-      "image": "/data/scenes/sentinel-20200709T154911.jpg",
-      "image_shape": [
-        477,
-        556
-      ],
-      "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2A_MSIL2A_20200709T154911_R054_T18SWJ_20200912T140710",
-      "high_tide": {
-        "time": "2020-07-09T16:31:00Z",
-        "level_m_msl": 0.563,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": -41.8
-      },
-      "geometry_p90_deviation_m": 32.1,
-      "geometry_max_deviation_m": 49.0
+      "geometry_p90_deviation_m": 71.2,
+      "geometry_max_deviation_m": 116.5
     },
     {
       "year": 2020,
@@ -1376,10 +527,20 @@
       "cloud_cover_tile_pct": 4.15,
       "cloud_mask_aoi_pct": 5.35,
       "ndwi_threshold": 0.22,
+      "wet_dry_point_count": 108,
+      "wet_dry_median_ndwi_contrast": 0.192,
+      "wet_dry_median_dry_side_ndwi": 0.171,
+      "wet_dry_median_wet_side_ndwi": 0.336,
       "tide": {
         "level_m_msl": 0.646,
         "time": "2020-08-05T15:42:00Z",
         "source": "verified"
+      },
+      "high_tide": {
+        "time": "2020-08-05T14:36:00Z",
+        "level_m_msl": 0.667,
+        "source": "NOAA predicted high tide",
+        "image_offset_minutes": 63.2
       },
       "wave": {
         "height_m": 0.87,
@@ -1396,14 +557,8 @@
         556
       ],
       "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2A_MSIL2A_20200805T153911_R011_T18SWJ_20200815T024630",
-      "high_tide": {
-        "time": "2020-08-05T14:36:00Z",
-        "level_m_msl": 0.667,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": 63.2
-      },
-      "geometry_p90_deviation_m": 114.2,
-      "geometry_max_deviation_m": 139.6
+      "geometry_p90_deviation_m": 133.1,
+      "geometry_max_deviation_m": 151.0
     },
     {
       "year": 2020,
@@ -1412,10 +567,20 @@
       "cloud_cover_tile_pct": 4.54,
       "cloud_mask_aoi_pct": 8.96,
       "ndwi_threshold": 0.22,
+      "wet_dry_point_count": 101,
+      "wet_dry_median_ndwi_contrast": 0.398,
+      "wet_dry_median_dry_side_ndwi": -0.021,
+      "wet_dry_median_wet_side_ndwi": 0.391,
       "tide": {
         "level_m_msl": 0.877,
         "time": "2020-09-04T15:42:00Z",
         "source": "verified"
+      },
+      "high_tide": {
+        "time": "2020-09-04T14:44:00Z",
+        "level_m_msl": 0.777,
+        "source": "NOAA predicted high tide",
+        "image_offset_minutes": 55.2
       },
       "wave": {
         "height_m": 0.75,
@@ -1432,86 +597,8 @@
         556
       ],
       "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2A_MSIL2A_20200904T153911_R011_T18SWJ_20200908T005129",
-      "high_tide": {
-        "time": "2020-09-04T14:44:00Z",
-        "level_m_msl": 0.777,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": 55.2
-      },
-      "geometry_p90_deviation_m": 63.3,
-      "geometry_max_deviation_m": 86.9
-    },
-    {
-      "year": 2020,
-      "scene_id": "S2B_MSIL2A_20200922T154859_R054_T18SWJ_20200926T064958",
-      "datetime": "2020-09-22T15:48:59.024000Z",
-      "cloud_cover_tile_pct": 0.23,
-      "cloud_mask_aoi_pct": 9.22,
-      "ndwi_threshold": 0.162,
-      "tide": {
-        "level_m_msl": 1.084,
-        "time": "2020-09-22T15:48:00Z",
-        "source": "verified"
-      },
-      "wave": {
-        "height_m": 2.59,
-        "dominant_period_s": 12.1,
-        "time": "2020-09-22T15:50:00Z",
-        "source": "NDBC historical"
-      },
-      "wave_setup_m": 0.383,
-      "horizontal_correction_m": 32.6,
-      "uncertainty_m": 19.9,
-      "image": "/data/scenes/sentinel-20200922T154859.jpg",
-      "image_shape": [
-        477,
-        556
-      ],
-      "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2B_MSIL2A_20200922T154859_R054_T18SWJ_20200926T064958",
-      "high_tide": {
-        "time": "2020-09-22T17:17:00Z",
-        "level_m_msl": 1.058,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": -88.0
-      },
-      "geometry_p90_deviation_m": 103.3,
-      "geometry_max_deviation_m": 143.7
-    },
-    {
-      "year": 2020,
-      "scene_id": "S2A_MSIL2A_20201007T155141_R054_T18SWJ_20201010T080603",
-      "datetime": "2020-10-07T15:51:41.024000Z",
-      "cloud_cover_tile_pct": 0.22,
-      "cloud_mask_aoi_pct": 8.8,
-      "ndwi_threshold": 0.22,
-      "tide": {
-        "level_m_msl": 0.836,
-        "time": "2020-10-07T15:54:00Z",
-        "source": "verified"
-      },
-      "wave": {
-        "height_m": 1.13,
-        "dominant_period_s": 4.8,
-        "time": "2020-10-07T15:50:00Z",
-        "source": "NDBC historical"
-      },
-      "wave_setup_m": 0.1,
-      "horizontal_correction_m": 20.8,
-      "uncertainty_m": 17.7,
-      "image": "/data/scenes/sentinel-20201007T155141.jpg",
-      "image_shape": [
-        477,
-        556
-      ],
-      "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2A_MSIL2A_20201007T155141_R054_T18SWJ_20201010T080603",
-      "high_tide": {
-        "time": "2020-10-07T16:39:00Z",
-        "level_m_msl": 0.811,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": -47.3
-      },
-      "geometry_p90_deviation_m": 43.2,
-      "geometry_max_deviation_m": 52.9
+      "geometry_p90_deviation_m": 60.7,
+      "geometry_max_deviation_m": 100.4
     },
     {
       "year": 2021,
@@ -1520,10 +607,20 @@
       "cloud_cover_tile_pct": 0.17,
       "cloud_mask_aoi_pct": 2.06,
       "ndwi_threshold": 0.207,
+      "wet_dry_point_count": 112,
+      "wet_dry_median_ndwi_contrast": 0.35,
+      "wet_dry_median_dry_side_ndwi": 0.114,
+      "wet_dry_median_wet_side_ndwi": 0.428,
       "tide": {
         "level_m_msl": 0.4,
         "time": "2021-03-03T15:42:00Z",
         "source": "verified"
+      },
+      "high_tide": {
+        "time": "2021-03-03T16:30:00Z",
+        "level_m_msl": 0.722,
+        "source": "NOAA predicted high tide",
+        "image_offset_minutes": -48.3
       },
       "wave": {
         "height_m": 0.79,
@@ -1540,50 +637,8 @@
         556
       ],
       "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2A_MSIL2A_20210303T154141_R011_T18SWJ_20210304T040452",
-      "high_tide": {
-        "time": "2021-03-03T16:30:00Z",
-        "level_m_msl": 0.722,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": -48.3
-      },
-      "geometry_p90_deviation_m": 37.4,
-      "geometry_max_deviation_m": 55.4
-    },
-    {
-      "year": 2021,
-      "scene_id": "S2A_MSIL2A_20210515T154911_R054_T18SWJ_20210517T144945",
-      "datetime": "2021-05-15T15:49:11.024000Z",
-      "cloud_cover_tile_pct": 8.35,
-      "cloud_mask_aoi_pct": 3.41,
-      "ndwi_threshold": -0.02,
-      "tide": {
-        "level_m_msl": 0.485,
-        "time": "2021-05-15T15:48:00Z",
-        "source": "verified"
-      },
-      "wave": {
-        "height_m": 0.54,
-        "dominant_period_s": 7.1,
-        "time": "2021-05-15T15:50:00Z",
-        "source": "NDBC historical"
-      },
-      "wave_setup_m": 0.103,
-      "horizontal_correction_m": 13.1,
-      "uncertainty_m": 16.4,
-      "image": "/data/scenes/sentinel-20210515T154911.jpg",
-      "image_shape": [
-        477,
-        556
-      ],
-      "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2A_MSIL2A_20210515T154911_R054_T18SWJ_20210517T144945",
-      "high_tide": {
-        "time": "2021-05-15T15:47:00Z",
-        "level_m_msl": 0.459,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": 2.2
-      },
-      "geometry_p90_deviation_m": 42.8,
-      "geometry_max_deviation_m": 58.6
+      "geometry_p90_deviation_m": 54.7,
+      "geometry_max_deviation_m": 68.2
     },
     {
       "year": 2021,
@@ -1592,10 +647,20 @@
       "cloud_cover_tile_pct": 10.64,
       "cloud_mask_aoi_pct": 6.12,
       "ndwi_threshold": 0.192,
+      "wet_dry_point_count": 92,
+      "wet_dry_median_ndwi_contrast": 0.475,
+      "wet_dry_median_dry_side_ndwi": -0.024,
+      "wet_dry_median_wet_side_ndwi": 0.452,
       "tide": {
         "level_m_msl": 0.749,
         "time": "2021-08-10T15:42:00Z",
         "source": "verified"
+      },
+      "high_tide": {
+        "time": "2021-08-10T14:39:00Z",
+        "level_m_msl": 0.721,
+        "source": "NOAA predicted high tide",
+        "image_offset_minutes": 60.2
       },
       "wave": {
         "height_m": 0.62,
@@ -1612,14 +677,8 @@
         556
       ],
       "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2A_MSIL2A_20210810T153911_R011_T18SWJ_20210812T160056",
-      "high_tide": {
-        "time": "2021-08-10T14:39:00Z",
-        "level_m_msl": 0.721,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": 60.2
-      },
-      "geometry_p90_deviation_m": 92.1,
-      "geometry_max_deviation_m": 118.3
+      "geometry_p90_deviation_m": 99.2,
+      "geometry_max_deviation_m": 116.4
     },
     {
       "year": 2021,
@@ -1628,10 +687,20 @@
       "cloud_cover_tile_pct": 0.09,
       "cloud_mask_aoi_pct": 8.05,
       "ndwi_threshold": 0.22,
+      "wet_dry_point_count": 115,
+      "wet_dry_median_ndwi_contrast": 0.375,
+      "wet_dry_median_dry_side_ndwi": -0.063,
+      "wet_dry_median_wet_side_ndwi": 0.312,
       "tide": {
         "level_m_msl": 0.953,
         "time": "2021-08-25T15:36:00Z",
         "source": "verified"
+      },
+      "high_tide": {
+        "time": "2021-08-25T15:24:00Z",
+        "level_m_msl": 0.806,
+        "source": "NOAA predicted high tide",
+        "image_offset_minutes": 14.2
       },
       "wave": {
         "height_m": 0.65,
@@ -1648,14 +717,8 @@
         556
       ],
       "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2B_MSIL2A_20210825T153809_R011_T18SWJ_20210826T034534",
-      "high_tide": {
-        "time": "2021-08-25T15:24:00Z",
-        "level_m_msl": 0.806,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": 14.2
-      },
-      "geometry_p90_deviation_m": 61.8,
-      "geometry_max_deviation_m": 93.6
+      "geometry_p90_deviation_m": 59.1,
+      "geometry_max_deviation_m": 82.6
     },
     {
       "year": 2021,
@@ -1664,10 +727,20 @@
       "cloud_cover_tile_pct": 3.02,
       "cloud_mask_aoi_pct": 9.84,
       "ndwi_threshold": 0.22,
+      "wet_dry_point_count": 87,
+      "wet_dry_median_ndwi_contrast": 0.407,
+      "wet_dry_median_dry_side_ndwi": 0.011,
+      "wet_dry_median_wet_side_ndwi": 0.404,
       "tide": {
         "level_m_msl": 1.047,
         "time": "2021-11-23T15:48:00Z",
         "source": "verified"
+      },
+      "high_tide": {
+        "time": "2021-11-23T15:42:00Z",
+        "level_m_msl": 0.797,
+        "source": "NOAA predicted high tide",
+        "image_offset_minutes": 3.8
       },
       "wave": {
         "height_m": 2.09,
@@ -1684,14 +757,8 @@
         556
       ],
       "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2B_MSIL2A_20211123T154549_R011_T18SWJ_20211124T005707",
-      "high_tide": {
-        "time": "2021-11-23T15:42:00Z",
-        "level_m_msl": 0.797,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": 3.8
-      },
-      "geometry_p90_deviation_m": 53.8,
-      "geometry_max_deviation_m": 62.7
+      "geometry_p90_deviation_m": 87.3,
+      "geometry_max_deviation_m": 103.2
     },
     {
       "year": 2021,
@@ -1700,10 +767,20 @@
       "cloud_cover_tile_pct": 0.13,
       "cloud_mask_aoi_pct": 10.63,
       "ndwi_threshold": 0.22,
+      "wet_dry_point_count": 81,
+      "wet_dry_median_ndwi_contrast": 0.413,
+      "wet_dry_median_dry_side_ndwi": 0.172,
+      "wet_dry_median_wet_side_ndwi": 0.571,
       "tide": {
         "level_m_msl": 0.925,
         "time": "2021-12-23T15:48:00Z",
         "source": "verified"
+      },
+      "high_tide": {
+        "time": "2021-12-23T16:00:00Z",
+        "level_m_msl": 0.744,
+        "source": "NOAA predicted high tide",
+        "image_offset_minutes": -13.2
       },
       "wave": {
         "height_m": 1.3,
@@ -1720,50 +797,8 @@
         556
       ],
       "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2B_MSIL2A_20211223T154649_R011_T18SWJ_20211224T110418",
-      "high_tide": {
-        "time": "2021-12-23T16:00:00Z",
-        "level_m_msl": 0.744,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": -13.2
-      },
-      "geometry_p90_deviation_m": 84.9,
-      "geometry_max_deviation_m": 103.8
-    },
-    {
-      "year": 2022,
-      "scene_id": "S2A_MSIL2A_20220219T155311_R054_T18SWJ_20220225T143457",
-      "datetime": "2022-02-19T15:53:11.024000Z",
-      "cloud_cover_tile_pct": 0.08,
-      "cloud_mask_aoi_pct": 0.75,
-      "ndwi_threshold": 0.018,
-      "tide": {
-        "level_m_msl": 0.646,
-        "time": "2022-02-19T15:54:00Z",
-        "source": "verified"
-      },
-      "wave": {
-        "height_m": 0.99,
-        "dominant_period_s": 9.1,
-        "time": "2022-02-19T15:40:00Z",
-        "source": "NDBC historical"
-      },
-      "wave_setup_m": 0.178,
-      "horizontal_correction_m": 18.3,
-      "uncertainty_m": 17.3,
-      "image": "/data/scenes/sentinel-20220219T155311.jpg",
-      "image_shape": [
-        477,
-        556
-      ],
-      "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2A_MSIL2A_20220219T155311_R054_T18SWJ_20220225T143457",
-      "high_tide": {
-        "time": "2022-02-19T15:12:00Z",
-        "level_m_msl": 0.77,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": 41.2
-      },
-      "geometry_p90_deviation_m": 148.5,
-      "geometry_max_deviation_m": 180.4
+      "geometry_p90_deviation_m": 100.6,
+      "geometry_max_deviation_m": 133.7
     },
     {
       "year": 2022,
@@ -1772,10 +807,20 @@
       "cloud_cover_tile_pct": 0.01,
       "cloud_mask_aoi_pct": 0.61,
       "ndwi_threshold": 0.012,
+      "wet_dry_point_count": 109,
+      "wet_dry_median_ndwi_contrast": 0.208,
+      "wet_dry_median_dry_side_ndwi": -0.058,
+      "wet_dry_median_wet_side_ndwi": 0.147,
       "tide": {
         "level_m_msl": 0.477,
         "time": "2022-02-21T15:42:00Z",
         "source": "verified"
+      },
+      "high_tide": {
+        "time": "2022-02-21T16:37:00Z",
+        "level_m_msl": 0.621,
+        "source": "NOAA predicted high tide",
+        "image_offset_minutes": -55.2
       },
       "wave": {
         "height_m": 0.61,
@@ -1792,14 +837,8 @@
         556
       ],
       "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2B_MSIL2A_20220221T154149_R011_T18SWJ_20220228T065548",
-      "high_tide": {
-        "time": "2022-02-21T16:37:00Z",
-        "level_m_msl": 0.621,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": -55.2
-      },
-      "geometry_p90_deviation_m": 132.3,
-      "geometry_max_deviation_m": 164.1
+      "geometry_p90_deviation_m": 138.5,
+      "geometry_max_deviation_m": 169.5
     },
     {
       "year": 2022,
@@ -1808,10 +847,20 @@
       "cloud_cover_tile_pct": 0.02,
       "cloud_mask_aoi_pct": 0.18,
       "ndwi_threshold": 0.002,
+      "wet_dry_point_count": 116,
+      "wet_dry_median_ndwi_contrast": 0.172,
+      "wet_dry_median_dry_side_ndwi": -0.053,
+      "wet_dry_median_wet_side_ndwi": 0.122,
       "tide": {
         "level_m_msl": 0.786,
         "time": "2022-03-21T15:48:00Z",
         "source": "verified"
+      },
+      "high_tide": {
+        "time": "2022-03-21T15:33:00Z",
+        "level_m_msl": 0.705,
+        "source": "NOAA predicted high tide",
+        "image_offset_minutes": 16.7
       },
       "wave": {
         "height_m": 0.52,
@@ -1828,14 +877,8 @@
         556
       ],
       "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2A_MSIL2A_20220321T154941_R054_T18SWJ_20220322T020307",
-      "high_tide": {
-        "time": "2022-03-21T15:33:00Z",
-        "level_m_msl": 0.705,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": 16.7
-      },
-      "geometry_p90_deviation_m": 126.7,
-      "geometry_max_deviation_m": 161.1
+      "geometry_p90_deviation_m": 125.7,
+      "geometry_max_deviation_m": 156.4
     },
     {
       "year": 2022,
@@ -1844,10 +887,20 @@
       "cloud_cover_tile_pct": 19.0,
       "cloud_mask_aoi_pct": 9.43,
       "ndwi_threshold": -0.002,
+      "wet_dry_point_count": 106,
+      "wet_dry_median_ndwi_contrast": 0.145,
+      "wet_dry_median_dry_side_ndwi": -0.049,
+      "wet_dry_median_wet_side_ndwi": 0.098,
       "tide": {
         "level_m_msl": 0.389,
         "time": "2022-04-20T15:48:00Z",
         "source": "verified"
+      },
+      "high_tide": {
+        "time": "2022-04-20T16:09:00Z",
+        "level_m_msl": 0.603,
+        "source": "NOAA predicted high tide",
+        "image_offset_minutes": -19.3
       },
       "wave": {
         "height_m": 0.99,
@@ -1864,14 +917,8 @@
         556
       ],
       "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2A_MSIL2A_20220420T154941_R054_T18SWJ_20240608T001828",
-      "high_tide": {
-        "time": "2022-04-20T16:09:00Z",
-        "level_m_msl": 0.603,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": -19.3
-      },
-      "geometry_p90_deviation_m": 120.1,
-      "geometry_max_deviation_m": 152.8
+      "geometry_p90_deviation_m": 117.2,
+      "geometry_max_deviation_m": 163.6
     },
     {
       "year": 2022,
@@ -1880,10 +927,20 @@
       "cloud_cover_tile_pct": 0.84,
       "cloud_mask_aoi_pct": 0.18,
       "ndwi_threshold": -0.002,
+      "wet_dry_point_count": 116,
+      "wet_dry_median_ndwi_contrast": 0.119,
+      "wet_dry_median_dry_side_ndwi": -0.048,
+      "wet_dry_median_wet_side_ndwi": 0.071,
       "tide": {
         "level_m_msl": 0.696,
         "time": "2022-05-17T15:36:00Z",
         "source": "verified"
+      },
+      "high_tide": {
+        "time": "2022-05-17T14:12:00Z",
+        "level_m_msl": 0.694,
+        "source": "NOAA predicted high tide",
+        "image_offset_minutes": 86.4
       },
       "wave": {
         "height_m": 0.81,
@@ -1900,14 +957,8 @@
         556
       ],
       "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2A_MSIL2A_20220517T153821_R011_T18SWJ_20220519T194201",
-      "high_tide": {
-        "time": "2022-05-17T14:12:00Z",
-        "level_m_msl": 0.694,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": 86.4
-      },
-      "geometry_p90_deviation_m": 106.7,
-      "geometry_max_deviation_m": 141.0
+      "geometry_p90_deviation_m": 103.8,
+      "geometry_max_deviation_m": 135.9
     },
     {
       "year": 2022,
@@ -1916,10 +967,20 @@
       "cloud_cover_tile_pct": 15.91,
       "cloud_mask_aoi_pct": 1.97,
       "ndwi_threshold": -0.02,
+      "wet_dry_point_count": 116,
+      "wet_dry_median_ndwi_contrast": 0.172,
+      "wet_dry_median_dry_side_ndwi": -0.069,
+      "wet_dry_median_wet_side_ndwi": 0.103,
       "tide": {
         "level_m_msl": 0.65,
         "time": "2022-06-04T15:48:00Z",
         "source": "verified"
+      },
+      "high_tide": {
+        "time": "2022-06-04T16:45:00Z",
+        "level_m_msl": 0.417,
+        "source": "NOAA predicted high tide",
+        "image_offset_minutes": -56.8
       },
       "wave": {
         "height_m": 0.8,
@@ -1936,86 +997,8 @@
         556
       ],
       "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2B_MSIL2A_20220604T154809_R054_T18SWJ_20220605T050923",
-      "high_tide": {
-        "time": "2022-06-04T16:45:00Z",
-        "level_m_msl": 0.417,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": -56.8
-      },
-      "geometry_p90_deviation_m": 77.3,
-      "geometry_max_deviation_m": 109.2
-    },
-    {
-      "year": 2022,
-      "scene_id": "S2B_MSIL2A_20220701T153819_R011_T18SWJ_20220702T145221",
-      "datetime": "2022-07-01T15:38:19.024000Z",
-      "cloud_cover_tile_pct": 1.11,
-      "cloud_mask_aoi_pct": 0.78,
-      "ndwi_threshold": -0.002,
-      "tide": {
-        "level_m_msl": 0.521,
-        "time": "2022-07-01T15:36:00Z",
-        "source": "verified"
-      },
-      "wave": {
-        "height_m": 0.88,
-        "dominant_period_s": 3.7,
-        "time": "2022-07-01T15:40:00Z",
-        "source": "NDBC historical"
-      },
-      "wave_setup_m": 0.068,
-      "horizontal_correction_m": 13.1,
-      "uncertainty_m": 16.4,
-      "image": "/data/scenes/sentinel-20220701T153819.jpg",
-      "image_shape": [
-        477,
-        556
-      ],
-      "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2B_MSIL2A_20220701T153819_R011_T18SWJ_20220702T145221",
-      "high_tide": {
-        "time": "2022-07-01T14:58:00Z",
-        "level_m_msl": 0.483,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": 40.3
-      },
-      "geometry_p90_deviation_m": 101.4,
-      "geometry_max_deviation_m": 125.4
-    },
-    {
-      "year": 2022,
-      "scene_id": "S2B_MSIL2A_20220704T154819_R054_T18SWJ_20220706T175830",
-      "datetime": "2022-07-04T15:48:19.024000Z",
-      "cloud_cover_tile_pct": 15.98,
-      "cloud_mask_aoi_pct": 1.41,
-      "ndwi_threshold": -0.02,
-      "tide": {
-        "level_m_msl": 0.521,
-        "time": "2022-07-04T15:48:00Z",
-        "source": "verified"
-      },
-      "wave": {
-        "height_m": 0.83,
-        "dominant_period_s": 8.3,
-        "time": "2022-07-04T15:40:00Z",
-        "source": "NDBC historical"
-      },
-      "wave_setup_m": 0.149,
-      "horizontal_correction_m": 14.9,
-      "uncertainty_m": 16.7,
-      "image": "/data/scenes/sentinel-20220704T154819.jpg",
-      "image_shape": [
-        477,
-        556
-      ],
-      "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2B_MSIL2A_20220704T154819_R054_T18SWJ_20220706T175830",
-      "high_tide": {
-        "time": "2022-07-04T17:00:00Z",
-        "level_m_msl": 0.521,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": -71.7
-      },
-      "geometry_p90_deviation_m": 84.2,
-      "geometry_max_deviation_m": 117.2
+      "geometry_p90_deviation_m": 81.9,
+      "geometry_max_deviation_m": 104.8
     },
     {
       "year": 2022,
@@ -2024,10 +1007,20 @@
       "cloud_cover_tile_pct": 1.76,
       "cloud_mask_aoi_pct": 0.21,
       "ndwi_threshold": -0.002,
+      "wet_dry_point_count": 116,
+      "wet_dry_median_ndwi_contrast": 0.197,
+      "wet_dry_median_dry_side_ndwi": -0.054,
+      "wet_dry_median_wet_side_ndwi": 0.141,
       "tide": {
         "level_m_msl": 0.676,
         "time": "2022-08-03T15:48:00Z",
         "source": "verified"
+      },
+      "high_tide": {
+        "time": "2022-08-03T17:13:00Z",
+        "level_m_msl": 0.718,
+        "source": "NOAA predicted high tide",
+        "image_offset_minutes": -84.7
       },
       "wave": {
         "height_m": 0.54,
@@ -2044,14 +1037,8 @@
         556
       ],
       "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2B_MSIL2A_20220803T154819_R054_T18SWJ_20220804T150432",
-      "high_tide": {
-        "time": "2022-08-03T17:13:00Z",
-        "level_m_msl": 0.718,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": -84.7
-      },
-      "geometry_p90_deviation_m": 65.6,
-      "geometry_max_deviation_m": 110.1
+      "geometry_p90_deviation_m": 72.3,
+      "geometry_max_deviation_m": 105.0
     },
     {
       "year": 2022,
@@ -2060,10 +1047,20 @@
       "cloud_cover_tile_pct": 0.34,
       "cloud_mask_aoi_pct": 0.19,
       "ndwi_threshold": -0.02,
+      "wet_dry_point_count": 116,
+      "wet_dry_median_ndwi_contrast": 0.207,
+      "wet_dry_median_dry_side_ndwi": -0.064,
+      "wet_dry_median_wet_side_ndwi": 0.144,
       "tide": {
         "level_m_msl": 0.817,
         "time": "2022-08-13T15:48:00Z",
         "source": "verified"
+      },
+      "high_tide": {
+        "time": "2022-08-13T14:19:00Z",
+        "level_m_msl": 0.837,
+        "source": "NOAA predicted high tide",
+        "image_offset_minutes": 89.3
       },
       "wave": {
         "height_m": 1.14,
@@ -2080,14 +1077,8 @@
         556
       ],
       "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2B_MSIL2A_20220813T154819_R054_T18SWJ_20220814T011534",
-      "high_tide": {
-        "time": "2022-08-13T14:19:00Z",
-        "level_m_msl": 0.837,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": 89.3
-      },
-      "geometry_p90_deviation_m": 78.4,
-      "geometry_max_deviation_m": 104.0
+      "geometry_p90_deviation_m": 85.2,
+      "geometry_max_deviation_m": 103.8
     },
     {
       "year": 2022,
@@ -2096,10 +1087,20 @@
       "cloud_cover_tile_pct": 5.63,
       "cloud_mask_aoi_pct": 1.67,
       "ndwi_threshold": 0.002,
+      "wet_dry_point_count": 84,
+      "wet_dry_median_ndwi_contrast": 0.24,
+      "wet_dry_median_dry_side_ndwi": -0.036,
+      "wet_dry_median_wet_side_ndwi": 0.203,
       "tide": {
         "level_m_msl": 0.948,
         "time": "2022-08-30T15:36:00Z",
         "source": "verified"
+      },
+      "high_tide": {
+        "time": "2022-08-30T15:18:00Z",
+        "level_m_msl": 0.827,
+        "source": "NOAA predicted high tide",
+        "image_offset_minutes": 20.2
       },
       "wave": {
         "height_m": 0.65,
@@ -2116,14 +1117,8 @@
         556
       ],
       "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2B_MSIL2A_20220830T153809_R011_T18SWJ_20220831T220404",
-      "high_tide": {
-        "time": "2022-08-30T15:18:00Z",
-        "level_m_msl": 0.827,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": 20.2
-      },
-      "geometry_p90_deviation_m": 83.6,
-      "geometry_max_deviation_m": 107.4
+      "geometry_p90_deviation_m": 98.5,
+      "geometry_max_deviation_m": 112.2
     },
     {
       "year": 2022,
@@ -2132,10 +1127,20 @@
       "cloud_cover_tile_pct": 0.02,
       "cloud_mask_aoi_pct": 0.25,
       "ndwi_threshold": 0.018,
+      "wet_dry_point_count": 106,
+      "wet_dry_median_ndwi_contrast": 0.186,
+      "wet_dry_median_dry_side_ndwi": -0.043,
+      "wet_dry_median_wet_side_ndwi": 0.141,
       "tide": {
         "level_m_msl": 0.92,
         "time": "2022-10-27T15:54:00Z",
         "source": "verified"
+      },
+      "high_tide": {
+        "time": "2022-10-27T14:26:00Z",
+        "level_m_msl": 1.101,
+        "source": "NOAA predicted high tide",
+        "image_offset_minutes": 87.7
       },
       "wave": {
         "height_m": 1.26,
@@ -2152,14 +1157,8 @@
         556
       ],
       "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2A_MSIL2A_20221027T155341_R054_T18SWJ_20221028T035736",
-      "high_tide": {
-        "time": "2022-10-27T14:26:00Z",
-        "level_m_msl": 1.101,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": 87.7
-      },
-      "geometry_p90_deviation_m": 61.0,
-      "geometry_max_deviation_m": 85.2
+      "geometry_p90_deviation_m": 57.7,
+      "geometry_max_deviation_m": 86.3
     },
     {
       "year": 2022,
@@ -2168,10 +1167,20 @@
       "cloud_cover_tile_pct": 0.03,
       "cloud_mask_aoi_pct": 0.35,
       "ndwi_threshold": 0.032,
+      "wet_dry_point_count": 114,
+      "wet_dry_median_ndwi_contrast": 0.181,
+      "wet_dry_median_dry_side_ndwi": -0.042,
+      "wet_dry_median_wet_side_ndwi": 0.148,
       "tide": {
         "level_m_msl": 1.083,
         "time": "2022-11-26T15:54:00Z",
         "source": "verified"
+      },
+      "high_tide": {
+        "time": "2022-11-26T14:58:00Z",
+        "level_m_msl": 1.104,
+        "source": "NOAA predicted high tide",
+        "image_offset_minutes": 58.2
       },
       "wave": {
         "height_m": 1.13,
@@ -2188,86 +1197,8 @@
         556
       ],
       "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2A_MSIL2A_20221126T155611_R054_T18SWJ_20221201T172341",
-      "high_tide": {
-        "time": "2022-11-26T14:58:00Z",
-        "level_m_msl": 1.104,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": 58.2
-      },
-      "geometry_p90_deviation_m": 63.4,
-      "geometry_max_deviation_m": 98.0
-    },
-    {
-      "year": 2022,
-      "scene_id": "S2A_MSIL2A_20221213T154641_R011_T18SWJ_20221214T054608",
-      "datetime": "2022-12-13T15:46:41.024000Z",
-      "cloud_cover_tile_pct": 9.87,
-      "cloud_mask_aoi_pct": 4.63,
-      "ndwi_threshold": 0.043,
-      "tide": {
-        "level_m_msl": 1.021,
-        "time": "2022-12-13T15:48:00Z",
-        "source": "verified"
-      },
-      "wave": {
-        "height_m": 2.08,
-        "dominant_period_s": 12.1,
-        "time": "2022-12-13T15:40:00Z",
-        "source": "NDBC historical"
-      },
-      "wave_setup_m": 0.343,
-      "horizontal_correction_m": 30.3,
-      "uncertainty_m": 19.5,
-      "image": "/data/scenes/sentinel-20221213T154641.jpg",
-      "image_shape": [
-        477,
-        556
-      ],
-      "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2A_MSIL2A_20221213T154641_R011_T18SWJ_20221214T054608",
-      "high_tide": {
-        "time": "2022-12-13T16:39:00Z",
-        "level_m_msl": 0.688,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": -52.3
-      },
-      "geometry_p90_deviation_m": 78.3,
-      "geometry_max_deviation_m": 102.3
-    },
-    {
-      "year": 2023,
-      "scene_id": "S2A_MSIL2A_20230224T155231_R054_T18SWJ_20230226T175621",
-      "datetime": "2023-02-24T15:52:31.024000Z",
-      "cloud_cover_tile_pct": 0.48,
-      "cloud_mask_aoi_pct": 0.3,
-      "ndwi_threshold": 0.018,
-      "tide": {
-        "level_m_msl": 0.827,
-        "time": "2023-02-24T15:54:00Z",
-        "source": "verified"
-      },
-      "wave": {
-        "height_m": 1.15,
-        "dominant_period_s": 7.7,
-        "time": "2023-02-24T15:40:00Z",
-        "source": "NDBC historical"
-      },
-      "wave_setup_m": 0.162,
-      "horizontal_correction_m": 22.0,
-      "uncertainty_m": 18.0,
-      "image": "/data/scenes/sentinel-20230224T155231.jpg",
-      "image_shape": [
-        477,
-        556
-      ],
-      "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2A_MSIL2A_20230224T155231_R054_T18SWJ_20230226T175621",
-      "high_tide": {
-        "time": "2023-02-24T16:37:00Z",
-        "level_m_msl": 0.689,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": -44.5
-      },
-      "geometry_p90_deviation_m": 59.0,
-      "geometry_max_deviation_m": 66.7
+      "geometry_p90_deviation_m": 60.7,
+      "geometry_max_deviation_m": 89.5
     },
     {
       "year": 2023,
@@ -2276,10 +1207,20 @@
       "cloud_cover_tile_pct": 0.05,
       "cloud_mask_aoi_pct": 0.28,
       "ndwi_threshold": 0.002,
+      "wet_dry_point_count": 96,
+      "wet_dry_median_ndwi_contrast": 0.2,
+      "wet_dry_median_dry_side_ndwi": -0.055,
+      "wet_dry_median_wet_side_ndwi": 0.149,
       "tide": {
         "level_m_msl": 0.724,
         "time": "2023-03-26T15:48:00Z",
         "source": "verified"
+      },
+      "high_tide": {
+        "time": "2023-03-26T16:56:00Z",
+        "level_m_msl": 0.507,
+        "source": "NOAA predicted high tide",
+        "image_offset_minutes": -67.0
       },
       "wave": {
         "height_m": 1.3,
@@ -2296,50 +1237,8 @@
         556
       ],
       "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2A_MSIL2A_20230326T154901_R054_T18SWJ_20240826T102635",
-      "high_tide": {
-        "time": "2023-03-26T16:56:00Z",
-        "level_m_msl": 0.507,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": -67.0
-      },
-      "geometry_p90_deviation_m": 58.5,
-      "geometry_max_deviation_m": 72.7
-    },
-    {
-      "year": 2023,
-      "scene_id": "S2B_MSIL2A_20230410T154819_R054_T18SWJ_20240830T012740",
-      "datetime": "2023-04-10T15:48:19.024000Z",
-      "cloud_cover_tile_pct": 0.15,
-      "cloud_mask_aoi_pct": 0.55,
-      "ndwi_threshold": 0.007,
-      "tide": {
-        "level_m_msl": 0.574,
-        "time": "2023-04-10T15:48:00Z",
-        "source": "verified"
-      },
-      "wave": {
-        "height_m": 1.61,
-        "dominant_period_s": 10.0,
-        "time": "2023-04-10T15:40:00Z",
-        "source": "NDBC historical"
-      },
-      "wave_setup_m": 0.25,
-      "horizontal_correction_m": 18.3,
-      "uncertainty_m": 17.3,
-      "image": "/data/scenes/sentinel-20230410T154819.jpg",
-      "image_shape": [
-        477,
-        556
-      ],
-      "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2B_MSIL2A_20230410T154819_R054_T18SWJ_20240830T012740",
-      "high_tide": {
-        "time": "2023-04-10T16:17:00Z",
-        "level_m_msl": 0.51,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": -28.7
-      },
       "geometry_p90_deviation_m": 45.9,
-      "geometry_max_deviation_m": 65.9
+      "geometry_max_deviation_m": 57.1
     },
     {
       "year": 2023,
@@ -2348,10 +1247,20 @@
       "cloud_cover_tile_pct": 6.57,
       "cloud_mask_aoi_pct": 0.34,
       "ndwi_threshold": -0.02,
+      "wet_dry_point_count": 113,
+      "wet_dry_median_ndwi_contrast": 0.154,
+      "wet_dry_median_dry_side_ndwi": -0.057,
+      "wet_dry_median_wet_side_ndwi": 0.097,
       "tide": {
         "level_m_msl": 0.511,
         "time": "2023-05-10T15:48:00Z",
         "source": "verified"
+      },
+      "high_tide": {
+        "time": "2023-05-10T17:04:00Z",
+        "level_m_msl": 0.492,
+        "source": "NOAA predicted high tide",
+        "image_offset_minutes": -75.7
       },
       "wave": {
         "height_m": 0.98,
@@ -2368,14 +1277,8 @@
         556
       ],
       "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2B_MSIL2A_20230510T154819_R054_T18SWJ_20230510T222908",
-      "high_tide": {
-        "time": "2023-05-10T17:04:00Z",
-        "level_m_msl": 0.492,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": -75.7
-      },
-      "geometry_p90_deviation_m": 56.8,
-      "geometry_max_deviation_m": 68.2
+      "geometry_p90_deviation_m": 35.9,
+      "geometry_max_deviation_m": 46.2
     },
     {
       "year": 2023,
@@ -2384,10 +1287,20 @@
       "cloud_cover_tile_pct": 5.79,
       "cloud_mask_aoi_pct": 0.27,
       "ndwi_threshold": -0.012,
+      "wet_dry_point_count": 115,
+      "wet_dry_median_ndwi_contrast": 0.193,
+      "wet_dry_median_dry_side_ndwi": -0.058,
+      "wet_dry_median_wet_side_ndwi": 0.141,
       "tide": {
         "level_m_msl": 0.664,
         "time": "2023-05-22T15:36:00Z",
         "source": "verified"
+      },
+      "high_tide": {
+        "time": "2023-05-22T15:19:00Z",
+        "level_m_msl": 0.508,
+        "source": "NOAA predicted high tide",
+        "image_offset_minutes": 19.2
       },
       "wave": {
         "height_m": 0.79,
@@ -2404,50 +1317,48 @@
         556
       ],
       "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2A_MSIL2A_20230522T153811_R011_T18SWJ_20240908T002113",
-      "high_tide": {
-        "time": "2023-05-22T15:19:00Z",
-        "level_m_msl": 0.508,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": 19.2
-      },
-      "geometry_p90_deviation_m": 39.9,
-      "geometry_max_deviation_m": 51.9
+      "geometry_p90_deviation_m": 28.7,
+      "geometry_max_deviation_m": 41.8
     },
     {
       "year": 2023,
-      "scene_id": "S2A_MSIL2A_20230820T153821_R011_T18SWJ_20241015T130941",
-      "datetime": "2023-08-20T15:38:21.024000Z",
-      "cloud_cover_tile_pct": 0.41,
-      "cloud_mask_aoi_pct": 0.24,
-      "ndwi_threshold": -0.002,
+      "scene_id": "S2B_MSIL2A_20230818T154819_R054_T18SWJ_20241024T050922",
+      "datetime": "2023-08-18T15:48:19.024000Z",
+      "cloud_cover_tile_pct": 18.55,
+      "cloud_mask_aoi_pct": 6.34,
+      "ndwi_threshold": -0.02,
+      "wet_dry_point_count": 97,
+      "wet_dry_median_ndwi_contrast": 0.157,
+      "wet_dry_median_dry_side_ndwi": -0.06,
+      "wet_dry_median_wet_side_ndwi": 0.092,
       "tide": {
-        "level_m_msl": 0.754,
-        "time": "2023-08-20T15:36:00Z",
+        "level_m_msl": 0.713,
+        "time": "2023-08-18T15:48:00Z",
         "source": "verified"
       },
+      "high_tide": {
+        "time": "2023-08-18T14:39:00Z",
+        "level_m_msl": 0.672,
+        "source": "NOAA predicted high tide",
+        "image_offset_minutes": 69.3
+      },
       "wave": {
-        "height_m": 0.57,
-        "dominant_period_s": 6.7,
-        "time": "2023-08-20T15:40:00Z",
+        "height_m": 1.0,
+        "dominant_period_s": 6.2,
+        "time": "2023-08-18T15:40:00Z",
         "source": "NDBC historical"
       },
-      "wave_setup_m": 0.1,
-      "horizontal_correction_m": 19.0,
-      "uncertainty_m": 17.4,
-      "image": "/data/scenes/sentinel-20230820T153821.jpg",
+      "wave_setup_m": 0.122,
+      "horizontal_correction_m": 18.6,
+      "uncertainty_m": 17.3,
+      "image": "/data/scenes/sentinel-20230818T154819.jpg",
       "image_shape": [
         477,
         556
       ],
-      "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2A_MSIL2A_20230820T153821_R011_T18SWJ_20241015T130941",
-      "high_tide": {
-        "time": "2023-08-20T15:50:00Z",
-        "level_m_msl": 0.716,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": -11.6
-      },
-      "geometry_p90_deviation_m": 45.4,
-      "geometry_max_deviation_m": 61.1
+      "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2B_MSIL2A_20230818T154819_R054_T18SWJ_20241024T050922",
+      "geometry_p90_deviation_m": 66.7,
+      "geometry_max_deviation_m": 174.5
     },
     {
       "year": 2023,
@@ -2456,10 +1367,20 @@
       "cloud_cover_tile_pct": 0.43,
       "cloud_mask_aoi_pct": 0.39,
       "ndwi_threshold": -0.002,
+      "wet_dry_point_count": 93,
+      "wet_dry_median_ndwi_contrast": 0.211,
+      "wet_dry_median_dry_side_ndwi": -0.058,
+      "wet_dry_median_wet_side_ndwi": 0.153,
       "tide": {
         "level_m_msl": 1.071,
         "time": "2023-09-02T15:48:00Z",
         "source": "verified"
+      },
+      "high_tide": {
+        "time": "2023-09-02T15:01:00Z",
+        "level_m_msl": 1.038,
+        "source": "NOAA predicted high tide",
+        "image_offset_minutes": 47.4
       },
       "wave": {
         "height_m": 1.37,
@@ -2476,14 +1397,8 @@
         556
       ],
       "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2A_MSIL2A_20230902T154821_R054_T18SWJ_20241105T121609",
-      "high_tide": {
-        "time": "2023-09-02T15:01:00Z",
-        "level_m_msl": 1.038,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": 47.4
-      },
-      "geometry_p90_deviation_m": 44.1,
-      "geometry_max_deviation_m": 60.3
+      "geometry_p90_deviation_m": 31.2,
+      "geometry_max_deviation_m": 53.2
     },
     {
       "year": 2023,
@@ -2492,10 +1407,20 @@
       "cloud_cover_tile_pct": 0.13,
       "cloud_mask_aoi_pct": 0.26,
       "ndwi_threshold": 0.002,
+      "wet_dry_point_count": 95,
+      "wet_dry_median_ndwi_contrast": 0.183,
+      "wet_dry_median_dry_side_ndwi": -0.035,
+      "wet_dry_median_wet_side_ndwi": 0.149,
       "tide": {
         "level_m_msl": 0.97,
         "time": "2023-09-19T15:42:00Z",
         "source": "verified"
+      },
+      "high_tide": {
+        "time": "2023-09-19T15:55:00Z",
+        "level_m_msl": 0.872,
+        "source": "NOAA predicted high tide",
+        "image_offset_minutes": -15.6
       },
       "wave": {
         "height_m": 1.12,
@@ -2512,50 +1437,8 @@
         556
       ],
       "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2A_MSIL2A_20230919T153921_R011_T18SWJ_20241018T113101",
-      "high_tide": {
-        "time": "2023-09-19T15:55:00Z",
-        "level_m_msl": 0.872,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": -15.6
-      },
-      "geometry_p90_deviation_m": 47.6,
-      "geometry_max_deviation_m": 59.4
-    },
-    {
-      "year": 2023,
-      "scene_id": "S2A_MSIL2A_20231002T155101_R054_T18SWJ_20231003T012309",
-      "datetime": "2023-10-02T15:51:01.024000Z",
-      "cloud_cover_tile_pct": 0.49,
-      "cloud_mask_aoi_pct": 0.61,
-      "ndwi_threshold": 0.032,
-      "tide": {
-        "level_m_msl": 1.299,
-        "time": "2023-10-02T15:54:00Z",
-        "source": "verified"
-      },
-      "wave": {
-        "height_m": 1.62,
-        "dominant_period_s": 10.8,
-        "time": "2023-10-02T15:40:00Z",
-        "source": "NDBC historical"
-      },
-      "wave_setup_m": 0.27,
-      "horizontal_correction_m": 34.9,
-      "uncertainty_m": 20.3,
-      "image": "/data/scenes/sentinel-20231002T155101.jpg",
-      "image_shape": [
-        477,
-        556
-      ],
-      "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2A_MSIL2A_20231002T155101_R054_T18SWJ_20231003T012309",
-      "high_tide": {
-        "time": "2023-10-02T15:22:00Z",
-        "level_m_msl": 1.11,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": 29.0
-      },
-      "geometry_p90_deviation_m": 62.1,
-      "geometry_max_deviation_m": 72.7
+      "geometry_p90_deviation_m": 37.3,
+      "geometry_max_deviation_m": 48.9
     },
     {
       "year": 2023,
@@ -2564,10 +1447,20 @@
       "cloud_cover_tile_pct": 0.17,
       "cloud_mask_aoi_pct": 0.83,
       "ndwi_threshold": 0.012,
+      "wet_dry_point_count": 87,
+      "wet_dry_median_ndwi_contrast": 0.202,
+      "wet_dry_median_dry_side_ndwi": -0.038,
+      "wet_dry_median_wet_side_ndwi": 0.163,
       "tide": {
         "level_m_msl": 0.973,
         "time": "2023-10-04T15:42:00Z",
         "source": "verified"
+      },
+      "high_tide": {
+        "time": "2023-10-04T17:00:00Z",
+        "level_m_msl": 0.947,
+        "source": "NOAA predicted high tide",
+        "image_offset_minutes": -79.8
       },
       "wave": {
         "height_m": 1.13,
@@ -2584,14 +1477,8 @@
         556
       ],
       "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2B_MSIL2A_20231004T154009_R011_T18SWJ_20231004T232420",
-      "high_tide": {
-        "time": "2023-10-04T17:00:00Z",
-        "level_m_msl": 0.947,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": -79.8
-      },
-      "geometry_p90_deviation_m": 79.8,
-      "geometry_max_deviation_m": 101.9
+      "geometry_p90_deviation_m": 52.6,
+      "geometry_max_deviation_m": 65.9
     },
     {
       "year": 2023,
@@ -2600,10 +1487,20 @@
       "cloud_cover_tile_pct": 0.13,
       "cloud_mask_aoi_pct": 0.21,
       "ndwi_threshold": 0.023,
+      "wet_dry_point_count": 115,
+      "wet_dry_median_ndwi_contrast": 0.214,
+      "wet_dry_median_dry_side_ndwi": -0.037,
+      "wet_dry_median_wet_side_ndwi": 0.176,
       "tide": {
         "level_m_msl": 1.156,
         "time": "2023-10-19T15:42:00Z",
         "source": "verified"
+      },
+      "high_tide": {
+        "time": "2023-10-19T16:16:00Z",
+        "level_m_msl": 0.932,
+        "source": "NOAA predicted high tide",
+        "image_offset_minutes": -33.1
       },
       "wave": {
         "height_m": 0.51,
@@ -2620,14 +1517,8 @@
         556
       ],
       "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2A_MSIL2A_20231019T154251_R011_T18SWJ_20240909T114951",
-      "high_tide": {
-        "time": "2023-10-19T16:16:00Z",
-        "level_m_msl": 0.932,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": -33.1
-      },
-      "geometry_p90_deviation_m": 61.1,
-      "geometry_max_deviation_m": 70.8
+      "geometry_p90_deviation_m": 40.9,
+      "geometry_max_deviation_m": 55.8
     },
     {
       "year": 2023,
@@ -2636,10 +1527,20 @@
       "cloud_cover_tile_pct": 0.02,
       "cloud_mask_aoi_pct": 0.72,
       "ndwi_threshold": 0.012,
+      "wet_dry_point_count": 101,
+      "wet_dry_median_ndwi_contrast": 0.188,
+      "wet_dry_median_dry_side_ndwi": -0.041,
+      "wet_dry_median_wet_side_ndwi": 0.15,
       "tide": {
         "level_m_msl": 1.013,
         "time": "2023-11-16T15:54:00Z",
         "source": "verified"
+      },
+      "high_tide": {
+        "time": "2023-11-16T15:12:00Z",
+        "level_m_msl": 0.984,
+        "source": "NOAA predicted high tide",
+        "image_offset_minutes": 43.5
       },
       "wave": {
         "height_m": 0.68,
@@ -2656,14 +1557,8 @@
         556
       ],
       "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2B_MSIL2A_20231116T155529_R054_T18SWJ_20241010T180337",
-      "high_tide": {
-        "time": "2023-11-16T15:12:00Z",
-        "level_m_msl": 0.984,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": 43.5
-      },
-      "geometry_p90_deviation_m": 48.5,
-      "geometry_max_deviation_m": 59.4
+      "geometry_p90_deviation_m": 41.1,
+      "geometry_max_deviation_m": 81.2
     },
     {
       "year": 2024,
@@ -2672,10 +1567,20 @@
       "cloud_cover_tile_pct": 5.38,
       "cloud_mask_aoi_pct": 2.64,
       "ndwi_threshold": 0.023,
+      "wet_dry_point_count": 99,
+      "wet_dry_median_ndwi_contrast": 0.189,
+      "wet_dry_median_dry_side_ndwi": -0.057,
+      "wet_dry_median_wet_side_ndwi": 0.133,
       "tide": {
         "level_m_msl": 0.886,
         "time": "2024-02-14T15:54:00Z",
         "source": "verified"
+      },
+      "high_tide": {
+        "time": "2024-02-14T16:57:00Z",
+        "level_m_msl": 0.703,
+        "source": "NOAA predicted high tide",
+        "image_offset_minutes": -64.2
       },
       "wave": {
         "height_m": 1.91,
@@ -2692,14 +1597,8 @@
         556
       ],
       "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2B_MSIL2A_20240214T155249_R054_T18SWJ_20240214T211948",
-      "high_tide": {
-        "time": "2024-02-14T16:57:00Z",
-        "level_m_msl": 0.703,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": -64.2
-      },
-      "geometry_p90_deviation_m": 70.9,
-      "geometry_max_deviation_m": 84.8
+      "geometry_p90_deviation_m": 62.2,
+      "geometry_max_deviation_m": 72.6
     },
     {
       "year": 2024,
@@ -2708,10 +1607,20 @@
       "cloud_cover_tile_pct": 0.35,
       "cloud_mask_aoi_pct": 0.22,
       "ndwi_threshold": 0.018,
+      "wet_dry_point_count": 114,
+      "wet_dry_median_ndwi_contrast": 0.221,
+      "wet_dry_median_dry_side_ndwi": -0.044,
+      "wet_dry_median_wet_side_ndwi": 0.179,
       "tide": {
         "level_m_msl": 0.79,
         "time": "2024-02-26T15:42:00Z",
         "source": "verified"
+      },
+      "high_tide": {
+        "time": "2024-02-26T14:37:00Z",
+        "level_m_msl": 0.694,
+        "source": "NOAA predicted high tide",
+        "image_offset_minutes": 65.4
       },
       "wave": {
         "height_m": 1.38,
@@ -2728,14 +1637,48 @@
         556
       ],
       "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2A_MSIL2A_20240226T154221_R011_T18SWJ_20240226T224219",
-      "high_tide": {
-        "time": "2024-02-26T14:37:00Z",
-        "level_m_msl": 0.694,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": 65.4
+      "geometry_p90_deviation_m": 46.9,
+      "geometry_max_deviation_m": 56.6
+    },
+    {
+      "year": 2024,
+      "scene_id": "S2B_MSIL2A_20240312T153929_R011_T18SWJ_20240312T211514",
+      "datetime": "2024-03-12T15:39:29.024000Z",
+      "cloud_cover_tile_pct": 13.35,
+      "cloud_mask_aoi_pct": 3.12,
+      "ndwi_threshold": 0.023,
+      "wet_dry_point_count": 116,
+      "wet_dry_median_ndwi_contrast": 0.157,
+      "wet_dry_median_dry_side_ndwi": -0.042,
+      "wet_dry_median_wet_side_ndwi": 0.112,
+      "tide": {
+        "level_m_msl": 0.881,
+        "time": "2024-03-12T15:42:00Z",
+        "source": "verified"
       },
-      "geometry_p90_deviation_m": 59.3,
-      "geometry_max_deviation_m": 72.9
+      "high_tide": {
+        "time": "2024-03-12T14:56:00Z",
+        "level_m_msl": 0.913,
+        "source": "NOAA predicted high tide",
+        "image_offset_minutes": 43.5
+      },
+      "wave": {
+        "height_m": 0.66,
+        "dominant_period_s": 12.9,
+        "time": "2024-03-12T15:40:00Z",
+        "source": "NDBC historical"
+      },
+      "wave_setup_m": 0.206,
+      "horizontal_correction_m": 24.2,
+      "uncertainty_m": 18.3,
+      "image": "/data/scenes/sentinel-20240312T153929.jpg",
+      "image_shape": [
+        477,
+        556
+      ],
+      "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2B_MSIL2A_20240312T153929_R011_T18SWJ_20240312T211514",
+      "geometry_p90_deviation_m": 47.3,
+      "geometry_max_deviation_m": 53.2
     },
     {
       "year": 2024,
@@ -2744,10 +1687,20 @@
       "cloud_cover_tile_pct": 1.76,
       "cloud_mask_aoi_pct": 4.53,
       "ndwi_threshold": 0.002,
+      "wet_dry_point_count": 101,
+      "wet_dry_median_ndwi_contrast": 0.203,
+      "wet_dry_median_dry_side_ndwi": -0.057,
+      "wet_dry_median_wet_side_ndwi": 0.147,
       "tide": {
         "level_m_msl": 0.69,
         "time": "2024-04-26T15:42:00Z",
         "source": "verified"
+      },
+      "high_tide": {
+        "time": "2024-04-26T14:55:00Z",
+        "level_m_msl": 0.519,
+        "source": "NOAA predicted high tide",
+        "image_offset_minutes": 44.7
       },
       "wave": {
         "height_m": 1.38,
@@ -2764,14 +1717,8 @@
         556
       ],
       "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2A_MSIL2A_20240426T153941_R011_T18SWJ_20240427T001359",
-      "high_tide": {
-        "time": "2024-04-26T14:55:00Z",
-        "level_m_msl": 0.519,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": 44.7
-      },
-      "geometry_p90_deviation_m": 70.9,
-      "geometry_max_deviation_m": 81.2
+      "geometry_p90_deviation_m": 57.4,
+      "geometry_max_deviation_m": 67.1
     },
     {
       "year": 2024,
@@ -2780,10 +1727,20 @@
       "cloud_cover_tile_pct": 6.16,
       "cloud_mask_aoi_pct": 0.27,
       "ndwi_threshold": 0.007,
+      "wet_dry_point_count": 110,
+      "wet_dry_median_ndwi_contrast": 0.172,
+      "wet_dry_median_dry_side_ndwi": -0.033,
+      "wet_dry_median_wet_side_ndwi": 0.14,
       "tide": {
         "level_m_msl": 0.501,
         "time": "2024-04-29T15:48:00Z",
         "source": "verified"
+      },
+      "high_tide": {
+        "time": "2024-04-29T17:13:00Z",
+        "level_m_msl": 0.415,
+        "source": "NOAA predicted high tide",
+        "image_offset_minutes": -83.3
       },
       "wave": {
         "height_m": 0.94,
@@ -2800,14 +1757,8 @@
         556
       ],
       "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2A_MSIL2A_20240429T154941_R054_T18SWJ_20240429T230645",
-      "high_tide": {
-        "time": "2024-04-29T17:13:00Z",
-        "level_m_msl": 0.415,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": -83.3
-      },
-      "geometry_p90_deviation_m": 83.9,
-      "geometry_max_deviation_m": 99.3
+      "geometry_p90_deviation_m": 69.2,
+      "geometry_max_deviation_m": 77.6
     },
     {
       "year": 2024,
@@ -2816,10 +1767,20 @@
       "cloud_cover_tile_pct": 11.97,
       "cloud_mask_aoi_pct": 0.73,
       "ndwi_threshold": -0.02,
+      "wet_dry_point_count": 116,
+      "wet_dry_median_ndwi_contrast": 0.113,
+      "wet_dry_median_dry_side_ndwi": -0.063,
+      "wet_dry_median_wet_side_ndwi": 0.054,
       "tide": {
         "level_m_msl": 0.714,
         "time": "2024-06-08T15:48:00Z",
         "source": "verified"
+      },
+      "high_tide": {
+        "time": "2024-06-08T14:46:00Z",
+        "level_m_msl": 0.556,
+        "source": "NOAA predicted high tide",
+        "image_offset_minutes": 63.7
       },
       "wave": {
         "height_m": 0.73,
@@ -2836,14 +1797,8 @@
         556
       ],
       "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2A_MSIL2A_20240608T154941_R054_T18SWJ_20240609T001309",
-      "high_tide": {
-        "time": "2024-06-08T14:46:00Z",
-        "level_m_msl": 0.556,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": 63.7
-      },
-      "geometry_p90_deviation_m": 63.8,
-      "geometry_max_deviation_m": 76.2
+      "geometry_p90_deviation_m": 56.0,
+      "geometry_max_deviation_m": 81.7
     },
     {
       "year": 2024,
@@ -2852,10 +1807,20 @@
       "cloud_cover_tile_pct": 1.86,
       "cloud_mask_aoi_pct": 0.18,
       "ndwi_threshold": -0.007,
+      "wet_dry_point_count": 116,
+      "wet_dry_median_ndwi_contrast": 0.187,
+      "wet_dry_median_dry_side_ndwi": -0.033,
+      "wet_dry_median_wet_side_ndwi": 0.153,
       "tide": {
         "level_m_msl": 1.048,
         "time": "2024-08-22T15:48:00Z",
         "source": "verified"
+      },
+      "high_tide": {
+        "time": "2024-08-22T15:15:00Z",
+        "level_m_msl": 0.993,
+        "source": "NOAA predicted high tide",
+        "image_offset_minutes": 33.2
       },
       "wave": {
         "height_m": 0.42,
@@ -2872,14 +1837,8 @@
         556
       ],
       "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2B_MSIL2A_20240822T154809_R054_T18SWJ_20240822T215036",
-      "high_tide": {
-        "time": "2024-08-22T15:15:00Z",
-        "level_m_msl": 0.993,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": 33.2
-      },
-      "geometry_p90_deviation_m": 38.3,
-      "geometry_max_deviation_m": 53.6
+      "geometry_p90_deviation_m": 52.8,
+      "geometry_max_deviation_m": 67.7
     },
     {
       "year": 2024,
@@ -2888,10 +1847,20 @@
       "cloud_cover_tile_pct": 0.05,
       "cloud_mask_aoi_pct": 1.48,
       "ndwi_threshold": -0.002,
+      "wet_dry_point_count": 104,
+      "wet_dry_median_ndwi_contrast": 0.188,
+      "wet_dry_median_dry_side_ndwi": -0.041,
+      "wet_dry_median_wet_side_ndwi": 0.148,
       "tide": {
         "level_m_msl": 0.978,
         "time": "2024-09-08T15:36:00Z",
         "source": "verified"
+      },
+      "high_tide": {
+        "time": "2024-09-08T16:32:00Z",
+        "level_m_msl": 0.779,
+        "source": "NOAA predicted high tide",
+        "image_offset_minutes": -53.7
       },
       "wave": {
         "height_m": 1.26,
@@ -2908,14 +1877,8 @@
         556
       ],
       "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2B_MSIL2A_20240908T153819_R011_T18SWJ_20240908T210212",
-      "high_tide": {
-        "time": "2024-09-08T16:32:00Z",
-        "level_m_msl": 0.779,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": -53.7
-      },
-      "geometry_p90_deviation_m": 44.2,
-      "geometry_max_deviation_m": 52.2
+      "geometry_p90_deviation_m": 52.5,
+      "geometry_max_deviation_m": 60.8
     },
     {
       "year": 2024,
@@ -2924,10 +1887,20 @@
       "cloud_cover_tile_pct": 12.61,
       "cloud_mask_aoi_pct": 3.82,
       "ndwi_threshold": 0.027,
+      "wet_dry_point_count": 94,
+      "wet_dry_median_ndwi_contrast": 0.174,
+      "wet_dry_median_dry_side_ndwi": -0.022,
+      "wet_dry_median_wet_side_ndwi": 0.154,
       "tide": {
         "level_m_msl": 1.1,
         "time": "2024-10-06T15:54:00Z",
         "source": "verified"
+      },
+      "high_tide": {
+        "time": "2024-10-06T15:20:00Z",
+        "level_m_msl": 0.873,
+        "source": "NOAA predicted high tide",
+        "image_offset_minutes": 31.5
       },
       "wave": {
         "height_m": 1.36,
@@ -2944,14 +1917,8 @@
         556
       ],
       "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2A_MSIL2A_20241006T155131_R054_T18SWJ_20241006T204347",
-      "high_tide": {
-        "time": "2024-10-06T15:20:00Z",
-        "level_m_msl": 0.873,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": 31.5
-      },
-      "geometry_p90_deviation_m": 39.5,
-      "geometry_max_deviation_m": 53.0
+      "geometry_p90_deviation_m": 46.1,
+      "geometry_max_deviation_m": 54.1
     },
     {
       "year": 2024,
@@ -2960,10 +1927,20 @@
       "cloud_cover_tile_pct": 0.01,
       "cloud_mask_aoi_pct": 0.32,
       "ndwi_threshold": 0.032,
+      "wet_dry_point_count": 98,
+      "wet_dry_median_ndwi_contrast": 0.173,
+      "wet_dry_median_dry_side_ndwi": -0.037,
+      "wet_dry_median_wet_side_ndwi": 0.136,
       "tide": {
         "level_m_msl": 1.115,
         "time": "2024-10-21T15:54:00Z",
         "source": "verified"
+      },
+      "high_tide": {
+        "time": "2024-10-21T16:09:00Z",
+        "level_m_msl": 1.085,
+        "source": "NOAA predicted high tide",
+        "image_offset_minutes": -16.7
       },
       "wave": {
         "height_m": 1.21,
@@ -2980,50 +1957,8 @@
         556
       ],
       "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2B_MSIL2A_20241021T155219_R054_T18SWJ_20241021T202707",
-      "high_tide": {
-        "time": "2024-10-21T16:09:00Z",
-        "level_m_msl": 1.085,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": -16.7
-      },
-      "geometry_p90_deviation_m": 30.7,
-      "geometry_max_deviation_m": 46.5
-    },
-    {
-      "year": 2025,
-      "scene_id": "S2C_MSIL2A_20250302T154211_R011_T18SWJ_20250302T203809",
-      "datetime": "2025-03-02T15:42:11.025000Z",
-      "cloud_cover_tile_pct": 2.77,
-      "cloud_mask_aoi_pct": 8.08,
-      "ndwi_threshold": 0.012,
-      "tide": {
-        "level_m_msl": 0.843,
-        "time": "2025-03-02T15:42:00Z",
-        "source": "verified"
-      },
-      "wave": {
-        "height_m": 1.79,
-        "dominant_period_s": 5.3,
-        "time": "2025-03-02T15:40:00Z",
-        "source": "NDBC historical"
-      },
-      "wave_setup_m": 0.14,
-      "horizontal_correction_m": 21.8,
-      "uncertainty_m": 17.9,
-      "image": "/data/scenes/sentinel-20250302T154211.jpg",
-      "image_shape": [
-        477,
-        556
-      ],
-      "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2C_MSIL2A_20250302T154211_R011_T18SWJ_20250302T203809",
-      "high_tide": {
-        "time": "2025-03-02T15:07:00Z",
-        "level_m_msl": 0.867,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": 35.2
-      },
-      "geometry_p90_deviation_m": 47.6,
-      "geometry_max_deviation_m": 62.4
+      "geometry_p90_deviation_m": 41.3,
+      "geometry_max_deviation_m": 46.6
     },
     {
       "year": 2025,
@@ -3032,10 +1967,20 @@
       "cloud_cover_tile_pct": 0.47,
       "cloud_mask_aoi_pct": 0.66,
       "ndwi_threshold": 0.012,
+      "wet_dry_point_count": 97,
+      "wet_dry_median_ndwi_contrast": 0.144,
+      "wet_dry_median_dry_side_ndwi": -0.047,
+      "wet_dry_median_wet_side_ndwi": 0.094,
       "tide": {
         "level_m_msl": 0.74,
         "time": "2025-04-01T15:42:00Z",
         "source": "verified"
+      },
+      "high_tide": {
+        "time": "2025-04-01T15:38:00Z",
+        "level_m_msl": 0.718,
+        "source": "NOAA predicted high tide",
+        "image_offset_minutes": 2.0
       },
       "wave": {
         "height_m": 1.81,
@@ -3052,14 +1997,8 @@
         556
       ],
       "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2C_MSIL2A_20250401T154001_R011_T18SWJ_20250401T203213",
-      "high_tide": {
-        "time": "2025-04-01T15:38:00Z",
-        "level_m_msl": 0.718,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": 2.0
-      },
-      "geometry_p90_deviation_m": 29.1,
-      "geometry_max_deviation_m": 35.7
+      "geometry_p90_deviation_m": 22.9,
+      "geometry_max_deviation_m": 30.8
     },
     {
       "year": 2025,
@@ -3068,10 +2007,20 @@
       "cloud_cover_tile_pct": 2.42,
       "cloud_mask_aoi_pct": 0.61,
       "ndwi_threshold": -0.018,
+      "wet_dry_point_count": 91,
+      "wet_dry_median_ndwi_contrast": 0.133,
+      "wet_dry_median_dry_side_ndwi": -0.048,
+      "wet_dry_median_wet_side_ndwi": 0.088,
       "tide": {
         "level_m_msl": 0.578,
         "time": "2025-04-29T15:48:00Z",
         "source": "verified"
+      },
+      "high_tide": {
+        "time": "2025-04-29T14:31:00Z",
+        "level_m_msl": 0.739,
+        "source": "NOAA predicted high tide",
+        "image_offset_minutes": 77.3
       },
       "wave": {
         "height_m": 0.66,
@@ -3088,14 +2037,8 @@
         556
       ],
       "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2B_MSIL2A_20250429T154819_R054_T18SWJ_20250429T194937",
-      "high_tide": {
-        "time": "2025-04-29T14:31:00Z",
-        "level_m_msl": 0.739,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": 77.3
-      },
-      "geometry_p90_deviation_m": 43.5,
-      "geometry_max_deviation_m": 60.6
+      "geometry_p90_deviation_m": 47.0,
+      "geometry_max_deviation_m": 63.7
     },
     {
       "year": 2025,
@@ -3104,10 +2047,20 @@
       "cloud_cover_tile_pct": 13.97,
       "cloud_mask_aoi_pct": 0.2,
       "ndwi_threshold": -0.007,
+      "wet_dry_point_count": 116,
+      "wet_dry_median_ndwi_contrast": 0.203,
+      "wet_dry_median_dry_side_ndwi": -0.053,
+      "wet_dry_median_wet_side_ndwi": 0.151,
       "tide": {
         "level_m_msl": 0.931,
         "time": "2025-07-28T15:48:00Z",
         "source": "verified"
+      },
+      "high_tide": {
+        "time": "2025-07-28T16:00:00Z",
+        "level_m_msl": 0.692,
+        "source": "NOAA predicted high tide",
+        "image_offset_minutes": -11.8
       },
       "wave": {
         "height_m": 0.48,
@@ -3124,14 +2077,8 @@
         556
       ],
       "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2B_MSIL2A_20250728T154809_R054_T18SWJ_20250728T194800",
-      "high_tide": {
-        "time": "2025-07-28T16:00:00Z",
-        "level_m_msl": 0.692,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": -11.8
-      },
-      "geometry_p90_deviation_m": 31.3,
-      "geometry_max_deviation_m": 45.6
+      "geometry_p90_deviation_m": 34.1,
+      "geometry_max_deviation_m": 46.8
     },
     {
       "year": 2025,
@@ -3140,10 +2087,20 @@
       "cloud_cover_tile_pct": 0.12,
       "cloud_mask_aoi_pct": 0.2,
       "ndwi_threshold": -0.002,
+      "wet_dry_point_count": 116,
+      "wet_dry_median_ndwi_contrast": 0.179,
+      "wet_dry_median_dry_side_ndwi": -0.047,
+      "wet_dry_median_wet_side_ndwi": 0.133,
       "tide": {
         "level_m_msl": 0.953,
         "time": "2025-08-27T15:48:00Z",
         "source": "verified"
+      },
+      "high_tide": {
+        "time": "2025-08-27T16:02:00Z",
+        "level_m_msl": 0.788,
+        "source": "NOAA predicted high tide",
+        "image_offset_minutes": -13.7
       },
       "wave": {
         "height_m": 0.97,
@@ -3160,50 +2117,8 @@
         556
       ],
       "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2B_MSIL2A_20250827T154819_R054_T18SWJ_20250827T194203",
-      "high_tide": {
-        "time": "2025-08-27T16:02:00Z",
-        "level_m_msl": 0.788,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": -13.7
-      },
-      "geometry_p90_deviation_m": 48.9,
-      "geometry_max_deviation_m": 51.8
-    },
-    {
-      "year": 2025,
-      "scene_id": "S2B_MSIL2A_20250923T153859_R011_T18SWJ_20250923T210616",
-      "datetime": "2025-09-23T15:38:59.024000Z",
-      "cloud_cover_tile_pct": 5.9,
-      "cloud_mask_aoi_pct": 0.4,
-      "ndwi_threshold": 0.012,
-      "tide": {
-        "level_m_msl": 0.884,
-        "time": "2025-09-23T15:36:00Z",
-        "source": "verified"
-      },
-      "wave": {
-        "height_m": 0.8,
-        "dominant_period_s": 7.0,
-        "time": "2025-09-23T15:38:59.024000Z",
-        "source": "regional climatology fallback"
-      },
-      "wave_setup_m": 0.123,
-      "horizontal_correction_m": 22.4,
-      "uncertainty_m": 18.0,
-      "image": "/data/scenes/sentinel-20250923T153859.jpg",
-      "image_shape": [
-        477,
-        556
-      ],
-      "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2B_MSIL2A_20250923T153859_R011_T18SWJ_20250923T210616",
-      "high_tide": {
-        "time": "2025-09-23T14:14:00Z",
-        "level_m_msl": 0.901,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": 85.0
-      },
-      "geometry_p90_deviation_m": 45.0,
-      "geometry_max_deviation_m": 50.7
+      "geometry_p90_deviation_m": 34.6,
+      "geometry_max_deviation_m": 70.2
     },
     {
       "year": 2025,
@@ -3212,10 +2127,20 @@
       "cloud_cover_tile_pct": 0.03,
       "cloud_mask_aoi_pct": 0.28,
       "ndwi_threshold": 0.038,
+      "wet_dry_point_count": 109,
+      "wet_dry_median_ndwi_contrast": 0.136,
+      "wet_dry_median_dry_side_ndwi": -0.04,
+      "wet_dry_median_wet_side_ndwi": 0.092,
       "tide": {
         "level_m_msl": 0.615,
         "time": "2025-12-22T15:48:00Z",
         "source": "verified"
+      },
+      "high_tide": {
+        "time": "2025-12-22T14:48:00Z",
+        "level_m_msl": 0.814,
+        "source": "NOAA predicted high tide",
+        "image_offset_minutes": 58.0
       },
       "wave": {
         "height_m": 0.8,
@@ -3232,14 +2157,8 @@
         556
       ],
       "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2B_MSIL2A_20251222T154559_R011_T18SWJ_20251222T210607",
-      "high_tide": {
-        "time": "2025-12-22T14:48:00Z",
-        "level_m_msl": 0.814,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": 58.0
-      },
-      "geometry_p90_deviation_m": 45.8,
-      "geometry_max_deviation_m": 60.0
+      "geometry_p90_deviation_m": 40.5,
+      "geometry_max_deviation_m": 46.9
     },
     {
       "year": 2026,
@@ -3248,10 +2167,20 @@
       "cloud_cover_tile_pct": 0.07,
       "cloud_mask_aoi_pct": 0.56,
       "ndwi_threshold": 0.012,
+      "wet_dry_point_count": 102,
+      "wet_dry_median_ndwi_contrast": 0.195,
+      "wet_dry_median_dry_side_ndwi": -0.055,
+      "wet_dry_median_wet_side_ndwi": 0.139,
       "tide": {
         "level_m_msl": 0.676,
         "time": "2026-01-21T15:42:00Z",
         "source": "verified"
+      },
+      "high_tide": {
+        "time": "2026-01-21T15:01:00Z",
+        "level_m_msl": 0.797,
+        "source": "NOAA predicted high tide",
+        "image_offset_minutes": 43.8
       },
       "wave": {
         "height_m": 0.8,
@@ -3268,14 +2197,8 @@
         556
       ],
       "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2B_MSIL2A_20260121T154449_R011_T18SWJ_20260121T193033",
-      "high_tide": {
-        "time": "2026-01-21T15:01:00Z",
-        "level_m_msl": 0.797,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": 43.8
-      },
-      "geometry_p90_deviation_m": 59.2,
-      "geometry_max_deviation_m": 84.6
+      "geometry_p90_deviation_m": 32.9,
+      "geometry_max_deviation_m": 44.5
     },
     {
       "year": 2026,
@@ -3284,10 +2207,20 @@
       "cloud_cover_tile_pct": 1.26,
       "cloud_mask_aoi_pct": 0.19,
       "ndwi_threshold": 0.023,
+      "wet_dry_point_count": 116,
+      "wet_dry_median_ndwi_contrast": 0.156,
+      "wet_dry_median_dry_side_ndwi": -0.05,
+      "wet_dry_median_wet_side_ndwi": 0.105,
       "tide": {
         "level_m_msl": 0.465,
         "time": "2026-04-06T15:36:00Z",
         "source": "verified"
+      },
+      "high_tide": {
+        "time": "2026-04-06T16:07:00Z",
+        "level_m_msl": 0.459,
+        "source": "NOAA predicted high tide",
+        "image_offset_minutes": -28.8
       },
       "wave": {
         "height_m": 0.8,
@@ -3304,14 +2237,8 @@
         556
       ],
       "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2C_MSIL2A_20260406T153811_R011_T18SWJ_20260406T211120",
-      "high_tide": {
-        "time": "2026-04-06T16:07:00Z",
-        "level_m_msl": 0.459,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": -28.8
-      },
-      "geometry_p90_deviation_m": 59.1,
-      "geometry_max_deviation_m": 66.8
+      "geometry_p90_deviation_m": 47.4,
+      "geometry_max_deviation_m": 56.2
     },
     {
       "year": 2026,
@@ -3320,10 +2247,20 @@
       "cloud_cover_tile_pct": 0.83,
       "cloud_mask_aoi_pct": 0.68,
       "ndwi_threshold": 0.043,
+      "wet_dry_point_count": 95,
+      "wet_dry_median_ndwi_contrast": 0.245,
+      "wet_dry_median_dry_side_ndwi": -0.052,
+      "wet_dry_median_wet_side_ndwi": 0.193,
       "tide": {
         "level_m_msl": 0.666,
         "time": "2026-04-21T15:36:00Z",
         "source": "verified"
+      },
+      "high_tide": {
+        "time": "2026-04-21T16:30:00Z",
+        "level_m_msl": 0.567,
+        "source": "NOAA predicted high tide",
+        "image_offset_minutes": -51.8
       },
       "wave": {
         "height_m": 0.8,
@@ -3340,14 +2277,8 @@
         556
       ],
       "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2B_MSIL2A_20260421T153809_R011_T18SWJ_20260421T193125",
-      "high_tide": {
-        "time": "2026-04-21T16:30:00Z",
-        "level_m_msl": 0.567,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": -51.8
-      },
-      "geometry_p90_deviation_m": 62.2,
-      "geometry_max_deviation_m": 77.8
+      "geometry_p90_deviation_m": 46.8,
+      "geometry_max_deviation_m": 58.6
     },
     {
       "year": 2026,
@@ -3356,10 +2287,20 @@
       "cloud_cover_tile_pct": 0.1,
       "cloud_mask_aoi_pct": 0.32,
       "ndwi_threshold": 0.018,
+      "wet_dry_point_count": 104,
+      "wet_dry_median_ndwi_contrast": 0.215,
+      "wet_dry_median_dry_side_ndwi": -0.054,
+      "wet_dry_median_wet_side_ndwi": 0.167,
       "tide": {
         "level_m_msl": 0.708,
         "time": "2026-04-21T16:00:00Z",
         "source": "verified"
+      },
+      "high_tide": {
+        "time": "2026-04-21T16:30:00Z",
+        "level_m_msl": 0.567,
+        "source": "NOAA predicted high tide",
+        "image_offset_minutes": -32.8
       },
       "wave": {
         "height_m": 0.8,
@@ -3376,14 +2317,8 @@
         556
       ],
       "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2A_MSIL2A_20260421T155711_R054_T18SWJ_20260422T013313",
-      "high_tide": {
-        "time": "2026-04-21T16:30:00Z",
-        "level_m_msl": 0.567,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": -32.8
-      },
-      "geometry_p90_deviation_m": 63.5,
-      "geometry_max_deviation_m": 71.3
+      "geometry_p90_deviation_m": 45.6,
+      "geometry_max_deviation_m": 54.9
     },
     {
       "year": 2026,
@@ -3392,10 +2327,20 @@
       "cloud_cover_tile_pct": 0.69,
       "cloud_mask_aoi_pct": 0.38,
       "ndwi_threshold": -0.002,
+      "wet_dry_point_count": 101,
+      "wet_dry_median_ndwi_contrast": 0.175,
+      "wet_dry_median_dry_side_ndwi": -0.048,
+      "wet_dry_median_wet_side_ndwi": 0.13,
       "tide": {
         "level_m_msl": 0.589,
         "time": "2026-05-04T15:48:00Z",
         "source": "verified"
+      },
+      "high_tide": {
+        "time": "2026-05-04T15:04:00Z",
+        "level_m_msl": 0.492,
+        "source": "NOAA predicted high tide",
+        "image_offset_minutes": 44.2
       },
       "wave": {
         "height_m": 0.8,
@@ -3412,95 +2357,19 @@
         556
       ],
       "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2B_MSIL2A_20260504T154809_R054_T18SWJ_20260504T194337",
-      "high_tide": {
-        "time": "2026-05-04T15:04:00Z",
-        "level_m_msl": 0.492,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": 44.2
-      },
-      "geometry_p90_deviation_m": 59.7,
-      "geometry_max_deviation_m": 75.5
-    },
-    {
-      "year": 2026,
-      "scene_id": "S2C_MSIL2A_20260519T154811_R054_T18SWJ_20260519T203302",
-      "datetime": "2026-05-19T15:48:11.025000Z",
-      "cloud_cover_tile_pct": 1.85,
-      "cloud_mask_aoi_pct": 1.54,
-      "ndwi_threshold": -0.012,
-      "tide": {
-        "level_m_msl": 0.667,
-        "time": "2026-05-19T15:48:00Z",
-        "source": "verified"
-      },
-      "wave": {
-        "height_m": 0.8,
-        "dominant_period_s": 7.0,
-        "time": "2026-05-19T15:48:11.025000Z",
-        "source": "regional climatology fallback"
-      },
-      "wave_setup_m": 0.123,
-      "horizontal_correction_m": 17.6,
-      "uncertainty_m": 17.2,
-      "image": "/data/scenes/sentinel-20260519T154811.jpg",
-      "image_shape": [
-        477,
-        556
-      ],
-      "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2C_MSIL2A_20260519T154811_R054_T18SWJ_20260519T203302",
-      "high_tide": {
-        "time": "2026-05-19T15:23:00Z",
-        "level_m_msl": 0.632,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": 25.2
-      },
-      "geometry_p90_deviation_m": 65.1,
-      "geometry_max_deviation_m": 78.4
-    },
-    {
-      "year": 2026,
-      "scene_id": "S2B_MSIL2A_20260603T154809_R054_T18SWJ_20260603T194014",
-      "datetime": "2026-06-03T15:48:09.024000Z",
-      "cloud_cover_tile_pct": 17.19,
-      "cloud_mask_aoi_pct": 0.92,
-      "ndwi_threshold": -0.02,
-      "tide": {
-        "level_m_msl": 0.615,
-        "time": "2026-06-03T15:48:00Z",
-        "source": "verified"
-      },
-      "wave": {
-        "height_m": 0.8,
-        "dominant_period_s": 7.0,
-        "time": "2026-06-03T15:48:09.024000Z",
-        "source": "regional climatology fallback"
-      },
-      "wave_setup_m": 0.123,
-      "horizontal_correction_m": 16.4,
-      "uncertainty_m": 17.0,
-      "image": "/data/scenes/sentinel-20260603T154809.jpg",
-      "image_shape": [
-        477,
-        556
-      ],
-      "stac_url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2B_MSIL2A_20260603T154809_R054_T18SWJ_20260603T194014",
-      "high_tide": {
-        "time": "2026-06-03T15:20:00Z",
-        "level_m_msl": 0.445,
-        "source": "NOAA predicted high tide",
-        "image_offset_minutes": 28.2
-      },
-      "geometry_p90_deviation_m": 66.0,
-      "geometry_max_deviation_m": 80.0
+      "geometry_p90_deviation_m": 47.5,
+      "geometry_max_deviation_m": 79.5
     }
   ],
   "method": {
     "water_index": "NDWI = (B03 - B08) / (B03 + B08), adaptive Otsu threshold",
+    "shoreline_proxy": "Ocean-facing wet/dry line: strongest validated seaward NDWI step next to the ocean-connected water mask",
+    "wet_dry_validation": "Median of three clear pixels sampled on each side; dry-side NDWI must be below the scene threshold, wet-side NDWI above it, and contrast at least 0.04",
     "cloud_mask": "Sentinel-2 Scene Classification Layer; classes 0,1,3,8,9,10,11 excluded",
     "tide": "Nearest NOAA CO-OPS Cape May water level, MSL datum",
     "high_tide_screen": "Capture must fall within +/- 90 minutes of a NOAA-predicted Cape May high tide",
     "waves": "Nearest NOAA NDBC 44009 significant wave height and dominant period",
     "wave_setup": "Stockdon setup term: 0.35 * beach slope * sqrt(H0 * L0)",
-    "horizontal_normalization": "Observed line shifted along local seaward normal by (tide + setup) / beach slope"
+    "horizontal_normalization": "Observed wet/dry line shifted along local seaward normal by (tide + setup) / beach slope"
   }
 }
