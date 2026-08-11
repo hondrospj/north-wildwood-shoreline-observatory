@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { access, readFile } from "node:fs/promises";
+import { access, readFile, readdir } from "node:fs/promises";
 import test from "node:test";
 
 const projectRoot = new URL("../", import.meta.url);
@@ -27,9 +27,9 @@ test("server-renders the complete shoreline observatory", async () => {
   assert.match(html, /<title>North Wildwood Shoreline Observatory<\/title>/i);
   assert.match(html, /A decade of shoreline movement/);
   assert.match(html, /Interactive shoreline explorer/);
-  assert.match(html, /−111\.8/);
-  assert.match(html, /Wave caveat/);
-  assert.match(html, /regional climatology/);
+  assert.match(html, /suitable acquisitions/);
+  assert.match(html, /Every suitable acquisition/);
+  assert.match(html, /No yearly sampling/);
   assert.match(html, /og:image[^>]+https:\/\/shoreline-observatory\.example\/og\.png/i);
   assert.doesNotMatch(html, /codex-preview|Your site is taking shape|react-loading-skeleton/i);
 });
@@ -44,15 +44,25 @@ test("ships the real data bundle and removes the starter preview", async () => {
   const trend = JSON.parse(trendRaw);
   const geojson = JSON.parse(geojsonRaw);
 
-  assert.equal(metadata.scenes.length, 6);
-  assert.equal(metadata.scenes.at(-1).wave.source, "regional climatology fallback");
-  assert.equal(trend.net_median_change_m, -111.8);
+  assert.ok(metadata.scenes.length > 300);
+  assert.equal(metadata.scenes.length, metadata.suitability.accepted_count);
+  assert.equal(metadata.suitability.catalog_item_count, metadata.suitability.catalog_candidate_count + metadata.suitability.duplicate_product_count);
+  assert.equal(metadata.suitability.catalog_candidate_count, metadata.suitability.accepted_count + metadata.suitability.rejected_count);
+  assert.equal(new Set(metadata.scenes.map((scene) => scene.datetime)).size, metadata.scenes.length);
+  assert.equal(trend.observation_count, metadata.scenes.length);
+  assert.equal(trend.observations.length, metadata.scenes.length);
+  assert.ok(trend.net_median_change_m < 0);
   assert.equal(trend.retreat_share_pct, 100);
-  assert.equal(geojson.features.filter((feature) => feature.properties.geometry_kind === "corrected").length, 6);
+  assert.equal(geojson.features.filter((feature) => feature.properties.geometry_kind === "corrected").length, metadata.scenes.length);
+  assert.ok(metadata.scenes.every((scene) => scene.cloud_mask_aoi_pct <= metadata.suitability.aoi_cloud_mask_max_pct));
+  assert.ok(metadata.scenes.every((scene) => scene.geometry_p90_deviation_m <= metadata.suitability.geometry_p90_max_deviation_m));
+  assert.ok(metadata.scenes.every((scene) => scene.geometry_max_deviation_m <= metadata.suitability.geometry_max_deviation_m));
+  assert.equal((await readdir(new URL("../public/data/scenes/", import.meta.url))).filter((name) => name.endsWith(".jpg")).length, metadata.scenes.length);
 
   await Promise.all([
-    access(new URL("../public/data/sentinel-2016.jpg", import.meta.url)),
-    access(new URL("../public/data/sentinel-2026.jpg", import.meta.url)),
+    ...metadata.scenes.map((scene) => access(new URL(`../public${scene.image}`, import.meta.url))),
+    access(new URL("../public/data/sentinel-baseline.jpg", import.meta.url)),
+    access(new URL("../public/data/sentinel-latest.jpg", import.meta.url)),
     access(new URL("../public/og.png", import.meta.url)),
   ]);
   await assert.rejects(access(new URL("../app/_sites-preview/SkeletonPreview.tsx", import.meta.url)));
@@ -66,8 +76,8 @@ test("builds a GitHub Pages app with project-scoped assets", async () => {
   assert.match(html, /\/north-wildwood-shoreline-observatory\/assets\//);
   assert.match(html, /hondrospj\.github\.io\/north-wildwood-shoreline-observatory\/og\.png/);
   await Promise.all([
-    access(new URL("../dist-github/data/sentinel-2016.jpg", import.meta.url)),
-    access(new URL("../dist-github/data/sentinel-2026.jpg", import.meta.url)),
+    access(new URL("../dist-github/data/sentinel-baseline.jpg", import.meta.url)),
+    access(new URL("../dist-github/data/sentinel-latest.jpg", import.meta.url)),
     access(new URL("../dist-github/data/shorelines.json", import.meta.url)),
     access(new URL("../dist-github/og.png", import.meta.url)),
   ]);

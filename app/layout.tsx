@@ -23,19 +23,19 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: "North Wildwood Shoreline Observatory",
     description:
-      "Explore a decade of North Wildwood shoreline movement from wave- and tide-normalized Sentinel-2 L2A imagery.",
+      "Explore every suitable North Wildwood Sentinel-2 L2A acquisition, wave- and tide-normalized to a common shoreline reference.",
     icons: { icon: "/favicon.svg", shortcut: "/favicon.svg" },
     openGraph: {
       title: "North Wildwood Shoreline Observatory",
-      description: "A decade of shoreline movement, normalized to the same sea state.",
+      description: "Every suitable Sentinel-2 acquisition, normalized to the same sea state.",
       type: "website",
       url: origin,
-      images: [{ url: `${origin}/og.png`, width: 1200, height: 630, alt: "North Wildwood shoreline change from 2016 to 2026" }],
+      images: [{ url: `${origin}/og.png`, width: 1200, height: 630, alt: "North Wildwood shoreline change across every suitable Sentinel-2 acquisition" }],
     },
     twitter: {
       card: "summary_large_image",
       title: "North Wildwood Shoreline Observatory",
-      description: "A decade of shoreline movement, normalized to the same sea state.",
+      description: "Every suitable Sentinel-2 acquisition, normalized to the same sea state.",
       images: [`${origin}/og.png`],
     },
   };

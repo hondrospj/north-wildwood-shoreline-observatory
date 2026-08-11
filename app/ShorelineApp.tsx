@@ -13,6 +13,7 @@ type Scene = {
   wave_setup_m: number;
   horizontal_correction_m: number;
   uncertainty_m: number;
+  image: string;
   stac_url: string;
 };
 
@@ -24,12 +25,23 @@ type Metadata = {
   sentinel_resolution_m: number;
   tide_station: string;
   wave_station: string;
+  suitability: {
+    catalog_cloud_max_pct: number;
+    aoi_cloud_mask_max_pct: number;
+    minimum_shoreline_points: number;
+    catalog_candidate_count: number;
+    accepted_count: number;
+    rejected_count: number;
+  };
   scenes: Scene[];
 };
 
 type Trend = {
   baseline_year: number;
   latest_year: number;
+  baseline_datetime: string;
+  latest_datetime: string;
+  observation_count: number;
   net_median_change_m: number;
   retreat_share_pct: number;
   max_retreat_m: number;
@@ -37,24 +49,16 @@ type Trend = {
   latitudes: number[];
   change_m: number[];
   zones: Array<{ name: string; median_change_m: number; min_change_m: number; max_change_m: number }>;
+  observations: Array<{ datetime: string; year: number; median_change_m: number; p10_change_m: number; p90_change_m: number }>;
   yearly: Array<{ year: number; median_change_m: number; p10_change_m: number; p90_change_m: number }>;
 };
 
 type Feature = {
-  properties: { year: number; geometry_kind: string };
+  properties: { year: number; datetime: string; geometry_kind: string };
   geometry: { type: string; coordinates: number[][] };
 };
 
 type GeoJSON = { type: string; features: Feature[] };
-
-const YEAR_COLORS: Record<number, string> = {
-  2016: "#f6e8c9",
-  2018: "#f4b95f",
-  2020: "#e57e68",
-  2022: "#d84e63",
-  2024: "#a75cd8",
-  2026: "#42e2d2",
-};
 
 function signed(value: number, digits = 1) {
   if (value === 0) return "0.0";
@@ -65,7 +69,11 @@ function cleanDate(date: string) {
   return new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" }).format(new Date(date));
 }
 
-function CoastCanvas({ metadata, shorelines, selectedYear, showAll }: { metadata: Metadata; shorelines: GeoJSON; selectedYear: number; showAll: boolean }) {
+function assetPath(path: string) {
+  return path.startsWith("/") ? `.${path}` : path;
+}
+
+function CoastCanvas({ metadata, shorelines, selectedDatetime, showAll }: { metadata: Metadata; shorelines: GeoJSON; selectedDatetime: string; showAll: boolean }) {
   const ref = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -82,11 +90,11 @@ function CoastCanvas({ metadata, shorelines, selectedYear, showAll }: { metadata
       ctx.clearRect(0, 0, rect.width, rect.height);
       const [minLon, minLat, maxLon, maxLat] = metadata.aoi;
       const corrected = shorelines.features.filter((feature) => feature.properties.geometry_kind === "corrected");
-      const lines = showAll ? corrected : corrected.filter((feature) => feature.properties.year === selectedYear);
+      const visible = showAll ? corrected : corrected.filter((feature) => feature.properties.datetime === selectedDatetime);
+      const lines = [...visible].sort((a, b) => Number(a.properties.datetime === selectedDatetime) - Number(b.properties.datetime === selectedDatetime));
 
       for (const feature of lines) {
-        const year = feature.properties.year;
-        const selected = year === selectedYear;
+        const selected = feature.properties.datetime === selectedDatetime;
         ctx.beginPath();
         feature.geometry.coordinates.forEach(([lon, lat], index) => {
           const x = ((lon - minLon) / (maxLon - minLon)) * rect.width;
@@ -94,13 +102,13 @@ function CoastCanvas({ metadata, shorelines, selectedYear, showAll }: { metadata
           if (index === 0) ctx.moveTo(x, y);
           else ctx.lineTo(x, y);
         });
-        ctx.strokeStyle = "rgba(5, 18, 30, .8)";
-        ctx.lineWidth = selected ? 6 : 4;
+        ctx.strokeStyle = selected ? "rgba(5, 18, 30, .9)" : "rgba(5, 18, 30, .2)";
+        ctx.lineWidth = selected ? 6 : 2.4;
         ctx.lineJoin = "round";
         ctx.lineCap = "round";
         ctx.stroke();
-        ctx.strokeStyle = YEAR_COLORS[year];
-        ctx.lineWidth = selected ? 3.5 : 2;
+        ctx.strokeStyle = selected ? "#42e2d2" : "rgba(246,232,201,.13)";
+        ctx.lineWidth = selected ? 3.5 : 1;
         ctx.stroke();
       }
     };
@@ -108,12 +116,12 @@ function CoastCanvas({ metadata, shorelines, selectedYear, showAll }: { metadata
     const observer = new ResizeObserver(draw);
     observer.observe(canvas);
     return () => observer.disconnect();
-  }, [metadata, shorelines, selectedYear, showAll]);
+  }, [metadata, shorelines, selectedDatetime, showAll]);
 
   return <canvas ref={ref} className="coast-canvas" aria-label="Corrected shoreline positions over satellite imagery" />;
 }
 
-function TrendChart({ trend }: { trend: Trend }) {
+function TrendChart({ trend, selectedDatetime }: { trend: Trend; selectedDatetime: string }) {
   const ref = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -131,15 +139,22 @@ function TrendChart({ trend }: { trend: Trend }) {
       const pad = { top: 20, right: 18, bottom: 34, left: 44 };
       const w = rect.width - pad.left - pad.right;
       const h = rect.height - pad.top - pad.bottom;
-      const min = -180;
-      const max = 20;
+      const observations = trend.observations;
+      if (observations.length < 2) return;
+      const bounds = observations.flatMap((item) => [item.p10_change_m, item.p90_change_m, item.median_change_m, 0]);
+      const min = Math.floor((Math.min(...bounds) - 10) / 25) * 25;
+      const max = Math.ceil((Math.max(...bounds) + 10) / 25) * 25;
       const y = (value: number) => pad.top + ((max - value) / (max - min)) * h;
-      const x = (index: number) => pad.left + (index / (trend.yearly.length - 1)) * w;
+      const start = new Date(observations[0].datetime).getTime();
+      const end = new Date(observations.at(-1)!.datetime).getTime();
+      const x = (item: Trend["observations"][number]) => pad.left + ((new Date(item.datetime).getTime() - start) / (end - start)) * w;
 
       ctx.font = "11px var(--font-geist-mono)";
       ctx.textAlign = "right";
       ctx.textBaseline = "middle";
-      for (const tick of [0, -50, -100, -150]) {
+      const tickStep = max - min > 250 ? 100 : 50;
+      const firstTick = Math.ceil(min / tickStep) * tickStep;
+      for (let tick = firstTick; tick <= max; tick += tickStep) {
         ctx.strokeStyle = tick === 0 ? "rgba(66,226,210,.45)" : "rgba(255,255,255,.1)";
         ctx.lineWidth = 1;
         ctx.beginPath();
@@ -151,62 +166,68 @@ function TrendChart({ trend }: { trend: Trend }) {
       }
 
       ctx.beginPath();
-      trend.yearly.forEach((item, index) => {
-        if (index === 0) ctx.moveTo(x(index), y(item.median_change_m));
-        else ctx.lineTo(x(index), y(item.median_change_m));
+      observations.forEach((item, index) => {
+        if (index === 0) ctx.moveTo(x(item), y(item.p90_change_m));
+        else ctx.lineTo(x(item), y(item.p90_change_m));
       });
-      ctx.lineTo(x(trend.yearly.length - 1), y(min));
-      ctx.lineTo(x(0), y(min));
+      [...observations].reverse().forEach((item) => ctx.lineTo(x(item), y(item.p10_change_m)));
       ctx.closePath();
-      const gradient = ctx.createLinearGradient(0, pad.top, 0, rect.height - pad.bottom);
-      gradient.addColorStop(0, "rgba(66,226,210,.38)");
-      gradient.addColorStop(1, "rgba(66,226,210,0)");
-      ctx.fillStyle = gradient;
+      ctx.fillStyle = "rgba(66,226,210,.12)";
       ctx.fill();
 
       ctx.beginPath();
-      trend.yearly.forEach((item, index) => {
-        if (index === 0) ctx.moveTo(x(index), y(item.median_change_m));
-        else ctx.lineTo(x(index), y(item.median_change_m));
+      observations.forEach((item, index) => {
+        if (index === 0) ctx.moveTo(x(item), y(item.median_change_m));
+        else ctx.lineTo(x(item), y(item.median_change_m));
       });
       ctx.strokeStyle = "#42e2d2";
-      ctx.lineWidth = 3;
+      ctx.lineWidth = 1.8;
       ctx.lineJoin = "round";
       ctx.stroke();
 
-      trend.yearly.forEach((item, index) => {
-        ctx.fillStyle = "#0b1d25";
+      const selected = observations.find((item) => item.datetime === selectedDatetime);
+      if (selected) {
+        ctx.strokeStyle = "rgba(232,114,97,.7)";
+        ctx.lineWidth = 1;
         ctx.beginPath();
-        ctx.arc(x(index), y(item.median_change_m), 5, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.strokeStyle = "#42e2d2";
-        ctx.lineWidth = 2;
+        ctx.moveTo(x(selected), pad.top);
+        ctx.lineTo(x(selected), rect.height - pad.bottom);
         ctx.stroke();
+        ctx.fillStyle = "#e87261";
+        ctx.beginPath();
+        ctx.arc(x(selected), y(selected.median_change_m), 4.5, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      const firstByYear = observations.filter((item, index) => index === 0 || observations[index - 1].year !== item.year);
+      firstByYear.forEach((item) => {
         ctx.fillStyle = "#b9c9ce";
         ctx.textAlign = "center";
         ctx.textBaseline = "top";
-        ctx.fillText(String(item.year), x(index), rect.height - pad.bottom + 10);
+        ctx.fillText(String(item.year), x(item), rect.height - pad.bottom + 10);
       });
     };
     draw();
     const observer = new ResizeObserver(draw);
     observer.observe(canvas);
     return () => observer.disconnect();
-  }, [trend]);
+  }, [trend, selectedDatetime]);
 
-  return <canvas ref={ref} className="trend-canvas" aria-label="Median shoreline change by observation year" />;
+  return <canvas ref={ref} className="trend-canvas" aria-label="Median shoreline change for every suitable acquisition" />;
 }
 
 export function ShorelineApp({ metadata, trend, shorelines }: { metadata: Metadata; trend: Trend; shorelines: GeoJSON }) {
-  const years = metadata.scenes.map((scene) => scene.year);
-  const [selectedYear, setSelectedYear] = useState(trend.latest_year);
+  const [selectedIndex, setSelectedIndex] = useState(metadata.scenes.length - 1);
   const [compare, setCompare] = useState(52);
-  const [showAll, setShowAll] = useState(true);
+  const [showAll, setShowAll] = useState(false);
   const [view, setView] = useState<"lines" | "compare">("lines");
-  const scene = useMemo(() => metadata.scenes.find((item) => item.year === selectedYear) ?? metadata.scenes.at(-1)!, [metadata.scenes, selectedYear]);
+  const scene = metadata.scenes[selectedIndex] ?? metadata.scenes.at(-1)!;
+  const baselineScene = metadata.scenes[0];
+  const selectedObservation = useMemo(() => trend.observations.find((item) => item.datetime === scene.datetime), [scene.datetime, trend.observations]);
+  const fallbackCount = useMemo(() => metadata.scenes.filter((item) => item.wave.source.includes("fallback")).length, [metadata.scenes]);
 
   return (
-    <main style={{ "--hero-image": "url('./data/sentinel-2026.jpg')" } as React.CSSProperties}>
+    <main style={{ "--hero-image": "url('./data/sentinel-latest.jpg')" } as React.CSSProperties}>
       <header className="topbar">
         <a className="brand" href="#top" aria-label="North Wildwood Shoreline Observatory home">
           <span className="brand-mark"><i /><i /><i /></span>
@@ -217,20 +238,20 @@ export function ShorelineApp({ metadata, trend, shorelines }: { metadata: Metada
           <a href="#change">Change</a>
           <a href="#method">Method</a>
         </nav>
-        <span className="data-badge"><i /> Updated Aug 10, 2026</span>
+        <span className="data-badge"><i /> Updated {cleanDate(metadata.generated)}</span>
       </header>
 
       <section id="top" className="hero">
         <div className="hero-copy">
           <p className="eyebrow">Cape May County · New Jersey</p>
           <h1>A decade of shoreline movement, <em>normalized to the same sea state.</em></h1>
-          <p className="lede">Sentinel-2 L2A imagery reveals where North Wildwood&apos;s oceanfront has moved after removing the visual influence of tide and wave setup.</p>
+          <p className="lede">Every suitable Sentinel-2 L2A acquisition reveals where North Wildwood&apos;s oceanfront has moved after removing the visual influence of tide and wave setup.</p>
         </div>
         <div className="hero-stat">
-          <span className="stat-kicker">2016 → 2026</span>
+          <span className="stat-kicker">{cleanDate(trend.baseline_datetime)} → {cleanDate(trend.latest_datetime)}</span>
           <strong>{Math.abs(trend.net_median_change_m).toFixed(1)}<small>m</small></strong>
           <span>median landward movement</span>
-          <div className="stat-scale"><i /><b>≈ one city block</b></div>
+          <div className="stat-scale"><i /><b>{trend.observation_count} suitable acquisitions</b></div>
         </div>
       </section>
 
@@ -250,31 +271,33 @@ export function ShorelineApp({ metadata, trend, shorelines }: { metadata: Metada
           <div className="map-card">
             <div className="map-stage">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img className="base-image" src="./data/sentinel-2026.jpg" alt="Sentinel-2 view of North Wildwood on August 7, 2026" />
+              <img className="base-image" src={assetPath(scene.image)} alt={`Sentinel-2 view of North Wildwood on ${cleanDate(scene.datetime)}`} />
               {view === "compare" && (
                 <>
                   <div className="compare-image" style={{ clipPath: `inset(0 ${100 - compare}% 0 0)` }}>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src="./data/sentinel-2016.jpg" alt="Sentinel-2 view of North Wildwood on July 20, 2016" />
+                    <img src={assetPath(baselineScene.image)} alt={`Sentinel-2 view of North Wildwood on ${cleanDate(baselineScene.datetime)}`} />
                   </div>
                   <div className="compare-handle" style={{ left: `${compare}%` }}><span>↔</span></div>
-                  <input className="compare-range" type="range" min="5" max="95" value={compare} onChange={(event) => setCompare(Number(event.target.value))} aria-label="Compare 2016 and 2026 imagery" />
-                  <span className="image-year left">2016</span><span className="image-year right">2026</span>
+                  <input className="compare-range" type="range" min="5" max="95" value={compare} onChange={(event) => setCompare(Number(event.target.value))} aria-label={`Compare ${cleanDate(baselineScene.datetime)} and ${cleanDate(scene.datetime)} imagery`} />
+                  <span className="image-year left">{cleanDate(baselineScene.datetime)}</span><span className="image-year right">{cleanDate(scene.datetime)}</span>
                 </>
               )}
-              {view === "lines" && <CoastCanvas metadata={metadata} shorelines={shorelines} selectedYear={selectedYear} showAll={showAll} />}
+              {view === "lines" && <CoastCanvas metadata={metadata} shorelines={shorelines} selectedDatetime={scene.datetime} showAll={showAll} />}
               <div className="north-arrow"><span>↑</span>N</div>
               <div className="map-attribution">Sentinel-2 L2A · 10 m</div>
             </div>
             <div className="map-controls">
-              <div className="timeline" role="group" aria-label="Observation year">
-                {years.map((year) => (
-                  <button key={year} className={selectedYear === year ? "selected" : ""} style={{ "--year-color": YEAR_COLORS[year] } as React.CSSProperties} onClick={() => setSelectedYear(year)}>
-                    <i />{year}
-                  </button>
-                ))}
+              <div className="timeline" role="group" aria-label="Suitable Sentinel-2 acquisition">
+                <div className="acquisition-nav">
+                  <button onClick={() => setSelectedIndex((value) => Math.max(0, value - 1))} disabled={selectedIndex === 0} aria-label="Previous acquisition">←</button>
+                  <strong>{cleanDate(scene.datetime)}</strong>
+                  <button onClick={() => setSelectedIndex((value) => Math.min(metadata.scenes.length - 1, value + 1))} disabled={selectedIndex === metadata.scenes.length - 1} aria-label="Next acquisition">→</button>
+                </div>
+                <input className="acquisition-range" type="range" min="0" max={metadata.scenes.length - 1} step="1" value={selectedIndex} onChange={(event) => setSelectedIndex(Number(event.target.value))} aria-label={`Acquisition ${selectedIndex + 1} of ${metadata.scenes.length}`} />
+                <span className="acquisition-count">{selectedIndex + 1} / {metadata.scenes.length}</span>
               </div>
-              <label className="toggle"><input type="checkbox" checked={showAll} onChange={(event) => setShowAll(event.target.checked)} disabled={view === "compare"} /><span />Show all corrected lines</label>
+              <label className="toggle"><input type="checkbox" checked={showAll} onChange={(event) => setShowAll(event.target.checked)} disabled={view === "compare"} /><span />All {metadata.scenes.length} corrected lines</label>
             </div>
           </div>
 
@@ -299,7 +322,7 @@ export function ShorelineApp({ metadata, trend, shorelines }: { metadata: Metada
               <div><dt>Water threshold</dt><dd>{scene.ndwi_threshold.toFixed(3)}</dd></div>
             </dl>
             {scene.wave.source.includes("fallback") && (
-              <div className="caveat"><b>Wave caveat</b><span>The 2026 tide is verified NOAA data; its wave term uses a regional climatology because matching buoy observations were unavailable.</span></div>
+              <div className="caveat"><b>Wave caveat</b><span>This scene uses regional wave climatology because a matching buoy observation was unavailable. Its tide term still comes from NOAA.</span></div>
             )}
           </aside>
         </div>
@@ -308,21 +331,21 @@ export function ShorelineApp({ metadata, trend, shorelines }: { metadata: Metada
       <section id="change" className="change-section shell">
         <div className="section-heading">
           <div><p className="eyebrow">Measured change</p><h2>Retreat is visible along the full exposed beach.</h2></div>
-          <p className="section-note">Negative values indicate landward movement from the 2016 MSL-normalized baseline.</p>
+          <p className="section-note">Negative values indicate landward movement from the {cleanDate(trend.baseline_datetime)} MSL-normalized baseline.</p>
         </div>
         <div className="metric-row">
-          <article><span>Median movement</span><strong>{signed(trend.net_median_change_m)} m</strong><small>2016 to 2026</small></article>
+          <article><span>Median movement</span><strong>{signed(trend.net_median_change_m)} m</strong><small>{trend.baseline_year} to {trend.latest_year}</small></article>
           <article><span>Most landward</span><strong>{signed(trend.max_retreat_m)} m</strong><small>single transect</small></article>
           <article><span>Transects retreating</span><strong>{trend.retreat_share_pct.toFixed(0)}%</strong><small>of exposed oceanfront</small></article>
         </div>
         <div className="analysis-grid">
           <article className="chart-card">
-            <div className="card-title"><div><span>Median shoreline position</span><strong>Relative to 2016 baseline</strong></div><div className="legend-key"><i /> Landward</div></div>
-            <TrendChart trend={trend} />
-            <p className="chart-footnote">Six cloud-screened summer observations; whisker ranges are omitted here for legibility and remain reflected in scene uncertainty.</p>
+            <div className="card-title"><div><span>Median shoreline position</span><strong>Every suitable acquisition · relative to baseline</strong></div><div className="legend-key"><i /> Median</div></div>
+            <TrendChart trend={trend} selectedDatetime={scene.datetime} />
+            <p className="chart-footnote">{trend.observation_count} accepted acquisitions; the shaded band shows the 10th–90th percentile range across the oceanfront. Selected scene: {selectedObservation ? `${signed(selectedObservation.median_change_m)} m` : "—"}.</p>
           </article>
           <article className="zones-card">
-            <div className="card-title"><div><span>Beach sectors</span><strong>Median 2016–2026 movement</strong></div></div>
+            <div className="card-title"><div><span>Beach sectors</span><strong>Median {trend.baseline_year}–{trend.latest_year} movement</strong></div></div>
             <div className="zones">
               {trend.zones.map((zone, index) => (
                 <div className="zone" key={zone.name}>
@@ -341,11 +364,11 @@ export function ShorelineApp({ metadata, trend, shorelines }: { metadata: Metada
         <div className="method-intro">
           <p className="eyebrow">How it works</p>
           <h2>From satellite pixels to a comparable shoreline.</h2>
-          <p>Every acquisition is processed with the same reproducible workflow, then shifted to a mean-sea-level reference so high tide does not masquerade as erosion.</p>
+          <p>Every catalog acquisition is tested with the same reproducible workflow. Suitable scenes are shifted to a mean-sea-level reference so high tide does not masquerade as erosion.</p>
         </div>
         <ol className="method-steps">
-          <li><span>01</span><div><strong>Screen the imagery</strong><p>Sentinel-2 L2A surface reflectance at 10 m. Scene Classification removes cloud, shadow, snow, and invalid pixels.</p></div></li>
-          <li><span>02</span><div><strong>Find the waterline</strong><p>Green and near-infrared bands form NDWI. An adaptive threshold traces the ocean-facing wet/dry boundary.</p></div></li>
+          <li><span>01</span><div><strong>Screen every acquisition</strong><p>Tile cloud must be below {metadata.suitability.catalog_cloud_max_pct}% and the local AOI cloud/invalid mask below {metadata.suitability.aoi_cloud_mask_max_pct}%. No yearly sampling.</p></div></li>
+          <li><span>02</span><div><strong>Find the waterline</strong><p>Green and near-infrared bands form NDWI. An adaptive threshold traces the ocean-facing boundary; traces need at least {metadata.suitability.minimum_shoreline_points} points and must pass a temporal-coherence screen.</p></div></li>
           <li><span>03</span><div><strong>Normalize the sea state</strong><p>NOAA tide and offshore wave height/period estimate water-level displacement and Stockdon wave setup.</p></div></li>
           <li><span>04</span><div><strong>Compare alongshore</strong><p>Each line shifts along its local seaward normal using a 0.045 beach slope, then is sampled on consistent transects.</p></div></li>
         </ol>
@@ -354,7 +377,7 @@ export function ShorelineApp({ metadata, trend, shorelines }: { metadata: Metada
             <span className="quality-icon">!</span>
             <div><strong>Interpret as screening-level evidence.</strong><p>Sentinel&apos;s 10 m pixels, wet-sand ambiguity, georegistration, slope assumptions, and wave estimates create scene uncertainty of roughly ±14–19 m. This is not a survey-grade property boundary.</p></div>
           </div>
-          <div className="quality-status"><i /> Tide records verified for all six scenes</div>
+          <div className="quality-status"><i /> {metadata.suitability.accepted_count} accepted · {metadata.suitability.rejected_count} rejected · {fallbackCount} wave fallbacks</div>
         </div>
       </section>
 

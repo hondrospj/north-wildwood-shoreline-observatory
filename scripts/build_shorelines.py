@@ -4,14 +4,17 @@
 from __future__ import annotations
 
 import gzip
-import io
 import json
 import math
 import os
+import shutil
+import threading
 import time
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlparse, urlunparse
 
 import numpy as np
 import rasterio
@@ -25,6 +28,8 @@ from rasterio.windows import from_bounds
 ROOT = Path(__file__).resolve().parents[1]
 PUBLIC_DATA = ROOT / "public" / "data"
 PUBLIC_DATA.mkdir(parents=True, exist_ok=True)
+SCENE_IMAGE_CACHE = ROOT / "work" / "scene-images"
+SCENE_IMAGE_CACHE.mkdir(parents=True, exist_ok=True)
 
 STAC = "https://planetarycomputer.microsoft.com/api/stac/v1"
 SIGN = "https://planetarycomputer.microsoft.com/api/sas/v1/sign"
@@ -41,42 +46,26 @@ WAVE_STATION = "44009"  # Delaware Bay 26 NM SE of Cape May
 BEACH_SLOPE = 0.045
 G = 9.80665
 
-SCENES = [
-    {
-        "year": 2016,
-        "id": "S2A_MSIL2A_20160720T154912_R054_T18SWJ_20210212T062408",
-        "datetime": "2016-07-20T15:49:12.026000Z",
-    },
-    {
-        "year": 2018,
-        "id": "S2B_MSIL2A_20180824T154809_R054_T18SWJ_20201011T063219",
-        "datetime": "2018-08-24T15:48:09.024000Z",
-    },
-    {
-        "year": 2020,
-        "id": "S2B_MSIL2A_20200803T154819_R054_T18SWJ_20200816T013303",
-        "datetime": "2020-08-03T15:48:19.024000Z",
-    },
-    {
-        "year": 2022,
-        "id": "S2B_MSIL2A_20220803T154819_R054_T18SWJ_20220804T150432",
-        "datetime": "2022-08-03T15:48:19.024000Z",
-    },
-    {
-        "year": 2024,
-        "id": "S2B_MSIL2A_20240822T154809_R054_T18SWJ_20240822T215036",
-        "datetime": "2024-08-22T15:48:09.024000Z",
-    },
-    {
-        "year": 2026,
-        "id": "S2C_MSIL2A_20260807T154811_R054_T18SWJ_20260807T210317",
-        "datetime": "2026-08-07T15:48:11.025000Z",
-    },
-]
+COLLECTION_START = "2015-06-23T00:00:00Z"
+CATALOG_CLOUD_MAX_PCT = 20.0
+AOI_CLOUD_MAX_PCT = 12.5
+MIN_SHORELINE_POINTS = 80
+GEOMETRY_P90_MAX_DEVIATION_M = 200.0
+GEOMETRY_MAX_DEVIATION_M = 300.0
+MGRS_TILE = "18SWJ"
+MAX_WORKERS = 3
 
 
 SESSION = requests.Session()
 SESSION.headers.update({"User-Agent": "NorthWildwoodShoreline/1.0 contact: shoreline-research"})
+NDBC_TEXT_CACHE: dict[str, str | None] = {}
+NDBC_CACHE_LOCK = threading.Lock()
+SAS_QUERY_CACHE: dict[tuple[str, str], tuple[str, float]] = {}
+SAS_CACHE_LOCK = threading.Lock()
+
+
+class UnsuitableScene(RuntimeError):
+    """Raised when an acquisition fails the declared shoreline quality screen."""
 
 
 def fetch_json(url: str, *, params: dict[str, Any] | None = None) -> dict[str, Any]:
@@ -93,11 +82,65 @@ def fetch_json(url: str, *, params: dict[str, Any] | None = None) -> dict[str, A
 
 
 def sign_href(href: str) -> str:
-    return fetch_json(SIGN, params={"href": href})["href"]
+    parsed = urlparse(href)
+    container = parsed.path.strip("/").split("/", 1)[0]
+    cache_key = (parsed.netloc, container)
+    with SAS_CACHE_LOCK:
+        cached = SAS_QUERY_CACHE.get(cache_key)
+        if cached and cached[1] > time.time() + 300:
+            return urlunparse(parsed._replace(query=cached[0]))
+
+        signed_href = fetch_json(SIGN, params={"href": href})["href"]
+        signed = urlparse(signed_href)
+        # Planetary Computer issues a read-only container SAS for Sentinel-2.
+        # Reusing its query is equivalent to signing every blob individually
+        # and prevents unnecessary catalog throttling.
+        if "sr=c" in signed.query:
+            SAS_QUERY_CACHE[cache_key] = (signed.query, time.time() + 45 * 60)
+        return signed_href
 
 
 def item(scene_id: str) -> dict[str, Any]:
     return fetch_json(f"{STAC}/collections/sentinel-2-l2a/items/{scene_id}")
+
+
+def discover_scenes() -> tuple[list[dict[str, Any]], int]:
+    end = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    payload = fetch_json(
+        f"{STAC}/search",
+        params={
+            "collections": "sentinel-2-l2a",
+            "bbox": ",".join(str(value) for value in AOI),
+            "datetime": f"{COLLECTION_START}/{end}",
+            "limit": 1000,
+            "query": json.dumps(
+                {
+                    "eo:cloud_cover": {"lt": CATALOG_CLOUD_MAX_PCT},
+                    "s2:mgrs_tile": {"eq": MGRS_TILE},
+                },
+                separators=(",", ":"),
+            ),
+        },
+    )
+    catalog_items = [
+        {
+            "year": int(feature["properties"]["datetime"][:4]),
+            "id": feature["id"],
+            "datetime": feature["properties"]["datetime"],
+            "catalog_cloud_pct": round(float(feature["properties"].get("eo:cloud_cover", 0)), 2),
+        }
+        for feature in payload.get("features", [])
+    ]
+    # The catalog can contain both the original and a reprocessed product for
+    # one physical acquisition. Keep the newest processing timestamp so the UI
+    # contains every image capture once, rather than duplicate observations.
+    by_datetime: dict[str, dict[str, Any]] = {}
+    for scene in catalog_items:
+        existing = by_datetime.get(scene["datetime"])
+        if existing is None or scene["id"].rsplit("_", 1)[-1] > existing["id"].rsplit("_", 1)[-1]:
+            by_datetime[scene["datetime"]] = scene
+    scenes = sorted(by_datetime.values(), key=lambda scene: scene["datetime"])
+    return scenes, len(catalog_items)
 
 
 def parse_dt(value: str) -> datetime:
@@ -185,20 +228,34 @@ def parse_ndbc_table(text: str, scene_time: datetime) -> dict[str, Any] | None:
 
 def wave_at(scene_time: datetime) -> dict[str, Any]:
     if scene_time.year == datetime.now(timezone.utc).year:
-        url = f"https://www.ndbc.noaa.gov/data/realtime2/{WAVE_STATION}.txt"
-        response = SESSION.get(url, timeout=60)
-        if response.ok:
-            parsed = parse_ndbc_table(response.text, scene_time)
+        cache_key = "realtime"
+        with NDBC_CACHE_LOCK:
+            if cache_key not in NDBC_TEXT_CACHE:
+                url = f"https://www.ndbc.noaa.gov/data/realtime2/{WAVE_STATION}.txt"
+                response = SESSION.get(url, timeout=60)
+                NDBC_TEXT_CACHE[cache_key] = response.text if response.ok else None
+            realtime_text = NDBC_TEXT_CACHE[cache_key]
+        if realtime_text:
+            parsed = parse_ndbc_table(realtime_text, scene_time)
             if parsed:
                 return {**parsed, "source": "NDBC realtime"}
 
-    url = f"https://www.ndbc.noaa.gov/data/historical/stdmet/{WAVE_STATION}h{scene_time.year}.txt.gz"
-    response = SESSION.get(url, timeout=60)
-    if response.ok:
-        try:
-            text = gzip.decompress(response.content).decode("utf-8", errors="replace")
-        except gzip.BadGzipFile:
-            text = response.text
+    cache_key = f"historical-{scene_time.year}"
+    with NDBC_CACHE_LOCK:
+        if cache_key not in NDBC_TEXT_CACHE:
+            url = f"https://www.ndbc.noaa.gov/data/historical/stdmet/{WAVE_STATION}h{scene_time.year}.txt.gz"
+            response = SESSION.get(url, timeout=60)
+            if response.ok:
+                try:
+                    NDBC_TEXT_CACHE[cache_key] = gzip.decompress(response.content).decode(
+                        "utf-8", errors="replace"
+                    )
+                except gzip.BadGzipFile:
+                    NDBC_TEXT_CACHE[cache_key] = response.text
+            else:
+                NDBC_TEXT_CACHE[cache_key] = None
+        text = NDBC_TEXT_CACHE[cache_key]
+    if text:
         parsed = parse_ndbc_table(text, scene_time)
         if parsed:
             return {**parsed, "source": "NDBC historical"}
@@ -244,7 +301,7 @@ def crop_window(dataset: rasterio.DatasetReader):
 def read_scene(scene: dict[str, Any]) -> dict[str, Any]:
     record = item(scene["id"])
     assets = record["assets"]
-    signed = {name: sign_href(assets[name]["href"]) for name in ("B03", "B08", "SCL", "visual")}
+    signed = {name: sign_href(assets[name]["href"]) for name in ("B03", "B08", "SCL")}
 
     env_options = {
         "GDAL_DISABLE_READDIR_ON_OPEN": "EMPTY_DIR",
@@ -282,14 +339,13 @@ def read_scene(scene: dict[str, Any]) -> dict[str, Any]:
                 resampling=Resampling.nearest,
             )
 
-        rgb = None
-        rgb_transform = None
-        with rasterio.open(signed["visual"]) as visual_src:
-            visual_window = crop_window(visual_src)
-            rgb = visual_src.read([1, 2, 3], window=visual_window)
-            rgb_transform = visual_src.window_transform(visual_window)
-
     clear = ~np.isin(scl, [0, 1, 3, 8, 9, 10, 11])
+    local_cloud_fraction = float(np.mean(~clear))
+    if local_cloud_fraction * 100 > AOI_CLOUD_MAX_PCT:
+        raise UnsuitableScene(
+            f"AOI cloud/invalid mask {local_cloud_fraction * 100:.2f}% exceeds {AOI_CLOUD_MAX_PCT:.1f}%"
+        )
+
     denominator = green + nir
     ndwi = np.where(denominator > 0, (green - nir) / denominator, np.nan)
     threshold = otsu_threshold(ndwi[clear])
@@ -331,7 +387,7 @@ def read_scene(scene: dict[str, Any]) -> dict[str, Any]:
             xs.append(px)
             ys.append(py)
 
-    if len(xs) < 80:
+    if len(xs) < MIN_SHORELINE_POINTS:
         sample_row = water.shape[0] // 2
         sample_signal = water[sample_row].astype("float32")
         sample_ocean = np.convolve(sample_signal, np.ones(9), mode="same") / 9 >= 0.58
@@ -342,7 +398,9 @@ def read_scene(scene: dict[str, Any]) -> dict[str, Any]:
             lon, lat = warp_transform(crs, "EPSG:4326", [px], [py])
             transition_lons.append((round(lon[0], 5), round(lat[0], 5)))
         print(f"  sample transitions={transition_lons[:20]}", flush=True)
-        raise RuntimeError(f"Only {len(xs)} shoreline points extracted for {scene['year']}")
+        raise UnsuitableScene(
+            f"Only {len(xs)} shoreline points extracted; minimum is {MIN_SHORELINE_POINTS}"
+        )
 
     xs_array = smooth(np.asarray(xs, dtype="float64"), 11)
     ys_array = np.asarray(ys, dtype="float64")
@@ -369,13 +427,23 @@ def read_scene(scene: dict[str, Any]) -> dict[str, Any]:
         crs, "EPSG:4326", corrected_x.tolist(), corrected_y.tolist()
     )
 
-    if rgb is not None and scene["year"] in (2016, 2026):
+    image_name = f"sentinel-{scene_time.strftime('%Y%m%dT%H%M%S')}.jpg"
+    image_path = SCENE_IMAGE_CACHE / image_name
+    rgb_shape = None
+    if not image_path.exists():
+        visual_href = sign_href(assets["visual"]["href"])
+        with rasterio.Env(**env_options), rasterio.open(visual_href) as visual_src:
+            visual_window = crop_window(visual_src)
+            rgb = visual_src.read([1, 2, 3], window=visual_window)
         image = np.moveaxis(rgb, 0, -1)
         if image.dtype != np.uint8:
             image = np.clip(image, 0, 255).astype("uint8")
-        Image.fromarray(image).save(PUBLIC_DATA / f"sentinel-{scene['year']}.jpg", quality=90)
+        Image.fromarray(image).save(image_path, quality=82, optimize=True)
+        rgb_shape = [int(rgb.shape[2]), int(rgb.shape[1])]
+    else:
+        with Image.open(image_path) as existing_image:
+            rgb_shape = [int(existing_image.width), int(existing_image.height)]
 
-    local_cloud_fraction = float(np.mean(~clear))
     return {
         "year": scene["year"],
         "scene_id": scene["id"],
@@ -392,9 +460,8 @@ def read_scene(scene: dict[str, Any]) -> dict[str, Any]:
         "corrected_coords": [
             [round(lon, 7), round(lat, 7)] for lon, lat in zip(corrected_lon, corrected_lat)
         ],
-        "image": f"/data/sentinel-{scene['year']}.jpg" if scene["year"] in (2016, 2026) else None,
-        "image_transform": list(rgb_transform) if rgb_transform is not None else None,
-        "image_shape": [int(rgb.shape[2]), int(rgb.shape[1])] if rgb is not None else None,
+        "image": f"/data/scenes/{image_name}",
+        "image_shape": rgb_shape,
         "stac_url": f"{STAC}/collections/sentinel-2-l2a/items/{scene['id']}",
     }
 
@@ -409,19 +476,64 @@ def lon_delta_m(delta_lon: np.ndarray, latitude: np.ndarray | float) -> np.ndarr
     return delta_lon * (111_320.0 * np.cos(np.radians(latitude)))
 
 
-def build_outputs(records: list[dict[str, Any]]) -> None:
+def screen_geometry(records: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    """Reject broken traces by comparison with the robust temporal shoreline."""
+    if len(records) < 3:
+        return records, []
+    latitudes = np.linspace(SHORE_LAT_RANGE[0] + 0.0005, SHORE_LAT_RANGE[1] - 0.0005, 90)
+    interpolated = np.asarray([interpolate_lon(record, latitudes) for record in records])
+    temporal_median = np.median(interpolated, axis=0)
+    deviations_m = lon_delta_m(interpolated - temporal_median, latitudes)
+    accepted: list[dict[str, Any]] = []
+    rejected: list[dict[str, Any]] = []
+    for record, deviations in zip(records, deviations_m):
+        p90 = float(np.percentile(np.abs(deviations), 90))
+        maximum = float(np.max(np.abs(deviations)))
+        if p90 > GEOMETRY_P90_MAX_DEVIATION_M or maximum > GEOMETRY_MAX_DEVIATION_M:
+            rejected.append(
+                {
+                    "scene": {"id": record["scene_id"], "datetime": record["datetime"]},
+                    "reason": (
+                        f"Shoreline geometry failed temporal-coherence screen "
+                        f"(p90={p90:.1f}m, max={maximum:.1f}m)"
+                    ),
+                }
+            )
+            continue
+        record["geometry_p90_deviation_m"] = round(p90, 1)
+        record["geometry_max_deviation_m"] = round(maximum, 1)
+        accepted.append(record)
+    return accepted, rejected
+
+
+def build_outputs(records: list[dict[str, Any]], diagnostics: dict[str, Any]) -> None:
+    if len(records) < 2:
+        raise RuntimeError("At least two suitable acquisitions are required")
+
+    records.sort(key=lambda record: record["datetime"])
+    public_scene_images = PUBLIC_DATA / "scenes"
+    public_scene_images.mkdir(parents=True, exist_ok=True)
+    accepted_image_names = {Path(record["image"]).name for record in records}
+    for image_name in accepted_image_names:
+        source = SCENE_IMAGE_CACHE / image_name
+        destination = public_scene_images / image_name
+        if not source.exists() and not destination.exists():
+            raise RuntimeError(f"Missing cached scene image: {image_name}")
+        if source.exists():
+            shutil.copyfile(source, destination)
+    for image_path in public_scene_images.glob("sentinel-*.jpg"):
+        if image_path.name not in accepted_image_names:
+            image_path.unlink()
+
     features = []
     for record in records:
         corrected_coords = [
             coord for coord in record["corrected_coords"] if SHORE_LAT_RANGE[0] <= coord[1] <= SHORE_LAT_RANGE[1]
         ]
-        raw_coords = [
-            coord for coord in record["raw_coords"] if SHORE_LAT_RANGE[0] <= coord[1] <= SHORE_LAT_RANGE[1]
-        ]
         common = {
             key: value
             for key, value in record.items()
-            if key not in ("raw_coords", "corrected_coords", "image_transform")
+            if key not in ("raw_coords", "corrected_coords")
         }
         features.append(
             {
@@ -430,19 +542,15 @@ def build_outputs(records: list[dict[str, Any]]) -> None:
                 "geometry": {"type": "LineString", "coordinates": corrected_coords},
             }
         )
-        features.append(
-            {
-                "type": "Feature",
-                "properties": {**common, "geometry_kind": "raw"},
-                "geometry": {"type": "LineString", "coordinates": raw_coords},
-            }
-        )
-
-    (PUBLIC_DATA / "shorelines.geojson").write_text(
-        json.dumps({"type": "FeatureCollection", "features": features}, separators=(",", ":"))
+    shoreline_payload = json.dumps(
+        {"type": "FeatureCollection", "features": features}, separators=(",", ":")
     )
+    (PUBLIC_DATA / "shorelines.geojson").write_text(shoreline_payload)
+    (PUBLIC_DATA / "shorelines.json").write_text(shoreline_payload)
 
     earliest, latest = records[0], records[-1]
+    shutil.copyfile(ROOT / "public" / earliest["image"].lstrip("/"), PUBLIC_DATA / "sentinel-baseline.jpg")
+    shutil.copyfile(ROOT / "public" / latest["image"].lstrip("/"), PUBLIC_DATA / "sentinel-latest.jpg")
     latitudes = np.linspace(SHORE_LAT_RANGE[0] + 0.0005, SHORE_LAT_RANGE[1] - 0.0005, 90)
     earliest_lon = interpolate_lon(earliest, latitudes)
     latest_lon = interpolate_lon(latest, latitudes)
@@ -466,14 +574,35 @@ def build_outputs(records: list[dict[str, Any]]) -> None:
             }
         )
 
-    yearly = []
+    observations = []
     baseline_lons = interpolate_lon(earliest, latitudes)
     for record in records:
         current_lons = interpolate_lon(record, latitudes)
         values = lon_delta_m(current_lons - baseline_lons, latitudes)
+        observations.append(
+            {
+                "datetime": record["datetime"],
+                "year": record["year"],
+                "median_change_m": round(float(np.median(values)), 1),
+                "p10_change_m": round(float(np.percentile(values, 10)), 1),
+                "p90_change_m": round(float(np.percentile(values, 90)), 1),
+            }
+        )
+
+    yearly = []
+    for year in sorted({observation["year"] for observation in observations}):
+        values = np.asarray(
+            [
+                observation["median_change_m"]
+                for observation in observations
+                if observation["year"] == year
+            ],
+            dtype="float64",
+        )
         yearly.append(
             {
-                "year": record["year"],
+                "year": year,
+                "observation_count": int(len(values)),
                 "median_change_m": round(float(np.median(values)), 1),
                 "p10_change_m": round(float(np.percentile(values, 10)), 1),
                 "p90_change_m": round(float(np.percentile(values, 90)), 1),
@@ -483,6 +612,9 @@ def build_outputs(records: list[dict[str, Any]]) -> None:
     trend = {
         "baseline_year": earliest["year"],
         "latest_year": latest["year"],
+        "baseline_datetime": earliest["datetime"],
+        "latest_datetime": latest["datetime"],
+        "observation_count": len(records),
         "net_median_change_m": round(float(np.median(change_m)), 1),
         "retreat_share_pct": round(float(np.mean(change_m < 0) * 100), 1),
         "max_retreat_m": round(float(np.min(change_m)), 1),
@@ -490,6 +622,7 @@ def build_outputs(records: list[dict[str, Any]]) -> None:
         "latitudes": [round(float(value), 6) for value in latitudes],
         "change_m": [round(float(value), 1) for value in change_m],
         "zones": zone_stats,
+        "observations": observations,
         "yearly": yearly,
     }
     (PUBLIC_DATA / "trend.json").write_text(json.dumps(trend, indent=2))
@@ -504,6 +637,14 @@ def build_outputs(records: list[dict[str, Any]]) -> None:
         "sentinel_resolution_m": 10,
         "tide_station": TIDE_STATION,
         "wave_station": WAVE_STATION,
+        "suitability": {
+            "catalog_cloud_max_pct": CATALOG_CLOUD_MAX_PCT,
+            "aoi_cloud_mask_max_pct": AOI_CLOUD_MAX_PCT,
+            "minimum_shoreline_points": MIN_SHORELINE_POINTS,
+            "geometry_p90_max_deviation_m": GEOMETRY_P90_MAX_DEVIATION_M,
+            "geometry_max_deviation_m": GEOMETRY_MAX_DEVIATION_M,
+            **diagnostics,
+        },
         "scenes": [
             {key: value for key, value in record.items() if key not in ("raw_coords", "corrected_coords", "image_transform")}
             for record in records
@@ -520,27 +661,116 @@ def build_outputs(records: list[dict[str, Any]]) -> None:
     (PUBLIC_DATA / "metadata.json").write_text(json.dumps(metadata, indent=2))
 
 
+PIPELINE_VERSION = 2
+
+
+def process_scene(scene: dict[str, Any]) -> dict[str, Any]:
+    cache_dir = ROOT / "work" / "shoreline-cache"
+    cache_dir.mkdir(parents=True, exist_ok=True)
+    cache_path = cache_dir / f"{scene['id']}.json"
+    if cache_path.exists():
+        payload = json.loads(cache_path.read_text())
+        if payload.get("pipeline_version") == PIPELINE_VERSION:
+            if payload.get("status") == "accepted":
+                record = payload["record"]
+                image_path = SCENE_IMAGE_CACHE / Path(record["image"]).name
+                if image_path.exists():
+                    return payload
+            elif payload.get("status") == "rejected":
+                return payload
+
+    try:
+        record = read_scene(scene)
+        payload = {
+            "pipeline_version": PIPELINE_VERSION,
+            "status": "accepted",
+            "record": record,
+        }
+        cache_path.write_text(json.dumps(payload))
+        return payload
+    except UnsuitableScene as error:
+        payload = {
+            "pipeline_version": PIPELINE_VERSION,
+            "status": "rejected",
+            "scene": scene,
+            "reason": str(error),
+        }
+        cache_path.write_text(json.dumps(payload))
+        return payload
+    except Exception as error:
+        return {
+            "pipeline_version": PIPELINE_VERSION,
+            "status": "error",
+            "scene": scene,
+            "reason": f"{type(error).__name__}: {error}",
+        }
+
+
 def main() -> None:
-    records = []
-    for scene in SCENES:
-        print(f"Processing {scene['year']} {scene['id']}", flush=True)
-        cache_path = ROOT / "work" / f"shoreline-cache-{scene['year']}.json"
-        cache_path.parent.mkdir(exist_ok=True)
-        if cache_path.exists():
-            record = json.loads(cache_path.read_text())
-            print("  using cached extraction", flush=True)
-        else:
-            record = read_scene(scene)
-            cache_path.write_text(json.dumps(record))
-        records.append(record)
-        print(
-            f"  tide={records[-1]['tide']['level_m_msl']:+.2f} m "
-            f"wave={records[-1]['wave']['height_m']:.2f} m "
-            f"correction={records[-1]['horizontal_correction_m']:+.1f} m",
-            flush=True,
+    scenes, raw_catalog_count = discover_scenes()
+    print(
+        f"Catalog candidates: {len(scenes)} unique acquisitions "
+        f"({raw_catalog_count - len(scenes)} duplicate products removed) with tile cloud < "
+        f"{CATALOG_CLOUD_MAX_PCT:.0f}%",
+        flush=True,
+    )
+    results: list[dict[str, Any]] = []
+    with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
+        futures = {executor.submit(process_scene, scene): scene for scene in scenes}
+        for completed, future in enumerate(as_completed(futures), start=1):
+            scene = futures[future]
+            result = future.result()
+            results.append(result)
+            status = result["status"]
+            detail = ""
+            if status == "accepted":
+                record = result["record"]
+                detail = (
+                    f" AOI mask={record['cloud_mask_aoi_pct']:.2f}% "
+                    f"correction={record['horizontal_correction_m']:+.1f}m"
+                )
+            elif status != "accepted":
+                detail = f" {result.get('reason', '')}"
+            print(
+                f"[{completed:03d}/{len(scenes):03d}] {status:8s} "
+                f"{scene['datetime'][:10]}{detail}",
+                flush=True,
+            )
+
+    errors = [result for result in results if result["status"] == "error"]
+    if errors:
+        print("Retrying processing errors sequentially...", flush=True)
+        retried = []
+        for result in errors:
+            retried.append(process_scene(result["scene"]))
+        results = [result for result in results if result["status"] != "error"] + retried
+        errors = [result for result in results if result["status"] == "error"]
+    if errors:
+        sample = "; ".join(
+            f"{result['scene']['datetime'][:10]} {result['reason']}" for result in errors[:8]
         )
-    build_outputs(records)
-    print(f"Wrote {PUBLIC_DATA}")
+        raise RuntimeError(f"{len(errors)} catalog acquisitions could not be evaluated: {sample}")
+
+    extracted = [result["record"] for result in results if result["status"] == "accepted"]
+    rejected = [result for result in results if result["status"] == "rejected"]
+    records, geometry_rejected = screen_geometry(extracted)
+    diagnostics = {
+        "catalog_item_count": raw_catalog_count,
+        "catalog_candidate_count": len(scenes),
+        "duplicate_product_count": raw_catalog_count - len(scenes),
+        "accepted_count": len(records),
+        "rejected_count": len(rejected) + len(geometry_rejected),
+        "cloud_or_extraction_rejected_count": len(rejected),
+        "geometry_rejected_count": len(geometry_rejected),
+        "date_start": scenes[0]["datetime"] if scenes else None,
+        "date_end": scenes[-1]["datetime"] if scenes else None,
+    }
+    build_outputs(records, diagnostics)
+    print(
+        f"Accepted {len(records)} of {len(scenes)} unique acquisitions "
+        f"({len(geometry_rejected)} geometry rejections); wrote {PUBLIC_DATA}",
+        flush=True,
+    )
 
 
 if __name__ == "__main__":
