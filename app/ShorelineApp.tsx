@@ -415,9 +415,9 @@ export function ShorelineApp({ catalog }: { catalog: Catalog }) {
       setNotice("Draw a transect first.");
       return;
     }
+    const activeBaselineId = baselineId ?? scene.id;
     if (!baselineId) {
-      setNotice("Set this or another image as the baseline first.");
-      return;
+      setBaselines((current) => ({ ...current, [mode]: scene.id }));
     }
     const snappedCoordinate = snapToTransect(coordinate, transect);
     const distance = distanceAlongTransect(snappedCoordinate, transect);
@@ -435,7 +435,7 @@ export function ShorelineApp({ catalog }: { catalog: Catalog }) {
       ...current.filter((item) => !(item.mode === mode && item.sceneId === scene.id)),
       row,
     ]);
-    setNotice(scene.id === baselineId ? "Baseline saved. Press → for the next image · ⌘Z undoes." : "Saved. Press → for the next image · ⌘Z undoes.");
+    setNotice(scene.id === activeBaselineId ? "Baseline saved. Press → for the next image · ⌘Z undoes." : "Saved. Press → for the next image · ⌘Z undoes.");
   }, [baselineId, drawStart, drawing, finishTransect, mode, scene, transect]);
 
   const onPointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
@@ -500,6 +500,14 @@ export function ShorelineApp({ catalog }: { catalog: Catalog }) {
     setTransect(null);
     setNotice("Draw the transect · Drag from land to ocean, or click each end.");
     focusShoreline();
+  };
+
+  const handlePrimaryAction = () => {
+    if (transect && !baselineId) {
+      setNotice("Click the wet/dry line. This image will become the baseline.");
+      return;
+    }
+    beginStudy();
   };
 
   const redrawTransect = () => {
@@ -632,7 +640,11 @@ export function ShorelineApp({ catalog }: { catalog: Catalog }) {
       <div className="logger-workspace">
         <section className="image-panel">
           <div className="work-tools">
-            <button className="primary-action" onClick={beginStudy}>{transect || baselineId ? "Restart from this baseline" : "Draw transect from this baseline"}</button>
+            <button className="primary-action" onClick={handlePrimaryAction}>
+              {transect
+                ? baselineId ? "Restart from this baseline" : "Click shoreline for baseline"
+                : "Draw transect from this baseline"}
+            </button>
             {transect && <button className="small-button" onClick={redrawTransect}>Redraw transect</button>}
             <output>{notice}</output>
             <label className="zoom-control">

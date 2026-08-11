@@ -98,6 +98,10 @@ test("includes keyboard logging and a true Excel export", async () => {
   assert.match(source, /\(event\.metaKey \|\| event\.ctrlKey\)/);
   assert.match(source, /event\.key\.toLowerCase\(\) === "z"/);
   assert.match(source, /Last shoreline point undone/);
+  assert.match(source, /const activeBaselineId = baselineId \?\? scene\.id/);
+  assert.match(source, /setBaselines\(\(current\) => \(\{ \.\.\.current, \[mode\]: scene\.id \}\)\)/);
+  assert.match(source, /Click shoreline for baseline/);
+  assert.doesNotMatch(source, /Set this or another image as the baseline first/);
   assert.match(source, /const DEFAULT_ZOOM = 7/);
   assert.match(source, /const SHORE_FOCUS: Coordinate = \[-74\.787, 38\.9945\]/);
   assert.match(source, /Clear study area/);
