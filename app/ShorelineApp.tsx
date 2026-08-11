@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-type Mode = "monthly" | "low_tide";
+type Mode = "clear" | "low_tide";
 type Coordinate = [number, number];
 type NormalizedPoint = { x: number; y: number };
 
@@ -29,7 +29,7 @@ type Catalog = {
   resolution_m: number;
   range: string[];
   selection: { low_tide_window_minutes: number };
-  monthly: Scene[];
+  clear: Scene[];
   low_tide: Scene[];
 };
 
@@ -52,7 +52,9 @@ type SavedWork = {
   observations: Observation[];
 };
 
-const STORAGE_KEY = "north-wildwood-shoreline-logger-v1";
+const STORAGE_KEY = "north-wildwood-shoreline-logger-v2";
+const DEFAULT_ZOOM = 7;
+const SHORE_FOCUS: Coordinate = [-74.7845, 38.9945];
 
 function cleanDate(value: string) {
   return new Intl.DateTimeFormat("en-US", {
@@ -91,6 +93,21 @@ function distanceAlongTransect(point: Coordinate, transect: Transect) {
     Math.min(1, (target[0] * end[0] + target[1] * end[1]) / lengthSquared),
   );
   return portion * Math.sqrt(lengthSquared);
+}
+
+function snapToTransect(point: Coordinate, transect: Transect): Coordinate {
+  const end = toMeters(transect.end, transect.start);
+  const target = toMeters(point, transect.start);
+  const lengthSquared = end[0] ** 2 + end[1] ** 2;
+  if (!lengthSquared) return transect.start;
+  const portion = Math.max(
+    0,
+    Math.min(1, (target[0] * end[0] + target[1] * end[1]) / lengthSquared),
+  );
+  return [
+    transect.start[0] + (transect.end[0] - transect.start[0]) * portion,
+    transect.start[1] + (transect.end[1] - transect.start[1]) * portion,
+  ];
 }
 
 function coordinateToPoint(coordinate: Coordinate, bounds: number[]): NormalizedPoint {
@@ -139,17 +156,19 @@ function ChangeChart({ observations, baselineWidth }: { observations: Observatio
 }
 
 export function ShorelineApp({ catalog }: { catalog: Catalog }) {
-  const [mode, setMode] = useState<Mode>("monthly");
+  const [mode, setMode] = useState<Mode>("clear");
   const [sceneIndex, setSceneIndex] = useState(0);
   const [zoom, setZoom] = useState(1);
   const [pan, setPan] = useState({ x: 0, y: 0 });
+  const [viewportSize, setViewportSize] = useState({ width: 1, height: 1 });
   const [transect, setTransect] = useState<Transect | null>(null);
   const [drawStart, setDrawStart] = useState<Coordinate | null>(null);
+  const [hoverCoordinate, setHoverCoordinate] = useState<Coordinate | null>(null);
   const [drawing, setDrawing] = useState(false);
   const [baselines, setBaselines] = useState<Partial<Record<Mode, string>>>({});
   const [observations, setObservations] = useState<Observation[]>([]);
   const [loaded, setLoaded] = useState(false);
-  const [notice, setNotice] = useState("Set a baseline, then draw a transect.");
+  const [notice, setNotice] = useState("Choose a date, then start with this baseline.");
   const viewportRef = useRef<HTMLDivElement>(null);
   const dragRef = useRef<{
     pointerId: number;
@@ -175,6 +194,20 @@ export function ShorelineApp({ catalog }: { catalog: Catalog }) {
     [catalog.bounds[0], (catalog.bounds[1] + catalog.bounds[3]) / 2],
     [catalog.bounds[2], (catalog.bounds[1] + catalog.bounds[3]) / 2],
   );
+  const imageFrame = useMemo(() => {
+    const sourceWidth = scene?.image_shape?.[0] || 1;
+    const sourceHeight = scene?.image_shape?.[1] || 1;
+    const sourceAspect = sourceWidth / sourceHeight;
+    const viewportAspect = viewportSize.width / viewportSize.height;
+    if (viewportAspect > sourceAspect) {
+      const width = viewportSize.width;
+      const height = width / sourceAspect;
+      return { width, height, left: 0, top: (viewportSize.height - height) / 2 };
+    }
+    const height = viewportSize.height;
+    const width = height * sourceAspect;
+    return { width, height, left: (viewportSize.width - width) / 2, top: 0 };
+  }, [scene?.image_shape, viewportSize.height, viewportSize.width]);
 
   useEffect(() => {
     const frame = window.requestAnimationFrame(() => {
@@ -202,6 +235,17 @@ export function ShorelineApp({ catalog }: { catalog: Catalog }) {
     );
   }, [baselines, loaded, observations, transect]);
 
+  useEffect(() => {
+    const viewport = viewportRef.current;
+    if (!viewport) return;
+    const observer = new ResizeObserver((entries) => {
+      const rect = entries[0]?.contentRect;
+      if (rect) setViewportSize({ width: rect.width, height: rect.height });
+    });
+    observer.observe(viewport);
+    return () => observer.disconnect();
+  }, []);
+
   const changeScene = useCallback(
     (amount: number) => {
       setSceneIndex((value) => Math.max(0, Math.min(scenes.length - 1, value + amount)));
@@ -211,8 +255,6 @@ export function ShorelineApp({ catalog }: { catalog: Catalog }) {
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
-      const target = event.target as HTMLElement | null;
-      if (target?.matches("input, select, textarea, button")) return;
       if (event.key === "ArrowRight") {
         event.preventDefault();
         changeScene(1);
@@ -236,17 +278,21 @@ export function ShorelineApp({ catalog }: { catalog: Catalog }) {
   const changeMode = (nextMode: Mode) => {
     setMode(nextMode);
     setSceneIndex(0);
-    setNotice(nextMode === "low_tide" ? "Low-tide monthly set." : "Best image from each month.");
+    setNotice(nextMode === "low_tide" ? "Low-tide images only. Choose a baseline." : "Choose a baseline image.");
   };
 
-  const clampPan = useCallback((next: { x: number; y: number }, nextZoom = zoom) => {
+  const clampPan = useCallback((next: { x: number; y: number }, nextZoom: number) => {
     const rect = viewportRef.current?.getBoundingClientRect();
     if (!rect || nextZoom <= 1) return { x: 0, y: 0 };
+    const minX = rect.width - imageFrame.left - imageFrame.width * nextZoom;
+    const maxX = -imageFrame.left;
+    const minY = rect.height - imageFrame.top - imageFrame.height * nextZoom;
+    const maxY = -imageFrame.top;
     return {
-      x: Math.min(0, Math.max(rect.width * (1 - nextZoom), next.x)),
-      y: Math.min(0, Math.max(rect.height * (1 - nextZoom), next.y)),
+      x: Math.min(maxX, Math.max(minX, next.x)),
+      y: Math.min(maxY, Math.max(minY, next.y)),
     };
-  }, [zoom]);
+  }, [imageFrame]);
 
   const setZoomAt = useCallback((nextZoom: number, clientX?: number, clientY?: number) => {
     const rect = viewportRef.current?.getBoundingClientRect();
@@ -254,31 +300,55 @@ export function ShorelineApp({ catalog }: { catalog: Catalog }) {
     const bounded = Math.max(1, Math.min(50, nextZoom));
     const anchorX = (clientX ?? rect.left + rect.width / 2) - rect.left;
     const anchorY = (clientY ?? rect.top + rect.height / 2) - rect.top;
-    const imageX = (anchorX - pan.x) / zoom;
-    const imageY = (anchorY - pan.y) / zoom;
+    const imageX = (anchorX - imageFrame.left - pan.x) / (imageFrame.width * zoom);
+    const imageY = (anchorY - imageFrame.top - pan.y) / (imageFrame.height * zoom);
     const nextPan = clampPan(
-      { x: anchorX - imageX * bounded, y: anchorY - imageY * bounded },
+      {
+        x: anchorX - imageFrame.left - imageX * imageFrame.width * bounded,
+        y: anchorY - imageFrame.top - imageY * imageFrame.height * bounded,
+      },
       bounded,
     );
     setZoom(bounded);
     setPan(nextPan);
-  }, [clampPan, pan.x, pan.y, zoom]);
+  }, [clampPan, imageFrame, pan.x, pan.y, zoom]);
+
+  const focusShoreline = useCallback((nextZoom = DEFAULT_ZOOM) => {
+    const rect = viewportRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    const focus = coordinateToPoint(SHORE_FOCUS, catalog.bounds);
+    const bounded = Math.max(1, Math.min(50, nextZoom));
+    const nextPan = clampPan(
+      {
+        x: rect.width / 2 - imageFrame.left - focus.x * imageFrame.width * bounded,
+        y: rect.height / 2 - imageFrame.top - focus.y * imageFrame.height * bounded,
+      },
+      bounded,
+    );
+    setZoom(bounded);
+    setPan(nextPan);
+  }, [catalog.bounds, clampPan, imageFrame]);
+
+  useEffect(() => {
+    const frame = window.requestAnimationFrame(() => focusShoreline());
+    return () => window.cancelAnimationFrame(frame);
+  }, [focusShoreline]);
 
   const eventPoint = useCallback((clientX: number, clientY: number): NormalizedPoint | null => {
     const rect = viewportRef.current?.getBoundingClientRect();
     if (!rect) return null;
-    const x = (clientX - rect.left - pan.x) / (rect.width * zoom);
-    const y = (clientY - rect.top - pan.y) / (rect.height * zoom);
+    const x = (clientX - rect.left - imageFrame.left - pan.x) / (imageFrame.width * zoom);
+    const y = (clientY - rect.top - imageFrame.top - pan.y) / (imageFrame.height * zoom);
     if (x < 0 || x > 1 || y < 0 || y > 1) return null;
     return { x, y };
-  }, [pan.x, pan.y, zoom]);
+  }, [imageFrame, pan.x, pan.y, zoom]);
 
   const logCoordinate = useCallback((coordinate: Coordinate) => {
     if (!scene) return;
     if (drawing) {
       if (!drawStart) {
         setDrawStart(coordinate);
-        setNotice("Click the other end of the transect.");
+        setNotice("2 of 3 · Click the oceanward end.");
         return;
       }
       if (distanceMeters(drawStart, coordinate) < 20) {
@@ -289,7 +359,7 @@ export function ShorelineApp({ catalog }: { catalog: Catalog }) {
       setDrawStart(null);
       setDrawing(false);
       setObservations([]);
-      setNotice("Click the wet/dry line to log this month.");
+      setNotice("3 of 3 · Click the baseline wet/dry line. The marker snaps to the transect.");
       return;
     }
     if (!transect) {
@@ -300,14 +370,15 @@ export function ShorelineApp({ catalog }: { catalog: Catalog }) {
       setNotice("Set this or another image as the baseline first.");
       return;
     }
-    const distance = distanceAlongTransect(coordinate, transect);
+    const snappedCoordinate = snapToTransect(coordinate, transect);
+    const distance = distanceAlongTransect(snappedCoordinate, transect);
     const row: Observation = {
       mode,
       sceneId: scene.id,
       date: scene.datetime,
       month: scene.month,
-      latitude: Number(coordinate[1].toFixed(7)),
-      longitude: Number(coordinate[0].toFixed(7)),
+      latitude: Number(snappedCoordinate[1].toFixed(7)),
+      longitude: Number(snappedCoordinate[0].toFixed(7)),
       distanceAlongTransectM: Number(distance.toFixed(2)),
       shorelineWidthM: Number(distance.toFixed(2)),
     };
@@ -315,7 +386,7 @@ export function ShorelineApp({ catalog }: { catalog: Catalog }) {
       ...current.filter((item) => !(item.mode === mode && item.sceneId === scene.id)),
       row,
     ]);
-    setNotice(scene.id === baselineId ? "Baseline point logged." : "Point logged. Press → for the next image.");
+    setNotice(scene.id === baselineId ? "Baseline saved. Press →, then click the wet/dry line." : "Saved. Press →, then click the wet/dry line.");
   }, [baselineId, drawStart, drawing, mode, scene, transect]);
 
   const onPointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
@@ -331,13 +402,17 @@ export function ShorelineApp({ catalog }: { catalog: Catalog }) {
   };
 
   const onPointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (drawing) {
+      const point = eventPoint(event.clientX, event.clientY);
+      setHoverCoordinate(point ? pointToCoordinate(point, catalog.bounds) : null);
+    }
     const drag = dragRef.current;
     if (!drag || drag.pointerId !== event.pointerId) return;
     const dx = event.clientX - drag.x;
     const dy = event.clientY - drag.y;
     if (Math.hypot(dx, dy) > 4) drag.moved = true;
     if (drag.moved && zoom > 1) {
-      setPan(clampPan({ x: drag.panX + dx, y: drag.panY + dy }));
+      setPan(clampPan({ x: drag.panX + dx, y: drag.panY + dy }, zoom));
     }
   };
 
@@ -349,28 +424,38 @@ export function ShorelineApp({ catalog }: { catalog: Catalog }) {
     if (point) logCoordinate(pointToCoordinate(point, catalog.bounds));
   };
 
-  const setCurrentBaseline = () => {
+  const beginStudy = () => {
     if (!scene) return;
-    setBaselines((current) => ({ ...current, [mode]: scene.id }));
-    setObservations((current) => current.filter((row) => row.mode !== mode));
-    setNotice("Baseline set. Draw a transect, then click its shoreline.");
-  };
-
-  const startTransect = () => {
+    setBaselines({ [mode]: scene.id });
+    setObservations([]);
     setDrawing(true);
     setDrawStart(null);
+    setHoverCoordinate(null);
     setTransect(null);
+    setNotice("1 of 3 · Click the landward end.");
+    focusShoreline();
+  };
+
+  const redrawTransect = () => {
+    if (!scene) return;
+    setBaselines({ [mode]: baselineId ?? scene.id });
     setObservations([]);
-    setNotice("Click the landward end of the transect.");
+    setDrawing(true);
+    setDrawStart(null);
+    setHoverCoordinate(null);
+    setTransect(null);
+    setNotice("1 of 3 · Click the landward end.");
+    focusShoreline();
   };
 
   const clearWork = () => {
     setTransect(null);
     setDrawStart(null);
+    setHoverCoordinate(null);
     setDrawing(false);
     setBaselines({});
     setObservations([]);
-    setNotice("Set a baseline, then draw a transect.");
+    setNotice("Choose a date, then start with this baseline.");
   };
 
   const exportExcel = async () => {
@@ -387,7 +472,7 @@ export function ShorelineApp({ catalog }: { catalog: Catalog }) {
           (item) => item.mode === row.mode && item.sceneId === baselines[row.mode],
         );
         return {
-          Mode: row.mode === "low_tide" ? "Low tide" : "Monthly best",
+          Mode: row.mode === "low_tide" ? "Low tide" : "All clear",
           Date: row.date.slice(0, 10),
           Month: row.month,
           Latitude: row.latitude,
@@ -424,17 +509,18 @@ export function ShorelineApp({ catalog }: { catalog: Catalog }) {
   const transectStartPoint = transect ? coordinateToPoint(transect.start, catalog.bounds) : null;
   const transectEndPoint = transect ? coordinateToPoint(transect.end, catalog.bounds) : null;
   const pendingStartPoint = drawStart ? coordinateToPoint(drawStart, catalog.bounds) : null;
+  const hoverPoint = hoverCoordinate ? coordinateToPoint(hoverCoordinate, catalog.bounds) : null;
 
   return (
     <main className="logger-app">
       <header className="logger-header">
         <div className="logger-title"><strong>North Wildwood</strong><span>shoreline logger</span></div>
         <div className="mode-switch" aria-label="Imagery set">
-          <button className={mode === "monthly" ? "active" : ""} onClick={() => changeMode("monthly")}>Monthly</button>
+          <button className={mode === "clear" ? "active" : ""} onClick={() => changeMode("clear")}>All clear</button>
           <button className={mode === "low_tide" ? "active" : ""} onClick={() => changeMode("low_tide")}>Low tide</button>
         </div>
         <div className="frame-control">
-          <button onClick={() => changeScene(-1)} disabled={sceneIndex === 0} aria-label="Previous image">←</button>
+          <button onClick={() => changeScene(-1)} disabled={sceneIndex === 0} aria-label="Previous image" aria-keyshortcuts="ArrowLeft">←</button>
           <input
             type="date"
             value={scene.datetime.slice(0, 10)}
@@ -449,7 +535,7 @@ export function ShorelineApp({ catalog }: { catalog: Catalog }) {
             }}
             aria-label="Current image date"
           />
-          <button onClick={() => changeScene(1)} disabled={sceneIndex === scenes.length - 1} aria-label="Next image">→</button>
+          <button onClick={() => changeScene(1)} disabled={sceneIndex === scenes.length - 1} aria-label="Next image" aria-keyshortcuts="ArrowRight">→</button>
           <span>{sceneIndex + 1}/{scenes.length}</span>
         </div>
         <button className="export-button" onClick={exportExcel} disabled={!observations.length}>Export .xlsx</button>
@@ -458,15 +544,16 @@ export function ShorelineApp({ catalog }: { catalog: Catalog }) {
       <div className="logger-workspace">
         <section className="image-panel">
           <div className="work-tools">
-            <button className={baselineId === scene.id ? "selected" : ""} onClick={setCurrentBaseline}>1 · Set baseline</button>
-            <button className={drawing ? "selected" : ""} onClick={startTransect}>2 · Draw transect</button>
-            <span>3 · Click shoreline</span>
+            <button className="primary-action" onClick={beginStudy}>{transect || baselineId ? "Start over with this baseline" : "Start with this baseline"}</button>
+            {transect && <button className="small-button" onClick={redrawTransect}>Redraw transect</button>}
             <output>{notice}</output>
             <label className="zoom-control">
               <span>{Math.max(100, Math.round(aoiWidthM / zoom))} m view</span>
+              <button type="button" onClick={() => setZoomAt(zoom / 1.4)} aria-label="Zoom out">−</button>
               <input type="range" min="1" max="50" step="0.25" value={zoom} onChange={(event) => setZoomAt(Number(event.target.value))} aria-label="Map zoom" />
+              <button type="button" onClick={() => setZoomAt(zoom * 1.4)} aria-label="Zoom in">+</button>
             </label>
-            <button className="small-button" onClick={() => { setZoom(1); setPan({ x: 0, y: 0 }); }}>Reset view</button>
+            <button className="small-button" onClick={() => focusShoreline()}>Center shore</button>
           </div>
 
           <div
@@ -475,16 +562,29 @@ export function ShorelineApp({ catalog }: { catalog: Catalog }) {
             onPointerDown={onPointerDown}
             onPointerMove={onPointerMove}
             onPointerUp={onPointerUp}
+            onPointerLeave={() => setHoverCoordinate(null)}
             onWheel={(event) => {
               event.preventDefault();
               setZoomAt(zoom * (event.deltaY < 0 ? 1.18 : 0.85), event.clientX, event.clientY);
             }}
           >
-            <div className="image-transform" style={{ transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})` }}>
+            <div
+              className="image-transform"
+              style={{
+                left: imageFrame.left,
+                top: imageFrame.top,
+                width: imageFrame.width,
+                height: imageFrame.height,
+                transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`,
+              }}
+            >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={scene.image} alt={`Sentinel-2 North Wildwood on ${cleanDate(scene.datetime)}`} draggable="false" />
               <svg className="measurement-layer" viewBox="0 0 1000 1000" preserveAspectRatio="none" aria-hidden="true">
-                {pendingStartPoint && <circle cx={pendingStartPoint.x * 1000} cy={pendingStartPoint.y * 1000} r="5" className="transect-end" />}
+                {pendingStartPoint && hoverPoint && (
+                  <line x1={pendingStartPoint.x * 1000} y1={pendingStartPoint.y * 1000} x2={hoverPoint.x * 1000} y2={hoverPoint.y * 1000} className="transect-preview" />
+                )}
+                {pendingStartPoint && <circle cx={pendingStartPoint.x * 1000} cy={pendingStartPoint.y * 1000} r="7" className="transect-end pending" />}
                 {transectStartPoint && transectEndPoint && (
                   <>
                     <line x1={transectStartPoint.x * 1000} y1={transectStartPoint.y * 1000} x2={transectEndPoint.x * 1000} y2={transectEndPoint.y * 1000} className="transect-line" />
@@ -499,7 +599,8 @@ export function ShorelineApp({ catalog }: { catalog: Catalog }) {
                 })}
               </svg>
             </div>
-            <div className="image-label"><strong>{cleanDate(scene.datetime)}</strong><span>{scene.estimated_aoi_cloud_pct.toFixed(1)}% cloud</span></div>
+            <div className="map-instruction">{notice}</div>
+            <div className="image-label"><strong>{cleanDate(scene.datetime)}</strong><span>Clear study area</span></div>
             <div className="scale-label">Sentinel-2 · 10 m</div>
           </div>
         </section>

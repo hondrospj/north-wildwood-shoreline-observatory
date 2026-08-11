@@ -23,26 +23,24 @@ test("server-renders the minimal shoreline logger", async () => {
   const html = await response.text();
   assert.match(html, /<title>North Wildwood Shoreline Observatory<\/title>/i);
   assert.match(html, /shoreline logger/i);
-  assert.match(html, /Monthly/);
+  assert.match(html, /All clear/);
   assert.match(html, /Low tide/);
-  assert.match(html, /Set baseline/);
-  assert.match(html, /Draw transect/);
-  assert.match(html, /Click shoreline/);
+  assert.match(html, /Start with this baseline/);
+  assert.match(html, /Center shore/);
   assert.match(html, /Export \.xlsx/);
   assert.match(html, /og:image[^>]+https:\/\/shoreline-observatory\.example\/og\.png/i);
   assert.doesNotMatch(html, /A decade of shoreline movement|Beach sectors|How it works|codex-preview/i);
 });
 
-test("ships one best image per month and a strict low-tide catalog", async () => {
+test("ships every strict cloud-free image and a strict low-tide subset", async () => {
   const catalog = JSON.parse(
     await readFile(new URL("../public/data/monthly-catalog.json", import.meta.url), "utf8"),
   );
   assert.deepEqual(catalog.range, ["2015-08", "2026-08"]);
-  assert.equal(catalog.monthly.length, 133);
-  assert.equal(new Set(catalog.monthly.map((scene) => scene.month)).size, catalog.monthly.length);
-  assert.equal(new Set(catalog.monthly.map((scene) => scene.image)).size, catalog.monthly.length);
-  assert.ok(catalog.low_tide.length > 80);
-  assert.equal(new Set(catalog.low_tide.map((scene) => scene.month)).size, catalog.low_tide.length);
+  assert.ok(catalog.clear.length > 400);
+  assert.equal(new Set(catalog.clear.map((scene) => scene.id)).size, catalog.clear.length);
+  assert.equal(new Set(catalog.clear.map((scene) => scene.image)).size, catalog.clear.length);
+  assert.ok(catalog.low_tide.length > 75);
   assert.ok(
     catalog.low_tide.every(
       (scene) =>
@@ -51,10 +49,18 @@ test("ships one best image per month and a strict low-tide catalog", async () =>
     ),
   );
   assert.ok(
-    [...catalog.monthly, ...catalog.low_tide].every((scene) =>
+    [...catalog.clear, ...catalog.low_tide].every((scene) =>
       scene.image.startsWith(
         "https://floodmapperv1.b-cdn.net/NorthWildwoodShoreline/scenes/",
       ),
+    ),
+  );
+  assert.ok(
+    [...catalog.clear, ...catalog.low_tide].every(
+      (scene) =>
+        scene.study_cloud_pixels === 0 &&
+        scene.study_snow_pixels === 0 &&
+        scene.study_invalid_pixels / scene.study_pixel_count <= 0.005,
     ),
   );
   assert.deepEqual(await readdir(new URL("../public/data/", import.meta.url)), [
@@ -70,7 +76,11 @@ test("includes keyboard logging and a true Excel export", async () => {
   const packageJson = JSON.parse(packageRaw);
   assert.match(source, /event\.key === "ArrowRight"/);
   assert.match(source, /event\.key === "ArrowLeft"/);
+  assert.match(source, /const DEFAULT_ZOOM = 7/);
+  assert.match(source, /Clear study area/);
   assert.match(source, /distanceAlongTransect/);
+  assert.match(source, /snapToTransect/);
+  assert.match(source, /const sourceAspect = sourceWidth \/ sourceHeight/);
   assert.match(source, /north-wildwood-shoreline-log\.xlsx/);
   assert.equal(packageJson.dependencies.xlsx, "^0.18.5");
 });

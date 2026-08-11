@@ -23,19 +23,19 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: "North Wildwood Shoreline Observatory",
     description:
-      "Draw a shoreline transect, log one monthly Sentinel-2 shoreline point at a time, and export the measurements to Excel.",
+      "Draw a shoreline transect, step through every cloud-free Sentinel-2 acquisition, and export measurements to Excel.",
     icons: { icon: "/favicon.svg", shortcut: "/favicon.svg" },
     openGraph: {
       title: "North Wildwood Shoreline Observatory",
-      description: "A minimal monthly and low-tide Sentinel-2 shoreline logger for North Wildwood.",
+      description: "A minimal cloud-free and low-tide Sentinel-2 shoreline logger for North Wildwood.",
       type: "website",
       url: origin,
-      images: [{ url: `${origin}/og.png`, width: 1200, height: 630, alt: "North Wildwood monthly Sentinel-2 shoreline logger" }],
+      images: [{ url: `${origin}/og.png`, width: 1200, height: 630, alt: "North Wildwood Sentinel-2 shoreline logger" }],
     },
     twitter: {
       card: "summary_large_image",
       title: "North Wildwood Shoreline Observatory",
-      description: "Draw a transect, log monthly shoreline points, and export the measurements to Excel.",
+      description: "Draw a transect, log cloud-free shoreline points, and export the measurements to Excel.",
       images: [`${origin}/og.png`],
     },
   };

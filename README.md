@@ -1,6 +1,6 @@
 # North Wildwood Shoreline Logger
 
-A minimal Sentinel-2 shoreline measurement app. It includes one lowest-cloud image for every month from August 2015 through August 2026 and a separate catalog of monthly images captured within 90 minutes of NOAA-predicted low tide.
+A minimal Sentinel-2 shoreline measurement app. It includes every acquisition from August 2015 onward with zero cloud, shadow, cirrus, or snow/ice Scene Classification Layer pixels over the North Wildwood oceanfront and no more than 0.5% invalid pixels. A separate view contains the clear acquisitions captured within 90 minutes of NOAA-predicted low tide.
 
 Choose a baseline image, draw a transect with two clicks, then click the wet/dry line once per image. `←` and `→` move through the catalog. Logged coordinates, distance along the transect, shoreline width, and baseline change are stored locally in the browser and export as an Excel workbook.
 

@@ -1,15 +1,13 @@
 #!/usr/bin/env python3
-"""Build monthly and low-tide Sentinel-2 image catalogs and publish them to Bunny."""
+"""Build cloud-free and low-tide Sentinel-2 image catalogs and publish them to Bunny."""
 
 from __future__ import annotations
 
 import argparse
-import calendar
 import concurrent.futures
 import hashlib
 import json
 import mimetypes
-import re
 import subprocess
 import time
 from datetime import datetime, timedelta, timezone
@@ -21,6 +19,7 @@ import numpy as np
 import rasterio
 import requests
 from PIL import Image
+from rasterio.features import geometry_mask
 
 import build_shorelines as shoreline
 
@@ -30,11 +29,31 @@ CATALOG_PATH = ROOT / "public" / "data" / "monthly-catalog.json"
 WORK_CATALOG_PATH = ROOT / "work" / "monthly-catalog-build.json"
 TIDE_CACHE = ROOT / "work" / "low-tide-cache"
 SCENE_CACHE = ROOT / "work" / "scene-images"
+STUDY_CLOUD_CACHE = ROOT / "work" / "study-cloud-cache"
 
 START_MONTH = "2015-08"
 END_YEAR = 2026
 LOW_TIDE_WINDOW_MINUTES = 90.0
-MAX_CATALOG_CLOUD_FOR_LOW_TIDE = 50.0
+
+# The exposed North Wildwood oceanfront. Every included image must contain zero
+# Sentinel-2 SCL cloud, shadow, cirrus, or snow/ice pixels in this box. A tiny
+# invalid-pixel allowance accommodates product-edge fill without admitting cloud.
+STUDY_BOUNDS = (-74.793, 38.984, -74.773, 39.007)
+# A roughly 430 m-wide corridor centered on the exposed wet/dry shoreline.
+STUDY_CENTERLINE = (
+    (-74.7890, 38.9840),
+    (-74.7840, 38.9900),
+    (-74.7790, 38.9970),
+    (-74.7770, 39.0030),
+    (-74.7795, 39.0070),
+)
+STUDY_CORRIDOR_HALF_WIDTH_LON = 0.0025
+OBSCURED_SCL_CLASSES = (0, 1, 3, 8, 9, 10, 11)
+CLOUD_SCL_CLASSES = (3, 8, 9, 10)
+INVALID_SCL_CLASSES = (0, 1)
+SNOW_SCL_CLASSES = (11,)
+MAX_STUDY_INVALID_PCT = 0.5
+CLOUD_MASK_VERSION = 3
 
 BUNNY_ZONE = "floodmapperv1"
 BUNNY_CDN = "https://floodmapperv1.b-cdn.net"
@@ -115,32 +134,89 @@ def discover_all_scenes() -> list[dict[str, Any]]:
     return sorted(by_datetime.values(), key=lambda scene: scene["datetime"])
 
 
-def cache_quality() -> dict[str, dict[str, Any]]:
-    values: dict[str, dict[str, Any]] = {}
-    cache_directory = ROOT / "work" / "shoreline-cache"
-    cloud_pattern = re.compile(r"AOI cloud/invalid mask ([0-9.]+)%")
-    for path in cache_directory.glob("*.json"):
-        try:
-            payload = json.loads(path.read_text())
-        except (OSError, json.JSONDecodeError):
-            continue
-        scene_id = payload.get("record", {}).get("scene_id") or payload.get("scene", {}).get("id")
-        if not scene_id:
-            continue
-        if payload.get("status") == "accepted":
-            record = payload["record"]
-            values[scene_id] = {
-                "aoi_cloud_pct": float(record.get("cloud_mask_aoi_pct", 100)),
-                "quality_source": "Sentinel-2 AOI mask",
-            }
-            continue
-        match = cloud_pattern.search(str(payload.get("reason", "")))
-        if match:
-            values[scene_id] = {
-                "aoi_cloud_pct": float(match.group(1)),
-                "quality_source": "Sentinel-2 AOI mask",
-            }
-    return values
+def study_cloud_quality(scene: dict[str, Any]) -> dict[str, Any]:
+    STUDY_CLOUD_CACHE.mkdir(parents=True, exist_ok=True)
+    path = STUDY_CLOUD_CACHE / f"{scene['id']}.json"
+    if path.exists():
+        cached = json.loads(path.read_text())
+        if cached.get("cloud_mask_version") == CLOUD_MASK_VERSION:
+            return cached
+
+    record = shoreline.item(scene["id"])
+    href = shoreline.sign_href(record["assets"]["SCL"]["href"])
+    env_options = {
+        "GDAL_DISABLE_READDIR_ON_OPEN": "EMPTY_DIR",
+        "CPL_VSIL_CURL_ALLOWED_EXTENSIONS": ".tif",
+        "GDAL_HTTP_MULTIRANGE": "YES",
+        "GDAL_HTTP_MERGE_CONSECUTIVE_RANGES": "YES",
+        "GDAL_CACHEMAX": 64,
+    }
+    with rasterio.Env(**env_options), rasterio.open(href) as source:
+        bounds = shoreline.transform_bounds(
+            "EPSG:4326", source.crs, *STUDY_BOUNDS, densify_pts=21
+        )
+        window = shoreline.from_bounds(*bounds, transform=source.transform).round_offsets().round_lengths()
+        scl = source.read(1, window=window)
+
+        west = [(lon - STUDY_CORRIDOR_HALF_WIDTH_LON, lat) for lon, lat in STUDY_CENTERLINE]
+        east = [(lon + STUDY_CORRIDOR_HALF_WIDTH_LON, lat) for lon, lat in reversed(STUDY_CENTERLINE)]
+        ring = west + east + [west[0]]
+        xs, ys = shoreline.warp_transform(
+            "EPSG:4326",
+            source.crs,
+            [point[0] for point in ring],
+            [point[1] for point in ring],
+        )
+        corridor = {
+            "type": "Polygon",
+            "coordinates": [list(zip(xs, ys, strict=True))],
+        }
+        inside = geometry_mask(
+            [corridor],
+            out_shape=scl.shape,
+            transform=source.window_transform(window),
+            invert=True,
+        )
+        scl = scl[inside]
+
+    total = int(scl.size)
+    cloud_pixels = int(np.count_nonzero(np.isin(scl, CLOUD_SCL_CLASSES)))
+    invalid_pixels = int(np.count_nonzero(np.isin(scl, INVALID_SCL_CLASSES)))
+    snow_pixels = int(np.count_nonzero(np.isin(scl, SNOW_SCL_CLASSES)))
+    obscured_pixels = int(np.count_nonzero(np.isin(scl, OBSCURED_SCL_CLASSES)))
+    result = {
+        "cloud_mask_version": CLOUD_MASK_VERSION,
+        "study_pixel_count": total,
+        "study_cloud_pixels": cloud_pixels,
+        "study_invalid_pixels": invalid_pixels,
+        "study_snow_pixels": snow_pixels,
+        "study_obscured_pixels": obscured_pixels,
+        "study_cloud_pct": round(cloud_pixels * 100 / total, 4),
+        "study_invalid_pct": round(invalid_pixels * 100 / total, 4),
+        "study_obscured_pct": round(obscured_pixels * 100 / total, 4),
+    }
+    path.write_text(json.dumps(result))
+    return result
+
+
+def attach_study_quality(scenes: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    output: list[dict[str, Any]] = []
+    with concurrent.futures.ThreadPoolExecutor(max_workers=6) as executor:
+        futures = {executor.submit(study_cloud_quality, scene): scene for scene in scenes}
+        for index, future in enumerate(concurrent.futures.as_completed(futures), start=1):
+            scene = futures[future]
+            quality = future.result()
+            output.append(
+                {
+                    **scene,
+                    **quality,
+                    "estimated_aoi_cloud_pct": quality["study_obscured_pct"],
+                    "quality_source": "Sentinel-2 SCL oceanfront mask",
+                }
+            )
+            if index % 50 == 0 or index == len(scenes):
+                print(f"Study cloud screen {index:04d}/{len(scenes):04d}", flush=True)
+    return sorted(output, key=lambda scene: scene["datetime"])
 
 
 def low_tides_for_year(year: int) -> list[dict[str, Any]]:
@@ -187,7 +263,6 @@ def low_tides_for_year(year: int) -> list[dict[str, Any]]:
 
 def attach_quality_and_tide(
     scenes: list[dict[str, Any]],
-    cached_quality: dict[str, dict[str, Any]],
 ) -> list[dict[str, Any]]:
     tide_by_year: dict[int, list[dict[str, Any]]] = {}
     for year in sorted({parse_dt(scene["datetime"]).year for scene in scenes}):
@@ -196,10 +271,6 @@ def attach_quality_and_tide(
     output = []
     for scene in scenes:
         scene_time = parse_dt(scene["datetime"])
-        quality = cached_quality.get(scene["id"])
-        estimated_cloud = (
-            quality["aoi_cloud_pct"] if quality else scene["catalog_cloud_pct"]
-        )
         events = tide_by_year[scene_time.year]
         nearest = min(
             events,
@@ -209,8 +280,6 @@ def attach_quality_and_tide(
         output.append(
             {
                 **scene,
-                "estimated_aoi_cloud_pct": round(float(estimated_cloud), 2),
-                "quality_source": quality["quality_source"] if quality else "Sentinel-2 tile cloud",
                 "nearest_low_tide": {
                     **nearest,
                     "image_offset_minutes": round(offset, 1),
@@ -221,48 +290,20 @@ def attach_quality_and_tide(
 
 
 def select_catalogs(scenes: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
-    expected = monthly_range()
-    by_month: dict[str, list[dict[str, Any]]] = {month: [] for month in expected}
-    for scene in scenes:
-        key = month_key(scene["datetime"])
-        if key in by_month:
-            by_month[key].append(scene)
-
-    monthly = []
-    low_tide = []
-    for month in expected:
-        candidates = by_month[month]
-        if not candidates:
-            continue
-        best = min(
-            candidates,
-            key=lambda scene: (
-                scene["estimated_aoi_cloud_pct"],
-                scene["catalog_cloud_pct"],
-                scene["datetime"],
-            ),
-        )
-        monthly.append(best)
-
-        low_candidates = [
-            scene
-            for scene in candidates
-            if abs(scene["nearest_low_tide"]["image_offset_minutes"])
-            <= LOW_TIDE_WINDOW_MINUTES
-            and scene["catalog_cloud_pct"] <= MAX_CATALOG_CLOUD_FOR_LOW_TIDE
-        ]
-        if low_candidates:
-            low_tide.append(
-                min(
-                    low_candidates,
-                    key=lambda scene: (
-                        scene["estimated_aoi_cloud_pct"],
-                        scene["catalog_cloud_pct"],
-                        abs(scene["nearest_low_tide"]["image_offset_minutes"]),
-                    ),
-                )
-            )
-    return monthly, low_tide
+    clear = [
+        scene
+        for scene in scenes
+        if scene["study_cloud_pixels"] == 0
+        and scene["study_snow_pixels"] == 0
+        and scene["study_invalid_pct"] <= MAX_STUDY_INVALID_PCT
+    ]
+    low_tide = [
+        scene
+        for scene in clear
+        if abs(scene["nearest_low_tide"]["image_offset_minutes"])
+        <= LOW_TIDE_WINDOW_MINUTES
+    ]
+    return clear, low_tide
 
 
 def download_visual(scene: dict[str, Any]) -> tuple[str, list[int]]:
@@ -315,6 +356,11 @@ def public_scene(scene: dict[str, Any], dimensions: dict[str, list[int]]) -> dic
         "catalog_cloud_pct": scene["catalog_cloud_pct"],
         "estimated_aoi_cloud_pct": scene["estimated_aoi_cloud_pct"],
         "quality_source": scene["quality_source"],
+        "study_pixel_count": scene["study_pixel_count"],
+        "study_cloud_pixels": scene["study_cloud_pixels"],
+        "study_invalid_pixels": scene["study_invalid_pixels"],
+        "study_snow_pixels": scene["study_snow_pixels"],
+        "study_obscured_pixels": scene["study_obscured_pixels"],
         "nearest_low_tide": scene["nearest_low_tide"],
         "stac_url": f"{shoreline.STAC}/collections/sentinel-2-l2a/items/{scene['id']}",
     }
@@ -421,31 +467,35 @@ def main() -> None:
     args = parser.parse_args()
 
     scenes = discover_all_scenes()
-    cached = cache_quality()
-    scenes = attach_quality_and_tide(scenes, cached)
-    monthly, low_tide = select_catalogs(scenes)
-    chosen = monthly + low_tide
+    scenes = attach_study_quality(scenes)
+    scenes = attach_quality_and_tide(scenes)
+    clear, low_tide = select_catalogs(scenes)
+    chosen = clear + low_tide
     dimensions = prepare_images(chosen)
 
     generated = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
     catalog = {
         "generated": generated,
         "bounds": list(shoreline.AOI),
+        "study_bounds": list(STUDY_BOUNDS),
         "resolution_m": 10,
         "tide_station": shoreline.TIDE_STATION,
         "range": [START_MONTH, monthly_range()[-1]],
         "selection": {
-            "monthly": "Lowest available Sentinel-2 cloud estimate in each calendar month",
-            "low_tide": f"Lowest-cloud scene within +/- {LOW_TIDE_WINDOW_MINUTES:.0f} minutes of a NOAA-predicted low tide",
+            "clear": "Every Sentinel-2 L2A acquisition with zero cloud, shadow, cirrus, or snow/ice SCL pixels over the oceanfront study area and no more than 0.5% invalid pixels",
+            "low_tide": f"Cloud-free acquisitions within +/- {LOW_TIDE_WINDOW_MINUTES:.0f} minutes of a NOAA-predicted low tide",
             "low_tide_window_minutes": LOW_TIDE_WINDOW_MINUTES,
+            "maximum_study_cloud_pixels": 0,
+            "maximum_study_snow_pixels": 0,
+            "maximum_study_invalid_pct": MAX_STUDY_INVALID_PCT,
         },
-        "monthly": [public_scene(scene, dimensions) for scene in monthly],
+        "clear": [public_scene(scene, dimensions) for scene in clear],
         "low_tide": [public_scene(scene, dimensions) for scene in low_tide],
     }
     CATALOG_PATH.write_text(json.dumps(catalog, indent=2))
     WORK_CATALOG_PATH.write_text(json.dumps(catalog, indent=2))
     print(
-        f"Selected {len(monthly)} monthly scenes and {len(low_tide)} low-tide scenes",
+        f"Selected {len(clear)} cloud-free scenes and {len(low_tide)} low-tide scenes",
         flush=True,
     )
     if args.upload_bunny:

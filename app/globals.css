@@ -52,30 +52,36 @@ a { color: inherit; text-decoration: none; }
 .export-button:disabled { border-color: var(--line); background: transparent; color: #536267; cursor: default; }
 
 .logger-workspace { min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 310px; }
-.image-panel { min-width: 0; min-height: 0; display: grid; grid-template-rows: 48px minmax(0, 1fr); border-right: 1px solid var(--line); }
+.image-panel { min-width: 0; min-height: 0; display: grid; grid-template-rows: 56px minmax(0, 1fr); border-right: 1px solid var(--line); }
 .work-tools { padding: 8px 10px; display: flex; align-items: center; gap: 7px; border-bottom: 1px solid var(--line); background: var(--panel); }
 .work-tools > button, .work-tools > span { padding: 7px 9px; border: 1px solid var(--line); border-radius: 3px; background: transparent; color: #a7b4b8; font: 9px var(--font-geist-mono), monospace; text-transform: uppercase; white-space: nowrap; }
 .work-tools > button { cursor: pointer; }
 .work-tools > button:hover, .work-tools > button.selected { border-color: var(--accent); color: var(--accent); background: rgba(102,225,207,.08); }
+.work-tools > button.primary-action { padding: 9px 12px; border-color: #5dcabb; background: var(--accent); color: #09201e; font-weight: 700; }
+.work-tools > button.primary-action:hover { background: #8aebdd; color: #071b19; }
 .work-tools output { min-width: 140px; margin-left: 4px; overflow: hidden; color: var(--accent); font: 10px var(--font-geist-mono), monospace; text-overflow: ellipsis; white-space: nowrap; }
-.zoom-control { min-width: 180px; margin-left: auto; display: flex; align-items: center; gap: 8px; }
+.zoom-control { min-width: 230px; margin-left: auto; display: flex; align-items: center; gap: 6px; }
 .zoom-control span { width: 68px; color: var(--muted); font: 9px var(--font-geist-mono), monospace; text-align: right; white-space: nowrap; }
-.zoom-control input { width: 95px; accent-color: var(--accent); }
+.zoom-control input { width: 84px; accent-color: var(--accent); }
+.zoom-control button { width: 27px; height: 27px; padding: 0; border: 1px solid var(--line); border-radius: 3px; background: #0d191d; color: var(--accent); cursor: pointer; }
 .work-tools .small-button { padding-left: 7px; padding-right: 7px; color: var(--muted); }
 
 .image-viewport { position: relative; min-width: 0; min-height: 0; overflow: hidden; touch-action: none; background: #071115; cursor: crosshair; user-select: none; }
 .image-viewport:active { cursor: grabbing; }
 .image-viewport.drawing { cursor: cell; }
-.image-transform { position: absolute; inset: 0; transform-origin: 0 0; will-change: transform; }
+.image-transform { position: absolute; transform-origin: 0 0; will-change: transform; }
 .image-transform > img { width: 100%; height: 100%; display: block; object-fit: fill; image-rendering: auto; pointer-events: none; filter: contrast(1.04) saturate(.92); }
 .measurement-layer { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
 .transect-line { stroke: var(--coral); stroke-width: 2; stroke-dasharray: 7 5; vector-effect: non-scaling-stroke; }
+.transect-preview { stroke: white; stroke-width: 2; stroke-dasharray: 4 5; opacity: .9; vector-effect: non-scaling-stroke; }
 .transect-end { fill: var(--paper); stroke: var(--coral); stroke-width: 2; vector-effect: non-scaling-stroke; }
+.transect-end.pending { fill: var(--coral); }
 .logged-point { fill: rgba(102,225,207,.5); stroke: #09211f; stroke-width: 1.5; vector-effect: non-scaling-stroke; }
 .logged-point.active { fill: var(--accent); stroke: white; stroke-width: 2; }
 .image-label { position: absolute; top: 12px; left: 12px; padding: 8px 10px; display: flex; gap: 10px; border-radius: 3px; background: rgba(10,20,24,.82); font: 10px var(--font-geist-mono), monospace; pointer-events: none; }
 .image-label strong { font-weight: 550; }
 .image-label span { color: #9db0b5; }
+.map-instruction { position: absolute; left: 50%; bottom: 14px; z-index: 2; max-width: calc(100% - 220px); padding: 10px 14px; transform: translateX(-50%); border: 1px solid rgba(102,225,207,.6); border-radius: 4px; background: rgba(8,20,23,.9); color: var(--accent); font: 11px var(--font-geist-mono), monospace; text-align: center; pointer-events: none; }
 .scale-label { position: absolute; right: 12px; bottom: 12px; padding: 6px 8px; border-radius: 3px; background: rgba(10,20,24,.8); color: #a4b2b6; font: 9px var(--font-geist-mono), monospace; pointer-events: none; }
 
 .log-panel { min-height: 0; display: grid; grid-template-rows: auto 132px auto minmax(0, 1fr) auto; background: var(--panel); }
@@ -129,6 +135,7 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 2px solid 
   .work-tools output { width: 100%; order: 5; }
   .zoom-control { margin-left: 0; }
   .image-viewport { min-height: 470px; }
+  .map-instruction { max-width: calc(100% - 24px); bottom: 48px; }
   .log-panel { min-height: 480px; }
 }
 
